@@ -1,6 +1,16 @@
 import './Card.css';
+import { useState } from "react";
 
-function Card() {
+function Card(props) {
+  const [symbol, setSymbol] = useState("");
+  const [price, setPrice] = useState(0);
+  const [interval, setInterval] = useState(0);
+  const [exchange, setExchange] = useState("");
+
+  const getCardID = () => {
+    return props.id;
+  };
+
   return (
     <div className="Card">
       <div class="column is-4">
@@ -15,7 +25,8 @@ function Card() {
               <h4>Tempor orci dapibus faber in.</h4>
               <p>Ut venenatis tellus in metus vulputate.Amet consectetur adipiscing elit pellentesque.Sed arcu non odio euismod lacinia at quis risus.Faucibus turpis in eu mi bibendum neque egestas cmonsu songue.Phasellus vestibulum lorem
                 sed risus.</p>
-              <span class="button is-link modal-button" data-target="modal-card">Modal Card</span>
+              <span class="button is-link modal-button" data-target="modal-card">Expand Card</span>
+              <button class="button is-danger ml-4">Remove Card</button>
             </div>
           </div>
         </div>
