@@ -1,36 +1,30 @@
 import './Card.css';
 import { useState } from "react";
 
-function Card(props) {
-  const [symbol, setSymbol] = useState("");
-  const [price, setPrice] = useState(0);
-  const [interval, setInterval] = useState(0);
-  const [exchange, setExchange] = useState("");
-
-  const getCardID = () => {
-    return props.id;
-  };
-
+function Card({ symbol, price, interval, exchange, id, removeCard }) {
   return (
-    <div className="Card">
-      <div class="column is-4">
-        <div class="card is-shady">
-          <div class="card-image">
-            {/* <figure class="image is-4by3">
-              <img src="https://source.unsplash.com/6Ticnhs1AG0" alt="Placeholder image" />
-            </figure> */}
-          </div>
-          <div class="card-content">
-            <div class="content">
-              <h4>Tempor orci dapibus faber in.</h4>
-              <p>Ut venenatis tellus in metus vulputate.Amet consectetur adipiscing elit pellentesque.Sed arcu non odio euismod lacinia at quis risus.Faucibus turpis in eu mi bibendum neque egestas cmonsu songue.Phasellus vestibulum lorem
-                sed risus.</p>
-              <span class="button is-link modal-button" data-target="modal-card">Expand Card</span>
-              <button class="button is-danger ml-4">Remove Card</button>
-            </div>
-          </div>
+    <div class="column is-4" className="StockCard">
+      <header class="card-header">
+        <p class="card-header-title">
+          Stock: {symbol}
+        </p>
+        <button class="card-header-icon" aria-label="more options">
+          <span class="icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </header>
+      <div class="card-content">
+        <div>
+          <p> Price: {price} </p>
+          <p> Interval: {interval} </p>
+          <p> Exchange: {exchange} </p>
         </div>
       </div>
+      <footer class="card-footer">
+        <span class="button is-link modal-button ml-2 mt-2 mb-2" data-target="modal-card">Expand Card</span>
+        <button className="Xbutton" class="button is-danger ml-6 mt-2 mb-2" onClick={() => removeCard(id)}>X</button>
+      </footer>
     </div>
   );
 }

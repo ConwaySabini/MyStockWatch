@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ConwaySabini/stonks/issues"
   },
-  "homepage": "https://github.com/ConwaySabini/stonks#readme"
+  "homepage": "https://github.com/ConwaySabini/stonks#readme",
+  "dependencies": {
+    "nanoid": "^3.1.29"
+  }
 }

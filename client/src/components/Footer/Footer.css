@@ -1,5 +1,9 @@
 .footer {
-  margin-top: 5%
+  width: 100%;
+  height: 150px;
+  position: sticky;
+  margin-top: 20%;
+  margin-right: 50%;
 }
 
 .footerMessage {

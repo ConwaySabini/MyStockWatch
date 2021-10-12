@@ -3,17 +3,40 @@ import Card from './../Card/Card';
 import { useState } from "react";
 
 function CardSection() {
-  const [symbol, setSymbol] = useState("");
-  const [cards, setCards] = useState([]);
+  const [value, setValue] = useState("");
+  const [cards, setCards] = useState([
+    {
+      symbol: "AMZN",
+      price: "1234.56",
+      interval: "1d",
+      exchange: "NYSE",
+      id: "AMZN"
+    },
+    {
+      symbol: "TSLA",
+      price: "3000",
+      interval: "1d",
+      exchange: "NYSE",
+      id: "TSLA",
+    }
+  ]);
+  const [stockCount, setStockCount] = useState(0);
+  // const [symbol, setSymbol] = useState("");
 
 
-  const addCard = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    setCards([...cards, symbol]);
-    setSymbol("");
+    if (!value) return;
+    addCard(value);
+    setValue("");
   };
 
-  const removeCard = (id) => {
+  const addCard = symbol => {
+    const newCards = setCards([...cards, { symbol }]);
+    setCards(newCards);
+  };
+
+  const removeCard = id => {
     const newCards = [...cards];
     newCards.splice(id, 1);
     setCards(newCards);
@@ -29,43 +52,31 @@ function CardSection() {
             Click the <strong>button</strong>, to add the stock.
           </h2>
           <div className="addbutton">
-            <button class="button is-link" onClick={addCard}>Add Stock</button>
-            <button class="button is-danger ml-5" onClick={() => setCards([""])}>Clear Stocks</button>
-            <input class="input is-rounded ml-5" type="text" placeholder="Rounded input" value={symbol} onChange={(e) => setSymbol(e.target.value)} />
+            <button class="button is-link" onClick={handleSubmit}>Add Stock</button>
+            {/* <button class="button is-danger ml-5" onClick={() => setCards([])}>Clear Stocks</button> */}
+            <input
+              class="input is-rounded ml-5"
+              type="text"
+              placeholder="Rounded input"
+              onChange={e => setValue(e.target.value)}
+              onSubmit={handleSubmit}
+            />
           </div>
           <div class="block"></div>
 
-
           <div class="columns features">
             {cards.map((card, id) => (
-              <div className="StockCard" key={id}>
-                <div class="card">
-                  <header class="card-header">
-                    <p class="card-header-title">
-                      Stock: {symbol}
-                    </p>
-                    <button class="card-header-icon" aria-label="more options">
-                      <span class="icon">
-                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                      </span>
-                    </button>
-                  </header>
-                  <div class="card-content">
-                    <div class="content">
-                      <h4>{symbol}</h4>
-                      <p>Price:</p>
-
-                    </div>
-                  </div>
-                  <footer class="card-footer">
-                    <span class="button is-link modal-button ml-2 mt-2 mb-2" data-target="modal-card">Expand Card</span>
-                    <button class="button is-danger ml-4 mr-2 mt-2 mb-2" onClick={() => removeCard(id)}>Remove Card</button>
-                  </footer>
-                </div>
-              </div>
+              <Card
+                key={id}
+                id={id}
+                symbol={card.symbol}
+                price={card.price}
+                interval={card.interval}
+                exchange={card.exchange}
+                removeCard={removeCard}
+              />
             ))}
           </div>
-
         </div>
       </section>
 
