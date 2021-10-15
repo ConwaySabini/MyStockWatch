@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ConwaySabini/stonks#readme",
   "dependencies": {
+    "axios": "^0.23.0",
     "nanoid": "^3.1.29"
   }
 }

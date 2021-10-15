@@ -4,45 +4,46 @@ import { nanoid } from 'nanoid'
 export const StockContext = createContext()
 
 const StockContextProvider = props => {
-  const initialState = JSON.parse(localStorage.getItem('stocks')) || []
+  const initialState = JSON.parse(localStorage.getItem('stocks')) || [];
 
-  const [stocks, setStocks] = useState(initialState)
+  const [stocks, setStocks] = useState(initialState);
 
   useEffect(() => {
-    localStorage.setItem('stocks', JSON.stringify(stocks))
+    localStorage.setItem('stocks', JSON.stringify(stocks));
   }, [stocks])
 
-  const [editItem, setEditItem] = useState(null)
+  // const [editItem, setEditItem] = useState(null)
 
   // Add stocks
-  const addStock = title => {
-    setStocks([...stocks, { title, id: nanoid() }])
+  const addStock = (symbol, data) => {
+    setStocks([...stocks, { symbol, data, id: nanoid() }]);
+
   }
 
   // Remove stocks
   const removeStock = id => {
-    setStocks(stocks.filter(stock => stock.id !== id))
+    setStocks(stocks.filter(stock => stock.id !== id));
   }
 
   // Clear stocks
   const clearList = () => {
-    setStocks([])
+    setStocks([]);
   }
 
   // Find stock
   const findStock = id => {
-    const item = stocks.find(stock => stock.id === id)
+    const item = stocks.find(stock => stock.id === id);
 
-    setEditItem(item)
+    // setEditItem(item)
   }
 
-  // Edit stock
-  const editStock = (title, id) => {
-    const newStocks = stocks.map(stock => (stock.id === id ? { title, id } : stock))
-    console.log(newStocks)
-    setStocks(newStocks)
-    setEditItem(null)
-  }
+  // // Edit stock
+  // const editStock = (title, id) => {
+  //   const newStocks = stocks.map(stock => (stock.id === id ? { title, id } : stock))
+  //   console.log(newStocks)
+  //   setStocks(newStocks)
+  //   setEditItem(null)
+  // }
 
   return (
     <StockContext.Provider
@@ -52,8 +53,8 @@ const StockContextProvider = props => {
         removeStock,
         clearList,
         findStock,
-        editStock,
-        editItem
+        // editStock,
+        // editItem
       }}
     >
       {props.children}

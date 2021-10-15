@@ -8,11 +8,11 @@ const StockList = () => {
   return (
     <div>
       {stocks.length ? (
-        <ul className="list">
+        <div className="list">
           {stocks.map(stock => {
             return <Stock stock={stock} key={stock.id} />;
           })}
-        </ul>
+        </div>
       ) : (
         <div className="no-stocks">No Stocks</div>
       )}

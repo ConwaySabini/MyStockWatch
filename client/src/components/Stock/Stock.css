@@ -1,0 +1,15 @@
+.StockCard {
+  background-color: azure;
+  margin-top: 10px;
+  margin-left: 30px;
+  width: 60%;
+  height: 10%;
+}
+
+.input {
+  width: 65%;
+}
+
+.card-content {
+  height: 10rem;
+}
