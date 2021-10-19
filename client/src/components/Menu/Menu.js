@@ -26,9 +26,11 @@ function Menu() {
         </p>
         {favorites.length ? (
           <div className="list">
-            {favorites.map(favorite => {
-              return <Favorite favortie={favorite} key={favorite.id} />;
-            })}
+            <ul class="menu-list">
+              {favorites.map(favorite => {
+                return <Favorite favortie={favorite} key={favorite.id} />;
+              })}
+            </ul>
           </div>
         ) : (
           <div className="no-favorites">No Favorites</div>

@@ -3,18 +3,16 @@ import { StockContext } from "../../context/StockContext";
 const axios = require('axios').default;
 
 const StockForm = () => {
-  const { addStock, clearList, editStock, editItem, findSymbol, addFavorite } = useContext(StockContext);
+  const { addStock, clearList, editStock, editItem, findSymbol, addFavorite, getStockTime, setTime } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [timeline, setTimeline] = useState('1day');
 
-
-  // News 
-
+  // News API
   // var axios = require("axios").default;
 
-  // var options = {
+  // const BingNewsOptions = {
   //   method: 'GET',
   //   url: 'https://bing-news-search1.p.rapidapi.com/news',
   //   params: { textFormat: 'Raw', safeSearch: 'Off', category: 'Business' },
@@ -35,7 +33,7 @@ const StockForm = () => {
 
   // More Trending News
 
-  // var options = {
+  // const NewsOptions = {
   //   method: 'GET',
   //   url: 'https://seeking-alpha.p.rapidapi.com/news/list-trending',
   //   headers: {
@@ -50,9 +48,7 @@ const StockForm = () => {
   //   console.error(error);
   // });
 
-
-
-
+  // Axios options for getting stock data from rapidAPI
   const options = {
     method: 'GET',
     url: 'https://twelve-data1.p.rapidapi.com/time_series',
@@ -62,8 +58,6 @@ const StockForm = () => {
       'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
     }
   };
-
-
 
   const getStockData = async () => {
     setLoading(true);
@@ -75,8 +69,6 @@ const StockForm = () => {
       } else {
         setLoading(false);
         setCounter(counter + 1);
-
-
 
         let priceSize = response.data.values.length;
         let startPrice = response.data.values[0].close;
@@ -93,22 +85,52 @@ const StockForm = () => {
     }
   }
 
+  const changeStockData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.request(options);
+      console.log(response.data);
+      if (response.data.status === "error") {
+        setLoading(false);
+      } else {
+        setCounter(counter + 1);
 
+        let priceSize = response.data.values.length;
+        let startPrice = response.data.values[0].close;
+        let endPrice = response.data.values[priceSize - 1].close;
+        let difference = endPrice - startPrice;
+        let percentChange = (difference / startPrice) * 100;
+
+        editStock(symbol, response.data, percentChange, timeline, editItem.id);
+        setSymbol('');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  }
 
   const handleSubmit = e => {
     e.preventDefault()
-    //if (!editItem) {
-    getStockData();
-    //}
-    //  else {
-    //   editStock(title, editItem.id)
-    // }
+    if (!editItem) {
+      getStockData();
+    }
+    else {
+      //TODO get stock data for new timeline and pass it through
+      //TODO get stock timeline for specific stock from the context api
+      const time = getStockTime();
+      console.log("time", time);
+      setTimeline(time);
+      changeStockData();
+    }
   }
 
   const handleChange = e => {
     setSymbol(e.target.value);
   }
 
+  //TODO get confirmation before clearing list
   const clear = e => {
     setCounter(0);
     clearList();

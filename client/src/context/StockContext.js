@@ -9,19 +9,20 @@ const StockContextProvider = props => {
 
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
-  // const [editItem, setEditItem] = useState(null)
+  const [time, setTime] = useState('1day');
+  const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('stocks', JSON.stringify(stocks));
-  }, [stocks])
+  }, [stocks]);
 
   useEffect(() => {
     localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites])
+  }, [favorites]);
 
   // Add favorites
-  const addFavorite = (symbol, data, percentChange, timeline) => {
-    setFavorites([...favorites, { symbol, data, percentChange, timeline, id: nanoid() }]);
+  const addFavorite = (stock) => {
+    setFavorites([...favorites, { stock, id: nanoid() }]);
   }
 
   // Remove favorites
@@ -37,7 +38,7 @@ const StockContextProvider = props => {
   // Find Favorite
   const findFavorite = id => {
     const favorite = favorites.find(favorite => favorite.id === id);
-    // setEditItem(item)
+    //setEditItem(favorite);
   }
 
   // Add stocks
@@ -58,7 +59,7 @@ const StockContextProvider = props => {
   // Find stock
   const findStock = id => {
     const stock = stocks.find(stock => stock.id === id);
-    // setEditItem(item)
+    setEditItem(stock);
   }
 
   // Find stock
@@ -73,13 +74,24 @@ const StockContextProvider = props => {
     // setEditItem(item)
   }
 
-  // // Edit stock
-  // const editStock = (title, id) => {
-  //   const newStocks = stocks.map(stock => (stock.id === id ? { title, id } : stock))
-  //   console.log(newStocks)
-  //   setStocks(newStocks)
-  //   setEditItem(null)
-  // }
+  // Edit stock
+  const editStock = (symbol, data, percentChange, timeline, id) => {
+    const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
+    console.log(newStocks);
+    setStocks(newStocks);
+    setEditItem(null);
+  }
+
+  //Set Time
+  const setStockTime = time => {
+    setTime(time);
+  }
+
+  //Get Time
+  const getStockTime = id => {
+    const stock = stocks.find(stock => stock.id === id);
+    return stock.timeline;
+  }
 
   return (
     <StockContext.Provider
@@ -94,8 +106,10 @@ const StockContextProvider = props => {
         removeFavorite,
         clearFavorites,
         findFavorite,
-        // editStock,
-        // editItem
+        editStock,
+        editItem,
+        setStockTime,
+        getStockTime,
       }}
     >
       {props.children}
