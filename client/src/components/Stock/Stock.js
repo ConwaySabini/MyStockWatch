@@ -2,7 +2,6 @@ import './Stock.css';
 import { useContext, useEffect, useState } from "react";
 import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
-// import Chart from 'chart.js/auto';
 
 function Stock({ stock }) {
   const { removeStock, findStock } = useContext(StockContext);
@@ -17,8 +16,6 @@ function Stock({ stock }) {
     labels[i] = stock.data.values[i].datetime;
     prices[i] = stock.data.values[i].close;
   }
-
-
 
   console.log("prices", prices);
   console.log("labels", labels);
@@ -39,7 +36,7 @@ function Stock({ stock }) {
         fontColor: "#333",
         fontSize: 16
       }
-    }
+    },
   };
 
   const data = {
@@ -49,44 +46,11 @@ function Stock({ stock }) {
         label: stock.symbol,
         data: prices,
         fill: true,
-        backgroundColor: 'rgba(66, 13, 138)',
-        borderColor: 'rgba(255, 99, 132, 0.2)',
+        backgroundColor: 'rgba(72, 95, 199)',
+        borderColor: 'rgba(0, 209, 178, 0.6)',
       },
     ],
   };
-
-
-
-  // const data = {
-  //   type: 'line',
-  //   data: {
-  //     labels: labels,
-  //     datasets: [{
-  //       label: stock.symbol,
-  //       data: prices,
-  //       fill: true,
-  //       borderWidth: 1,
-  //       backgroundColor: 'rgba(66, 13, 138)',
-  //     }],
-  //   },
-  //   options: {
-  //     responsiveness: true,
-  //   },
-  //   parsing: {
-  //     xAxisKey: 'date',
-  //     yAxisKey: 'value',
-  //   }
-  // };
-
-
-
-
-  // useEffect(() => {
-
-  // }, []);
-
-
-
 
 
   return (
@@ -102,18 +66,6 @@ function Stock({ stock }) {
 
     </div >
   );
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="StockCard mt-6">
-
-  //     </div>
-  //   );
-  // } else {
-
-  //   );
-  // }
-
 }
 
 export default Stock;

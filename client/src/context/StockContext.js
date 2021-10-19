@@ -9,6 +9,7 @@ const StockContextProvider = props => {
 
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
+  // const [editItem, setEditItem] = useState(null)
 
   useEffect(() => {
     localStorage.setItem('stocks', JSON.stringify(stocks));
@@ -19,8 +20,8 @@ const StockContextProvider = props => {
   }, [favorites])
 
   // Add favorites
-  const addFavorite = (symbol, data) => {
-    setFavorites([...favorites, { symbol, data, id: nanoid() }]);
+  const addFavorite = (symbol, data, percentChange, timeline) => {
+    setFavorites([...favorites, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
   // Remove favorites
@@ -39,11 +40,9 @@ const StockContextProvider = props => {
     // setEditItem(item)
   }
 
-  // const [editItem, setEditItem] = useState(null)
-
   // Add stocks
-  const addStock = (symbol, data) => {
-    setStocks([...stocks, { symbol, data, id: nanoid() }]);
+  const addStock = (symbol, data, percentChange, timeline) => {
+    setStocks([...stocks, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
   // Remove stocks
@@ -58,6 +57,12 @@ const StockContextProvider = props => {
 
   // Find stock
   const findStock = id => {
+    const stock = stocks.find(stock => stock.id === id);
+    // setEditItem(item)
+  }
+
+  // Find stock
+  const getTimeline = id => {
     const stock = stocks.find(stock => stock.id === id);
     // setEditItem(item)
   }
@@ -84,6 +89,7 @@ const StockContextProvider = props => {
         removeStock,
         clearList,
         findStock,
+        favorites,
         addFavorite,
         removeFavorite,
         clearFavorites,

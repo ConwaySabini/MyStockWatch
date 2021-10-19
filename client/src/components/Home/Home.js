@@ -44,7 +44,7 @@ function Home() {
             </section>
           </div>
 
-          <div class="column is-2">
+          <div class="column is-2" id="SideMenu">
             <Menu />
           </div>
 

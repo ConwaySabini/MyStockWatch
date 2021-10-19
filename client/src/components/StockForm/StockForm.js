@@ -3,12 +3,11 @@ import { StockContext } from "../../context/StockContext";
 const axios = require('axios').default;
 
 const StockForm = () => {
-  const { addStock, clearList, editStock, editItem, findSymbol } = useContext(StockContext);
+  const { addStock, clearList, editStock, editItem, findSymbol, addFavorite } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
-  const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [fetchError, setError] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [timeline, setTimeline] = useState('1day');
 
 
   // News 
@@ -57,7 +56,7 @@ const StockForm = () => {
   const options = {
     method: 'GET',
     url: 'https://twelve-data1.p.rapidapi.com/time_series',
-    params: { interval: '1day', symbol: `${symbol}`, format: 'json', outputsize: '30' },
+    params: { interval: `${timeline}`, symbol: `${symbol}`, format: 'json', outputsize: '30' },
     headers: {
       'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
       'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
@@ -72,26 +71,24 @@ const StockForm = () => {
       const response = await axios.request(options);
       console.log(response.data);
       if (response.data.status === "error") {
-        setError(true);
         setLoading(false);
       } else {
-        setStockData(response.data);
         setLoading(false);
-        setError(false);
-
-        let data = stockData
         setCounter(counter + 1);
-        if (!fetchError) {
-          // if (!data === []) {
-          //   addStock(symbol, data);
-          // }
-          addStock(symbol, response.data);
-        }
+
+
+
+        let priceSize = response.data.values.length;
+        let startPrice = response.data.values[0].close;
+        let endPrice = response.data.values[priceSize - 1].close;
+        let difference = endPrice - startPrice;
+        let percentChange = (difference / startPrice) * 100;
+
+        addStock(symbol, response.data, percentChange, timeline);
         setSymbol('');
       }
     } catch (error) {
       console.error(error);
-      setError(true);
       setLoading(false);
     }
   }
@@ -101,10 +98,7 @@ const StockForm = () => {
   const handleSubmit = e => {
     e.preventDefault()
     //if (!editItem) {
-
     getStockData();
-
-
     //}
     //  else {
     //   editStock(title, editItem.id)
@@ -139,14 +133,14 @@ const StockForm = () => {
       <div className="button-and-form">
         <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add Stock</button>
         <button class="button is-danger ml-5" onClick={clearList} disabled={loading}>
-          Clear
+          Clear All Stocks
         </button>
 
         <form onSubmit={handleSubmit}>
           <div className="stock-form" id="stock-search">
             <input
               type="text"
-              placeholder="Add Stock..."
+              placeholder="Enter Symbol..."
               value={symbol}
               onChange={handleChange}
               required

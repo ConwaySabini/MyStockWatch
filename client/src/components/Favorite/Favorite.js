@@ -1,6 +1,6 @@
 
 
-function Favorite() {
+function Favorite({ favorite }) {
 
 
   return (
