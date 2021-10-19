@@ -3,10 +3,56 @@ import { StockContext } from "../../context/StockContext";
 const axios = require('axios').default;
 
 const StockForm = () => {
-  const { addStock, clearList, /*editStock,*/ editItem } = useContext(StockContext);
+  const { addStock, clearList, editStock, editItem, findSymbol } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
   const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchError, setError] = useState(false);
+  const [counter, setCounter] = useState(0);
+
+
+  // News 
+
+  // var axios = require("axios").default;
+
+  // var options = {
+  //   method: 'GET',
+  //   url: 'https://bing-news-search1.p.rapidapi.com/news',
+  //   params: { textFormat: 'Raw', safeSearch: 'Off', category: 'Business' },
+  //   headers: {
+  //     'x-bingapis-sdk': 'true',
+  //     'x-rapidapi-host': 'bing-news-search1.p.rapidapi.com',
+  //     'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+  //   }
+  // };
+
+  // axios.request(options).then(function (response) {
+  //   console.log(response.data);
+  // }).catch(function (error) {
+  //   console.error(error);
+  // });
+
+
+
+  // More Trending News
+
+  // var options = {
+  //   method: 'GET',
+  //   url: 'https://seeking-alpha.p.rapidapi.com/news/list-trending',
+  //   headers: {
+  //     'x-rapidapi-host': 'seeking-alpha.p.rapidapi.com',
+  //     'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+  //   }
+  // };
+
+  // axios.request(options).then(function (response) {
+  //   console.log(response.data);
+  // }).catch(function (error) {
+  //   console.error(error);
+  // });
+
+
+
 
   const options = {
     method: 'GET',
@@ -18,23 +64,47 @@ const StockForm = () => {
     }
   };
 
-  const getStockData = () => {
+
+
+  const getStockData = async () => {
     setLoading(true);
-    axios.request(options).then(function (response) {
+    try {
+      const response = await axios.request(options);
       console.log(response.data);
-      setLoading(false);
-    }).catch(function (error) {
+      if (response.data.status === "error") {
+        setError(true);
+        setLoading(false);
+      } else {
+        setStockData(response.data);
+        setLoading(false);
+        setError(false);
+
+        let data = stockData
+        setCounter(counter + 1);
+        if (!fetchError) {
+          // if (!data === []) {
+          //   addStock(symbol, data);
+          // }
+          addStock(symbol, response.data);
+        }
+        setSymbol('');
+      }
+    } catch (error) {
       console.error(error);
+      setError(true);
       setLoading(false);
-    });
+    }
   }
+
+
 
   const handleSubmit = e => {
     e.preventDefault()
     //if (!editItem) {
+
     getStockData();
-    addStock(symbol, stockData);
-    setSymbol('');
+
+
     //}
     //  else {
     //   editStock(title, editItem.id)
@@ -45,6 +115,11 @@ const StockForm = () => {
     setSymbol(e.target.value);
   }
 
+  const clear = e => {
+    setCounter(0);
+    clearList();
+  }
+
   // useEffect(() => {
   //   if (editItem) {
   //     setSymbol(editItem.symbol);
@@ -53,6 +128,7 @@ const StockForm = () => {
   //     setSymbol('');
   //   }
   // }, [editItem]);
+
 
   return (
     <div class="StockForm">
@@ -81,7 +157,7 @@ const StockForm = () => {
         </form>
       </div>
     </div >
-  )
+  );
 }
 
 export default StockForm

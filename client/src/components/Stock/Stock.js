@@ -1,41 +1,119 @@
 import './Stock.css';
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StockContext } from "../../context/StockContext";
+import { Line } from "react-chartjs-2";
+// import Chart from 'chart.js/auto';
 
 function Stock({ stock }) {
-  const { removeStock, findStock } = useContext(StockContext)
+  const { removeStock, findStock } = useContext(StockContext);
+
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [chartData, setChartData] = useState({});
+
+  const labels = [];
+  const prices = [];
+
+  for (let i = 0; i < stock.data.values.length; i++) {
+    labels[i] = stock.data.values[i].datetime;
+    prices[i] = stock.data.values[i].close;
+  }
+
+
+
+  console.log("prices", prices);
+  console.log("labels", labels);
+
+  const options = {
+    responsive: true,
+    title: {
+      display: true,
+      // position: "top",
+      text: stock.symbol,
+      fontSize: 18,
+      fontColor: "#111"
+    },
+    legend: {
+      display: true,
+      position: "bottom",
+      labels: {
+        fontColor: "#333",
+        fontSize: 16
+      }
+    }
+  };
+
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: stock.symbol,
+        data: prices,
+        fill: true,
+        backgroundColor: 'rgba(66, 13, 138)',
+        borderColor: 'rgba(255, 99, 132, 0.2)',
+      },
+    ],
+  };
+
+
+
+  // const data = {
+  //   type: 'line',
+  //   data: {
+  //     labels: labels,
+  //     datasets: [{
+  //       label: stock.symbol,
+  //       data: prices,
+  //       fill: true,
+  //       borderWidth: 1,
+  //       backgroundColor: 'rgba(66, 13, 138)',
+  //     }],
+  //   },
+  //   options: {
+  //     responsiveness: true,
+  //   },
+  //   parsing: {
+  //     xAxisKey: 'date',
+  //     yAxisKey: 'value',
+  //   }
+  // };
+
+
+
+
+  // useEffect(() => {
+
+  // }, []);
+
+
+
+
+
   return (
-    // <li className="list-item">
-    <div className="StockCard mt-6">
-      <header class="card-header">
-        <p class="card-header-title">
-          Stock: {stock.symbol}
-        </p>
-        <button class="card-header-icon" aria-label="more options">
-          <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </header>
-      <div class="card-content">
-        {/* <div>
-      <p> Price: {price} </p>
-      <p> Interval: {interval} </p>
-      <p> Exchange: {exchange} </p>
-    </div> */}
-      </div>
-      <footer class="card-footer">
-        <span class="button is-link modal-button ml-2 mt-2 mb-2" data-target="modal-card">Expand Card</span>
-        <button className="delete-stock" class="button is-danger ml-4 pr-2 pl-5 mt-2 mb-2" onClick={() => removeStock(stock.id)}>
-          <i className="fas fa-trash-alt"></i>
-        </button>
-        {/* <button className="edit-stock" onClick={() => findStock(stock.id)}>
-          <i className="fas fa-pen"></i>
-        </button> */}
-      </footer>
+    <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
+      <Line data={data} options={options} />
+      <span className="favorite" class="button is-warning modal-button ml-2 mt-4 mb-2">Favorite</span>
+      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2">1D</button>
+      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2">1W</button>
+      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2">1M</button>
+      <button className="delete-stock" class="button is-danger ml-4 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
+        <i className="fas fa-trash-alt"></i>
+      </button>
+
     </div >
-    // </li>
-  )
+  );
+
+  // if (isLoading) {
+  //   return (
+  //     <div className="StockCard mt-6">
+
+  //     </div>
+  //   );
+  // } else {
+
+  //   );
+  // }
+
 }
 
 export default Stock;
