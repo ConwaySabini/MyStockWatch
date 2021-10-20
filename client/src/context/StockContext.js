@@ -37,7 +37,7 @@ const StockContextProvider = props => {
 
   // Find Favorite
   const findFavorite = id => {
-    const favorite = favorites.find(favorite => favorite.id === id);
+    const favoriteStock = favorites.find(favorite => favorite.id === id);
     //setEditItem(favorite);
   }
 
@@ -64,13 +64,13 @@ const StockContextProvider = props => {
 
   // Find stock
   const getTimeline = id => {
-    const stock = stocks.find(stock => stock.id === id);
+    const stockToGet = stocks.find(stock => stock.id === id);
     // setEditItem(item)
   }
 
   // Find stock with matching symbol
   const findSymbol = symbol => {
-    const stock = stocks.find(stock => stock.symbol === symbol);
+    const stockToGet = stocks.find(stock => stock.symbol === symbol);
     // setEditItem(item)
   }
 
@@ -83,14 +83,13 @@ const StockContextProvider = props => {
   }
 
   //Set Time
-  const setStockTime = time => {
-    setTime(time);
+  const setStockTime = timeline => {
+    setTime(timeline);
   }
 
   //Get Time
   const getStockTime = id => {
-    const stock = stocks.find(stock => stock.id === id);
-    return stock.timeline;
+    return time;
   }
 
   return (

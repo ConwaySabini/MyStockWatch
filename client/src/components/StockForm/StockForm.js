@@ -3,7 +3,7 @@ import { StockContext } from "../../context/StockContext";
 const axios = require('axios').default;
 
 const StockForm = () => {
-  const { addStock, clearList, editStock, editItem, findSymbol, addFavorite, getStockTime, setTime } = useContext(StockContext);
+  const { addStock, clearList, editStock, editItem, findSymbol, addFavorite, getStockTime } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
