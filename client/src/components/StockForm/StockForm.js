@@ -1,13 +1,61 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StockContext } from "../../context/StockContext";
+import Stock from "./../Stock/Stock";
 const axios = require('axios').default;
 
 const StockForm = () => {
-  const { addStock, clearList, editStock, editItem, findSymbol, addFavorite, getStockTime } = useContext(StockContext);
+  const { stocks } = useContext(StockContext);
+  const { addStock, clearList, editStock, findSymbol, addFavorite, getStockTime } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
   const [loading, setLoading] = useState(false);
-  const [counter, setCounter] = useState(0);
   const [timeline, setTimeline] = useState('1day');
+  const [currentStock, setCurrentStock] = useState({});
+
+  // Axios options for getting stock data from rapidAPI
+  const options = {
+    method: 'GET',
+    url: 'https://twelve-data1.p.rapidapi.com/time_series',
+    params: { interval: `${timeline}`, symbol: `${symbol}`, format: 'json', outputsize: '30' },
+    headers: {
+      'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
+      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+    }
+  };
+
+
+
+
+  useEffect(() => {
+    const changeStockData = async () => {
+      setLoading(true);
+      console.log("time ", timeline, "symbol ", symbol);
+      try {
+        const response = await axios.request(options);
+        console.log(response.data);
+        if (response.data.status === "error") {
+          setLoading(false);
+        } else {
+
+          let priceSize = response.data.values.length;
+          let startPrice = response.data.values[0].close;
+          let endPrice = response.data.values[priceSize - 1].close;
+          let difference = endPrice - startPrice;
+          let percentChange = (difference / startPrice) * 100;
+
+          editStock(symbol, response.data, percentChange, timeline, currentStock.id);
+          setSymbol('');
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    }
+
+    if (symbol !== '') {
+      changeStockData();
+    }
+  }, [timeline]);
 
   // News API
   // var axios = require("axios").default;
@@ -48,16 +96,10 @@ const StockForm = () => {
   //   console.error(error);
   // });
 
-  // Axios options for getting stock data from rapidAPI
-  const options = {
-    method: 'GET',
-    url: 'https://twelve-data1.p.rapidapi.com/time_series',
-    params: { interval: `${timeline}`, symbol: `${symbol}`, format: 'json', outputsize: '30' },
-    headers: {
-      'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-    }
-  };
+
+
+
+
 
   const getStockData = async () => {
     setLoading(true);
@@ -68,7 +110,6 @@ const StockForm = () => {
         setLoading(false);
       } else {
         setLoading(false);
-        setCounter(counter + 1);
 
         let priceSize = response.data.values.length;
         let startPrice = response.data.values[0].close;
@@ -85,54 +126,25 @@ const StockForm = () => {
     }
   }
 
-  const changeStockData = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.request(options);
-      console.log(response.data);
-      if (response.data.status === "error") {
-        setLoading(false);
-      } else {
-        setCounter(counter + 1);
 
-        let priceSize = response.data.values.length;
-        let startPrice = response.data.values[0].close;
-        let endPrice = response.data.values[priceSize - 1].close;
-        let difference = endPrice - startPrice;
-        let percentChange = (difference / startPrice) * 100;
-
-        editStock(symbol, response.data, percentChange, timeline, editItem.id);
-        setSymbol('');
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  }
 
   const handleSubmit = e => {
     e.preventDefault()
-    if (!editItem) {
-      getStockData();
-    }
-    else {
-      //TODO get stock data for new timeline and pass it through
-      //TODO get stock timeline for specific stock from the context api
-      const time = getStockTime();
-      console.log("time", time);
-      setTimeline(time);
-      changeStockData();
-    }
+    getStockData();
   }
 
-  const handleChange = e => {
+  const handleTimeChange = (time, stock) => {
+    setSymbol(stock.symbol);
+    setCurrentStock(stock);
+    setTimeline(time);
+  }
+
+  const handleChange = (e) => {
     setSymbol(e.target.value);
   }
 
   //TODO get confirmation before clearing list
   const clear = e => {
-    setCounter(0);
     clearList();
   }
 
@@ -154,7 +166,7 @@ const StockForm = () => {
       </h2>
       <div className="button-and-form">
         <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add Stock</button>
-        <button class="button is-danger ml-5" onClick={clearList} disabled={loading}>
+        <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
           Clear All Stocks
         </button>
 
@@ -171,6 +183,17 @@ const StockForm = () => {
             />
           </div>
         </form>
+      </div>
+      <div className="StockList">
+        {stocks.length ? (
+          <div className="list">
+            {stocks.map(stock => {
+              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} />;
+            })}
+          </div>
+        ) : (
+          <div className="no-stocks">No Stocks</div>
+        )}
       </div>
     </div >
   );

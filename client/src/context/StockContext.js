@@ -9,7 +9,6 @@ const StockContextProvider = props => {
 
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
-  const [time, setTime] = useState('1day');
   const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
@@ -58,13 +57,14 @@ const StockContextProvider = props => {
 
   // Find stock
   const findStock = id => {
-    const stock = stocks.find(stock => stock.id === id);
-    setEditItem(stock);
+    const foundStock = stocks.find(stock => stock.id === id);
+    // setEditItem(foundStock);
   }
 
   // Find stock
-  const getTimeline = id => {
+  const getStockTime = id => {
     const stockToGet = stocks.find(stock => stock.id === id);
+    return stockToGet.timeline;
     // setEditItem(item)
   }
 
@@ -82,16 +82,6 @@ const StockContextProvider = props => {
     setEditItem(null);
   }
 
-  //Set Time
-  const setStockTime = timeline => {
-    setTime(timeline);
-  }
-
-  //Get Time
-  const getStockTime = id => {
-    return time;
-  }
-
   return (
     <StockContext.Provider
       value={{
@@ -107,7 +97,6 @@ const StockContextProvider = props => {
         findFavorite,
         editStock,
         editItem,
-        setStockTime,
         getStockTime,
       }}
     >

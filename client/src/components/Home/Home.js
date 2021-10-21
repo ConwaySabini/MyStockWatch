@@ -1,6 +1,5 @@
 import './Home.css';
 
-import CardSection from './../CardSection/CardSection';
 import Nav from './../Nav/Nav';
 import Panel from './../Panel/Panel';
 import Footer from './../Footer/Footer';
@@ -35,10 +34,7 @@ function Home() {
               <div class="container">
 
                 <div class="block"></div>
-                {/* <CardSection /> */}
                 <StockForm />
-                <div class="block"></div>
-                <StockList />
                 <div class="block"></div>
               </div>
             </section>
