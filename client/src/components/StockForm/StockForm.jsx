@@ -1,15 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StockContext } from "../../context/StockContext";
-import Stock from "./../Stock/Stock";
+import Stock from "../Stock/Stock";
 const axios = require('axios').default;
 
 const StockForm = () => {
-  const { stocks } = useContext(StockContext);
-  const { addStock, clearList, editStock, findSymbol, addFavorite, getStockTime } = useContext(StockContext);
+  const { stocks, addStock, clearList, editStock, findFavorite, editFavorite, findSymbol } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
   const [loading, setLoading] = useState(false);
   const [timeline, setTimeline] = useState('1day');
   const [currentStock, setCurrentStock] = useState({});
+  const [currentFavorite, setCurrentFavorite] = useState({});
 
   // Axios options for getting stock data from rapidAPI
   const options = {
@@ -22,9 +22,6 @@ const StockForm = () => {
     }
   };
 
-
-
-
   useEffect(() => {
     const changeStockData = async () => {
       setLoading(true);
@@ -35,16 +32,19 @@ const StockForm = () => {
         if (response.data.status === "error") {
           setLoading(false);
         } else {
-
           let priceSize = response.data.values.length;
-          let startPrice = response.data.values[0].close;
-          let endPrice = response.data.values[priceSize - 1].close;
+          let endPrice = response.data.values[0].close;
+          let startPrice = response.data.values[priceSize - 1].close;
           let difference = endPrice - startPrice;
           let percentChange = (difference / startPrice) * 100;
+          let percentChangeRounded = percentChange.toFixed(2);
+          percentChange = parseFloat(percentChangeRounded);
 
           editStock(symbol, response.data, percentChange, timeline, currentStock.id);
+          editFavorite(symbol, response.data, percentChange, timeline, currentFavorite.id);
           setSymbol('');
           setLoading(false);
+          setTimeline('1day');
         }
       } catch (error) {
         console.error(error);
@@ -96,12 +96,7 @@ const StockForm = () => {
   //   console.error(error);
   // });
 
-
-
-
-
-
-  const getStockData = async () => {
+  const addStockData = async () => {
     setLoading(true);
     try {
       const response = await axios.request(options);
@@ -109,16 +104,20 @@ const StockForm = () => {
       if (response.data.status === "error") {
         setLoading(false);
       } else {
-        setLoading(false);
+        const foundStock = findSymbol(symbol);
+        if (!foundStock) {
+          let priceSize = response.data.values.length;
+          let endPrice = response.data.values[0].close;
+          let startPrice = response.data.values[priceSize - 1].close;
+          let difference = endPrice - startPrice;
+          let percentChange = (difference / startPrice) * 100;
+          let percentChangeRounded = percentChange.toFixed(2);
+          percentChange = parseFloat(percentChangeRounded);
 
-        let priceSize = response.data.values.length;
-        let startPrice = response.data.values[0].close;
-        let endPrice = response.data.values[priceSize - 1].close;
-        let difference = endPrice - startPrice;
-        let percentChange = (difference / startPrice) * 100;
-
-        addStock(symbol, response.data, percentChange, timeline);
+          addStock(symbol, response.data, percentChange, timeline);
+        }
         setSymbol('');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -126,17 +125,17 @@ const StockForm = () => {
     }
   }
 
-
-
   const handleSubmit = e => {
     e.preventDefault()
-    getStockData();
+    addStockData();
   }
 
   const handleTimeChange = (time, stock) => {
     setSymbol(stock.symbol);
     setCurrentStock(stock);
     setTimeline(time);
+    const favorite = findFavorite(stock.symbol);
+    setCurrentFavorite(favorite);
   }
 
   const handleChange = (e) => {

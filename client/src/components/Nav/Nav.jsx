@@ -67,9 +67,9 @@ function Nav() {
             </div>
           </div>
         </div>
-      </nav>
+      </nav >
 
-    </div>
+    </div >
   );
 }
 

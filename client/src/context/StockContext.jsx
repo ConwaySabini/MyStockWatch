@@ -9,7 +9,6 @@ const StockContextProvider = props => {
 
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
-  const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('stocks', JSON.stringify(stocks));
@@ -20,8 +19,8 @@ const StockContextProvider = props => {
   }, [favorites]);
 
   // Add favorites
-  const addFavorite = (stock) => {
-    setFavorites([...favorites, { stock, id: nanoid() }]);
+  const addFavorite = (symbol, data, percentChange, timeline) => {
+    setFavorites([...favorites, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
   // Remove favorites
@@ -35,9 +34,9 @@ const StockContextProvider = props => {
   }
 
   // Find Favorite
-  const findFavorite = id => {
-    const favoriteStock = favorites.find(favorite => favorite.id === id);
-    //setEditItem(favorite);
+  const findFavorite = symbol => {
+    const favoriteStock = favorites.find(favorite => favorite.symbol === symbol);
+    return favoriteStock;
   }
 
   // Add stocks
@@ -48,38 +47,50 @@ const StockContextProvider = props => {
   // Remove stocks
   const removeStock = id => {
     setStocks(stocks.filter(stock => stock.id !== id));
+    let stock = findStock(id);
+    let favorite = findFavorite(stock.symbol);
+    if (favorite !== undefined) {
+      removeFavorite(favorite.id);
+    }
   }
 
   // Clear stocks
   const clearList = () => {
     setStocks([]);
+    setFavorites([]);
   }
 
   // Find stock
   const findStock = id => {
     const foundStock = stocks.find(stock => stock.id === id);
-    // setEditItem(foundStock);
+    return foundStock;
   }
 
   // Find stock
   const getStockTime = id => {
     const stockToGet = stocks.find(stock => stock.id === id);
     return stockToGet.timeline;
-    // setEditItem(item)
   }
 
   // Find stock with matching symbol
   const findSymbol = symbol => {
     const stockToGet = stocks.find(stock => stock.symbol === symbol);
-    // setEditItem(item)
+    if (stockToGet !== undefined) {
+      return true;
+    }
+    return false;
   }
 
   // Edit stock
   const editStock = (symbol, data, percentChange, timeline, id) => {
     const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
-    console.log(newStocks);
     setStocks(newStocks);
-    setEditItem(null);
+  }
+
+  // Edit stock
+  const editFavorite = (symbol, data, percentChange, timeline, id) => {
+    const newFavorites = favorites.map(favorite => (favorite.id === id ? { symbol, data, percentChange, timeline, id } : favorite));
+    setFavorites(newFavorites);
   }
 
   return (
@@ -95,8 +106,9 @@ const StockContextProvider = props => {
         removeFavorite,
         clearFavorites,
         findFavorite,
+        findSymbol,
         editStock,
-        editItem,
+        editFavorite,
         getStockTime,
       }}
     >

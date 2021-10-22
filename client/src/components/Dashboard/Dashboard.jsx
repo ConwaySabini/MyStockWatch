@@ -1,16 +1,15 @@
-import './Home.css';
+import './Dashboard.css';
 
-import Nav from './../Nav/Nav';
-import Panel from './../Panel/Panel';
-import Footer from './../Footer/Footer';
+import Nav from '../Nav/Nav';
+import Panel from '../Panel/Panel';
+import Footer from '../Footer/Footer';
 import StockContextProvider from '../../context/StockContext';
-import StockList from './../StockList/StockList';
-import StockForm from './../StockForm/StockForm';
-import Menu from './../Menu/Menu';
+import StockForm from '../StockForm/StockForm';
+import Menu from '../Menu/Menu';
 
-const chart = require('chart.js');
+function Dashboard() {
 
-function Home() {
+
   return (
     <StockContextProvider>
       <div className="Home">
@@ -53,4 +52,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Dashboard;
