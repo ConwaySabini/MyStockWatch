@@ -6,9 +6,9 @@ function Nav() {
     <div className="navigation">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="https://bulma.io">
+          <a class="navbar-item">
             <i class="fas fa-chart-line fa-2x"></i>
-            <a class="nav-title fa-2x">
+            <a class="nav-title fa-2x" href="">
               Stocks
             </a>
             {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}
@@ -23,44 +23,30 @@ function Nav() {
 
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item">
+            <a class="navbar-item" href="home">
               Home
             </a>
 
-            <a class="navbar-item">
-              Documentation
+            <a class="navbar-item" href="dashboard">
+              Dashboard
             </a>
 
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">
-                More
-              </a>
+            <a class="navbar-item" href="news">
+              News
+            </a>
 
-              <div class="navbar-dropdown">
-                <a class="navbar-item">
-                  About
-                </a>
-                <a class="navbar-item">
-                  Jobs
-                </a>
-                <a class="navbar-item">
-                  Contact
-                </a>
-                <hr class="navbar-divider" />
-                <a class="navbar-item">
-                  Report an issue
-                </a>
-              </div>
-            </div>
+            <a class="navbar-item">
+              About
+            </a>
           </div>
 
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                <a class="button is-link">
+                <a class="button is-link" href="Register">
                   <strong>Sign up</strong>
                 </a>
-                <a class="button is-light">
+                <a class="button is-light" href="Login">
                   Log in
                 </a>
               </div>

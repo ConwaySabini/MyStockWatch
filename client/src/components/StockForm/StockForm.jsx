@@ -1,11 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StockContext } from "../../context/StockContext";
 import Stock from "../Stock/Stock";
+import './StockForm.css';
 const axios = require('axios').default;
 
 const StockForm = () => {
   const { stocks, addStock, clearList, editStock, findFavorite, editFavorite, findSymbol } = useContext(StockContext);
   const [symbol, setSymbol] = useState('');
+  const [filterSymbol, setFilterSymbol] = useState('');
+  const [filteredStocks, setFilteredStocks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [timeline, setTimeline] = useState('1day');
   const [currentStock, setCurrentStock] = useState({});
@@ -41,10 +44,12 @@ const StockForm = () => {
           percentChange = parseFloat(percentChangeRounded);
 
           editStock(symbol, response.data, percentChange, timeline, currentStock.id);
-          editFavorite(symbol, response.data, percentChange, timeline, currentFavorite.id);
+          if (currentFavorite !== undefined) {
+            editFavorite(symbol, response.data, percentChange, timeline, currentFavorite.id);
+          }
           setSymbol('');
           setLoading(false);
-          setTimeline('1day');
+          //setTimeline('1day');
         }
       } catch (error) {
         console.error(error);
@@ -142,6 +147,11 @@ const StockForm = () => {
     setSymbol(e.target.value);
   }
 
+  //TODO fix
+  const handleFilter = (e) => {
+    e.preventDefault();
+  }
+
   //TODO get confirmation before clearing list
   const clear = e => {
     clearList();
@@ -163,26 +173,103 @@ const StockForm = () => {
       <h2 class="subtitle">
         Enter the symbol and click the <strong>button</strong>, to add the stock.
       </h2>
-      <div className="button-and-form">
-        <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add Stock</button>
-        <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
-          Clear All Stocks
-        </button>
-
-        <form onSubmit={handleSubmit}>
-          <div className="stock-form" id="stock-search">
-            <input
-              type="text"
-              placeholder="Enter Symbol..."
-              value={symbol}
-              onChange={handleChange}
-              required
-              class="input is-rounded is-link mt-4"
-              disabled={loading}
-            />
+      <div className="button-and-forms">
+        <div class="columns">
+          <div class="column is-4">
+            <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add Stock</button>
+            <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
+              Clear All Stocks
+            </button>
+            <form onSubmit={handleSubmit}>
+              <div className="stock-form" id="stock-search">
+                <input
+                  id="StockInput"
+                  type="text"
+                  placeholder="Enter Symbol..."
+                  value={symbol}
+                  onChange={handleChange}
+                  required
+                  class="input is-rounded is-link mt-4"
+                  disabled={loading}
+                />
+              </div>
+            </form>
           </div>
-        </form>
+          <div class="column is-3">
+            <button class="button is-link" onClick={handleSubmit} disabled={loading}>Filter</button>
+            <form onSubmit={handleFilter}>
+              <input
+                id="FilterInput"
+                type="text"
+                placeholder="Enter Symbol to Filter"
+                value={symbol}
+                onChange={handleChange}
+                required
+                class="input is-rounded is-link mt-4"
+                disabled={loading}
+              />
+            </form>
+          </div>
+          <div class="column is-4">
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                  <span>Sort</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Overview
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Modifiers
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Grid
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Form
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Elements
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Components
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Layout
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown is-hoverable ml-4">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                  <span>Ascending/Descending</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Ascending Order
+                  </a>
+                  <a href="#" class="dropdown-item">
+                    Descending Order
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div className="StockList">
         {stocks.length ? (
           <div className="list">

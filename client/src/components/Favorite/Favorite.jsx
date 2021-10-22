@@ -14,7 +14,7 @@ function Favorite({ favorite }) {
             <article class="message is-primary">
               <div class="message-body">
                 {favorite.symbol}: {favorite.percentChange}%
-                <button class="button is-danger mt-4" onClick={() => removeFavorite(favorite.id)}>Delete</button>
+                <button class="button is-small is-danger ml-6" onClick={() => removeFavorite(favorite.id)}>Delete</button>
               </div>
             </article>
           </li>
@@ -29,7 +29,7 @@ function Favorite({ favorite }) {
             <article class="message is-danger">
               <div class="message-body">
                 {favorite.symbol}: {favorite.percentChange}%
-                <button class="button is-danger mt-4" onClick={() => removeFavorite(favorite.id)}>Delete</button>
+                <button class="button is-small is-danger ml-6" onClick={() => removeFavorite(favorite.id)}>Delete</button>
               </div>
             </article>
           </li>

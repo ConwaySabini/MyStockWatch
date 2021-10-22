@@ -4,7 +4,7 @@ import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
 
 function Stock({ stock, handleTimeChange }) {
-  const { removeStock, findStock, addFavorite, setStockTime } = useContext(StockContext);
+  const { removeStock, addFavorite, findFavorite } = useContext(StockContext);
 
   //TODO set timeline to change when button is clicked
 
@@ -57,7 +57,10 @@ function Stock({ stock, handleTimeChange }) {
   }
 
   const handleFavorite = () => {
-    addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline);
+    const favorite = findFavorite(stock.symbol);
+    if (favorite === undefined) {
+      addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline);
+    }
   }
 
 

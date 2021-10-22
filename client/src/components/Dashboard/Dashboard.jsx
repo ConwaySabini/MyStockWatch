@@ -12,7 +12,7 @@ function Dashboard() {
 
   return (
     <StockContextProvider>
-      <div className="Home">
+      <div className="Dashboard">
         {/* Navigation */}
         <header className="app-header">
           <Nav />

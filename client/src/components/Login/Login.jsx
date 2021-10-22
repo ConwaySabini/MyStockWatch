@@ -11,9 +11,9 @@ function Login() {
               <hr class="login-hr" />
               <p class="subtitle has-text-black">Please login to proceed.</p>
               <div class="box">
-                <figure class="avatar">
+                {/* <figure class="avatar">
                   <img src="https://placehold.it/128x128" />
-                </figure>
+                </figure> */}
                 <form>
                   <div class="field">
                     <div class="control">
@@ -36,7 +36,7 @@ function Login() {
                 </form>
               </div>
               <p class="has-text-grey">
-                <a href="../">Sign Up</a> &nbsp; ·&nbsp;
+                <a href="register">Sign Up</a> &nbsp; ·&nbsp;
                 <a href="../">Forgot Password</a> &nbsp; ·&nbsp;
                 <a href="../">Need Help?</a>
               </p>
