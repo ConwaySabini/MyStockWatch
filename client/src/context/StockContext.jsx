@@ -40,7 +40,7 @@ const StockContextProvider = props => {
   }
 
   // Add stocks
-  const addStock = (symbol, data, percentChange, timeline) => {
+  const addStock = (symbol, data, dataDaily, dataWeekly, dataMonthly, dataYearly, percentChange, timeline) => {
     setStocks([...stocks, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
@@ -76,13 +76,13 @@ const StockContextProvider = props => {
   const findSymbol = symbol => {
     const stockToGet = stocks.find(stock => stock.symbol === symbol);
     if (stockToGet !== undefined) {
-      return true;
+      return stockToGet;
     }
-    return false;
+    return stockToGet;
   }
 
   // Edit stock
-  const editStock = (symbol, data, percentChange, timeline, id) => {
+  const editStock = (symbol, data, dataDaily, dataWeekly, dataMonthly, dataYearly, percentChange, timeline, id) => {
     const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
     setStocks(newStocks);
   }
