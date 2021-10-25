@@ -6,16 +6,16 @@ import './Nav.css';
 function Nav() {
   return (
     <div className="navigation">
-      <nav class="navbar" role="navigation" aria-label="main navigation">
+      <nav class="navbar" role="navigation" aria-label="main navigation" id="navigation-bar">
         <div class="navbar-brand">
-          <a class="navbar-item">
+          <a class="navbar-item" href="/#title">
             <i class="fas fa-chart-line fa-2x"></i>
-            <a class="nav-title fa-2x" href="">
+            <a class="nav-title fa-2x" href="#title">
               MyStockWatch
             </a>
             {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}
           </a>
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <a href="burger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -33,7 +33,7 @@ function Nav() {
             <a class="navbar-item" href="news">
               News
             </a>
-            <a class="navbar-item">
+            <a class="navbar-item" href="about">
               About
             </a>
           </div>

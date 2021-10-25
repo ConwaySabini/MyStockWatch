@@ -11,10 +11,7 @@ function Footer() {
           <div class="container">
             <div class="content has-text-centered">
               <div class="soc">
-                <a href="/#"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
-                <a href="/#"><i class="fa fa-youtube fa-lg" aria-hidden="true"></i></a>
-                <a href="/#"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a>
-                <a href="/#"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a>
+                <a href="/#github"><i class="fa fa-github-alt fa-lg" role="none"></i></a>
               </div>
               <div className="FooterMessage">
                 <p>

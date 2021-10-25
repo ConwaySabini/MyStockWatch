@@ -1,5 +1,5 @@
 import './Stock.css';
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
 
@@ -96,16 +96,16 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
       <Line data={data} options={options} />
       <span className="favorite" class="button is-warning modal-button ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</span>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
-      <button class="button is-link ml-4 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
-      <button className="delete-stock" class="button is-danger ml-4 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
+      <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
+      <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
         <i className="fas fa-trash-alt"></i>
       </button>
     </div >

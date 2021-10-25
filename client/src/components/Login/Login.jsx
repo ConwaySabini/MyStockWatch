@@ -3,40 +3,40 @@ import './Login.css';
 // Component to log the user in
 function Login() {
   return (
-    <body>
-      <section class="hero is-success is-fullheight">
-        <div class="hero-body">
+    <body id="login-body">
+      <section id="login-hero-success" class="hero is-success is-fullheight">
+        <div class="hero-body" id="login-hero">
           <div class="container has-text-centered">
             <div class="column is-4 is-offset-4">
               <h3 class="title has-text-black">Login</h3>
               <hr class="login-hr" />
-              <p class="subtitle has-text-black">Please login to proceed.</p>
-              <div class="box">
+              <p id="login-p" class="subtitle has-text-black">Please login to proceed.</p>
+              <div class="box" id="login-box">
                 {/* <figure class="avatar">
                   <img src="https://placehold.it/128x128" />
                 </figure> */}
                 <form>
-                  <div class="field">
+                  <div id="login-field" class="field">
                     <div class="control">
-                      <input class="input is-large" type="email" placeholder="Your Email" autofocus="" />
+                      <input id="login-input" class="input is-large" type="email" placeholder="Your Email" autofocus="" />
                     </div>
                   </div>
 
-                  <div class="field">
+                  <div id="login-field" class="field">
                     <div class="control">
-                      <input class="input is-large" type="password" placeholder="Your Password" />
+                      <input id="login-input" class="input is-large" type="password" placeholder="Your Password" />
                     </div>
                   </div>
-                  <div class="field">
+                  <div id="login-field" class="field">
                     <label class="checkbox">
-                      <input type="checkbox" />
+                      <input id="login-input" type="checkbox" />
                       Remember me
                     </label>
                   </div>
-                  <button class="button is-block is-info is-large is-fullwidth">Login <i class="fa fa-sign-in" aria-hidden="true"></i></button>
+                  <button class="button is-block is-primary is-large is-fullwidth">Login <i id="login-fa" class="fa fa-sign-in" aria-hidden="true"></i></button>
                 </form>
               </div>
-              <p class="has-text-grey">
+              <p id="login-p" class="has-text-grey">
                 <a href="register">Sign Up</a> &nbsp; ·&nbsp;
                 <a href="../">Forgot Password</a> &nbsp; ·&nbsp;
                 <a href="../">Need Help?</a>

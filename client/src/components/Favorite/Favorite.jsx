@@ -1,5 +1,5 @@
 import './Favorite.css'
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { StockContext } from "../../context/StockContext";
 
 // Component to display the individual favorite stock in the menu

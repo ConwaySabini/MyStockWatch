@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { StockContext } from "../../context/StockContext";
 import Favorite from '../Favorite/Favorite';
 

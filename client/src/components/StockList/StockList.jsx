@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { StockContext } from "../../context/StockContext";
 import Stock from "./../Stock/Stock";
 

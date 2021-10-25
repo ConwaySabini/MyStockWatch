@@ -39,42 +39,6 @@ const StockHub = () => {
     }
   };
 
-  // News API
-  const BingNewsOptions = {
-    method: 'GET',
-    url: 'https://bing-news-search1.p.rapidapi.com/news',
-    params: { textFormat: 'Raw', safeSearch: 'Off', category: 'Business' },
-    headers: {
-      'x-bingapis-sdk': 'true',
-      'x-rapidapi-host': 'bing-news-search1.p.rapidapi.com',
-      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-    }
-  };
-
-  // axios.request(options).then(function (response) {
-  //   console.log(response.data);
-  // }).catch(function (error) {
-  //   console.error(error);
-  // });
-
-
-
-  // More Trending News from API
-  const NewsOptions = {
-    method: 'GET',
-    url: 'https://seeking-alpha.p.rapidapi.com/news/list-trending',
-    headers: {
-      'x-rapidapi-host': 'seeking-alpha.p.rapidapi.com',
-      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-    }
-  };
-
-  // axios.request(options).then(function (response) {
-  //   console.log(response.data);
-  // }).catch(function (error) {
-  //   console.error(error);
-  // });
-
   // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
   useEffect(() => {
     const changeStockData = async () => {
@@ -86,6 +50,7 @@ const StockHub = () => {
         if (response.data.status === "error") {
           setSymbol('');
           setLoading(false);
+          console.log(response.data.message);
         } else {
           // get the stock and calculate the percent change over the time period
           const percentChange = calculatePercentChange(response.data);
@@ -121,6 +86,7 @@ const StockHub = () => {
       const response = await axios.request(options);
       // handle error
       if (response.data.status === "error") {
+        console.log(response.data.message);
         setLoading(false);
         setSymbol('');
       } else {
@@ -268,9 +234,9 @@ const StockHub = () => {
       </section>
       <div class="block" />
       {/* Forms and buttons to interact with the dashboard */}
-      <div className="button-and-forms">
+      <div className="button-and-forms ml-6">
         <div class="columns">
-          <div class="column is-3">
+          <div class="column is-4">
             <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add Stock</button>
             <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
               Clear All Stocks
@@ -319,11 +285,11 @@ const StockHub = () => {
                   </span>
                 </button>
               </div>
-              <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-                <div class="dropdown-content">
+              <div class="dropdown-menu" id="sort-dropdown" role="menu">
+                <div class="dropdown-content" id="sort-dropdown">
                   <div class="dropdown-item">
                     <button class="button is-link" id="dropdown-buton" onClick={setDescendingFalse} disabled={loading}>Ascending</button>
-                    <button class="button is-link mt-2" id="dropdown-buton" onClick={setDescendingTrue} disabled={loading}>Descending</button>
+                    <button class="button is-link mt-4" id="dropdown-buton" onClick={setDescendingTrue} disabled={loading}>Descending</button>
                   </div>
                 </div>
               </div>

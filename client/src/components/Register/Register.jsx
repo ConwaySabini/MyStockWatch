@@ -4,13 +4,13 @@ import './Register.css';
 function Register() {
   return (
     <div className="search-panel">
-      <body>
+      <body id="register-body">
         <section class="container">
           <div class="columns is-multiline">
             <div class="column is-8 is-offset-2 register">
               <div class="columns">
                 <div class="column left">
-                  <h1 class="title is-1">StockWatch</h1>
+                  <h1 class="title is-1" id="register-title">StockWatch</h1>
                   <h2 class="subtitle colored is-4">Sign Up With Your Name, Email, and Password</h2>
                   <p>Creating an account is free and grants you access to the best and most intuitive stock tracker around.</p>
                   <br />
@@ -21,7 +21,7 @@ function Register() {
                   </a>
                 </div>
                 <div class="column right has-text-centered">
-                  <h1 class="title is-4">Sign up today</h1>
+                  <h1 class="title is-4" id="register-title">Sign up today</h1>
                   <p class="description">Make sure to use a strong password of at least 10 characters with a mix of numbers, special characters, and cases.</p>
                   <form>
                     <div class="field">

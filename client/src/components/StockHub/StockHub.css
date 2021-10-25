@@ -11,6 +11,10 @@
   border-radius: 25px;
 }
 
+#sort-dropdown {
+  background: linear-gradient(52deg, #a6b2e4 40%, #00d1b2 70%);
+}
+
 /* #dropdown-button:focus {
   background-color: #263680;
 } */
