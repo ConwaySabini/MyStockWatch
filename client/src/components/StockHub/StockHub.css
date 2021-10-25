@@ -1,0 +1,16 @@
+#StockInput {
+  width: 90%;
+}
+
+#FilterInput {
+  width: 100%;
+}
+
+#hero-dash {
+  background: linear-gradient(52deg, #485FC7 30%, #00d1b2 70%);
+  border-radius: 25px;
+}
+
+/* #dropdown-button:focus {
+  background-color: #263680;
+} */

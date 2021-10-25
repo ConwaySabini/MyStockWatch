@@ -1,6 +1,8 @@
 import './Nav.css';
 
+//TODO add navbar links to hamburger menu
 
+// Component to render the navigation bar
 function Nav() {
   return (
     <div className="navigation">
@@ -9,12 +11,10 @@ function Nav() {
           <a class="navbar-item">
             <i class="fas fa-chart-line fa-2x"></i>
             <a class="nav-title fa-2x" href="">
-              Stocks
+              MyStockWatch
             </a>
             {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}
           </a>
-
-          {/* TODO add navbar links to hamburger menu */}
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -27,20 +27,16 @@ function Nav() {
             <a class="navbar-item" href="home">
               Home
             </a>
-
             <a class="navbar-item" href="dashboard">
               Dashboard
             </a>
-
             <a class="navbar-item" href="news">
               News
             </a>
-
             <a class="navbar-item">
               About
             </a>
           </div>
-
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">

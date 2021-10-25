@@ -1,5 +1,6 @@
 import './Register.css';
 
+// component to register new users
 function Register() {
   return (
     <div className="search-panel">

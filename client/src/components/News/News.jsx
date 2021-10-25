@@ -1,12 +1,11 @@
-import './CardSection.css';
+import './News.css';
 import Nav from '../Nav/Nav';
 import Card from '../Card/Card';
 import Footer from '../Footer/Footer';
 import { useState } from "react";
 
-function CardSection() {
-
-
+// Component to display the news cards
+function News() {
   return (
     <div classname="CardSection">
       {/* Navigation */}
@@ -45,4 +44,4 @@ function CardSection() {
   );
 }
 
-export default CardSection;
+export default News;

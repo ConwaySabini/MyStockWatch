@@ -1,14 +1,14 @@
 import './Home.css';
 
-
+// Component to display the home page of the application
 function Home() {
   return (
     <div className="Home">
       <body>
-        <section class="hero is-medium">
+        <section class="hero is-medium" id="home-hero">
           <div class="hero-body">
             <div class="container">
-              <h1 class="title is-1" id="homeTitle">Welcome to StockWatch</h1>
+              <h1 class="title is-1" id="homeTitle">Welcome to MyStockWatch</h1>
               <h2 class="subtitle" id="homeSubtitle">The simple and intuitive stock tracker and financial news aggregator</h2>
               {/* <a href="register" class="button is-white is-medium is-inverted">Learn More&ensp; </a> */}
             </div>
@@ -56,7 +56,7 @@ function Home() {
             </div>
           </div>
         </section>
-        <section class="cta va">
+        <section class="cta va" id="home-cta">
           <div class="container">
             <div class="columns">
               <div class="column is-6">
@@ -77,15 +77,6 @@ function Home() {
           </div>
 
         </section>
-        {/* <footer class="footer">
-          <div class="content has-text-centered">
-            <p>
-              <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
-              <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-              is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
-            </p>
-          </div>
-        </footer> */}
       </body>
 
     </div >

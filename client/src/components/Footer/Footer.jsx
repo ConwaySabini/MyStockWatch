@@ -1,5 +1,6 @@
 import './Footer.css';
 
+// Component to display the footer of the application
 function Footer() {
   return (
 
@@ -17,7 +18,7 @@ function Footer() {
               </div>
               <div className="FooterMessage">
                 <p>
-                  <strong>MyStocks</strong> by <a href="https://jgthms.com">Ethan Sabini</a>. The source code is licensed by
+                  <strong>MyStockWatch</strong> by <a href="https://jgthms.com">Ethan Sabini</a>. The source code is licensed by
                   <a href="http://opensource.org/licenses/mit-license.php"> MIT</a>. The website content
                   is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
                 </p>

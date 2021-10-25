@@ -1,6 +1,7 @@
 import './Card.css';
 import { useState } from "react";
 
+// Component for individual news card
 function Card({ symbol, price, interval, exchange, id, removeCard }) {
   return (
     <div class="column is-4" className="NewsCard">

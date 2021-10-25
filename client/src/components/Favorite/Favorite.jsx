@@ -2,10 +2,11 @@ import './Favorite.css'
 import React, { useContext, useState, useEffect } from 'react'
 import { StockContext } from "../../context/StockContext";
 
+// Component to display the individual favorite stock in the menu
 function Favorite({ favorite }) {
-  const { removeFavorite, favorites } = useContext(StockContext);
-  // const [myFavorites, setMyFavorites] = useState(favorites);
+  const { removeFavorite } = useContext(StockContext);
 
+  // Display stocks that have gained in value
   if (favorite.percentChange > 0) {
     return (
       <section>
@@ -21,6 +22,7 @@ function Favorite({ favorite }) {
         </div>
       </section>
     );
+    // Display stocks that have lost value
   } else {
     return (
       <section>

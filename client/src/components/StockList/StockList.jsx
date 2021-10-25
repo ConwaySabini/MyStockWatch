@@ -2,17 +2,18 @@ import React, { useContext, useState } from "react";
 import { StockContext } from "../../context/StockContext";
 import Stock from "./../Stock/Stock";
 
-const StockList = ({ handleTimeChange, filterSymbols }) => {
+// Component to display a list of stocks
+const StockList = ({ handleTimeChange, filterSymbols, handleStockChange }) => {
   const { stocks } = useContext(StockContext);
-  const [filteredStocks, setFilteredStocks] = useState([]);
 
+  // If there are no stocks to filter display all stocks
   if (filterSymbols.length === 0) {
     return (
       <div>
         {stocks.length ? (
           <div className="list">
             {stocks.map(stock => {
-              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} />;
+              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} handleStockChange={handleStockChange} />;
             })}
           </div>
         ) : (
@@ -20,8 +21,10 @@ const StockList = ({ handleTimeChange, filterSymbols }) => {
         )}
       </div>
     );
+    // Display only filtered stocks
   } else {
     let filterStocks = [];
+    // Get each filtered stock and add it to the array
     for (const symbol of filterSymbols) {
       for (let stock of stocks) {
         if (stock.symbol === symbol) {
@@ -34,7 +37,7 @@ const StockList = ({ handleTimeChange, filterSymbols }) => {
         {filterStocks.length ? (
           <div className="list">
             {filterStocks.map(stock => {
-              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} />;
+              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} handleStockChange={handleStockChange} />;
             })}
           </div>
         ) : (

@@ -3,23 +3,26 @@ import { useContext, useEffect, useState } from "react";
 import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
 
-function Stock({ stock, handleTimeChange }) {
+// Component to display the individual stock
+function Stock({ stock, handleTimeChange, handleStockChange }) {
+  // stock context api shared data across components
   const { removeStock, addFavorite, findFavorite } = useContext(StockContext);
 
-  //TODO set timeline to change when button is clicked
-
+  // dates of the stock for the graph
   const labels = [];
+  // prices of the stock for the graph
   const prices = [];
+  // 30 dates and prices for the graph
   let index = 29;
 
+  // Loop through each date and price for the stock and add it to the arrays
   for (let i = 0; i < stock.data.values.length; i++) {
     labels[index] = stock.data.values[i].datetime;
     prices[index] = stock.data.values[i].close;
     index--;
   }
 
-  console.log("stock", stock);
-
+  // options for the graph
   const options = {
     responsive: true,
     title: {
@@ -39,23 +42,48 @@ function Stock({ stock, handleTimeChange }) {
     },
   };
 
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: stock.symbol,
-        data: prices,
-        fill: true,
-        backgroundColor: 'rgba(72, 95, 199)',
-        borderColor: 'rgba(0, 209, 178, 0.6)',
-      },
-    ],
+  // data for the graph
+  const data = (canvas) => {
+    // Create gradients to make the graph pretty
+    const ctx = canvas.getContext("2d");
+    const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
+    gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+    gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+    const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
+    gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+    gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+    // return the data for the graph
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: stock.symbol,
+          data: prices,
+          fill: true,
+          backgroundColor: gradientFill,
+          borderColor: gradientStroke,
+          pointBorderColor: gradientStroke,
+          pointBackgroundColor: gradientStroke,
+          pointHoverBackgroundColor: gradientStroke,
+          pointHoverBorderColor: gradientStroke,
+          pointBorderWidth: 5,
+          pointHoverRadius: 5,
+          pointHoverBorderWidth: 1,
+          pointRadius: 3,
+          borderWidth: 4,
+        },
+      ],
+    };
   };
 
+  // When the user changes the timeframe of the stock, update the graph
   const handleTime = (time) => {
     handleTimeChange(time, stock);
+    handleStockChange(time);
   }
 
+  // When the user adds a favorite to their list update the list
   const handleFavorite = () => {
     const favorite = findFavorite(stock.symbol);
     if (favorite === undefined) {
@@ -63,7 +91,7 @@ function Stock({ stock, handleTimeChange }) {
     }
   }
 
-
+  // Return the graph
   return (
     <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
       <Line data={data} options={options} />

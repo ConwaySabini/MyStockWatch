@@ -1,5 +1,6 @@
 import './Login.css';
 
+// Component to log the user in
 function Login() {
   return (
     <body>

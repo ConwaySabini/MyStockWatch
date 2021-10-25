@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { StockContext } from "../../context/StockContext";
 import Favorite from '../Favorite/Favorite';
 
+// Component to display all favorite stocks
 function Menu() {
   const { favorites, clearFavorites } = useContext(StockContext);
   let index = 0;

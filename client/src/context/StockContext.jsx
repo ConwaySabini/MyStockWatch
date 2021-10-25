@@ -1,19 +1,23 @@
-import React, { useState, useEffect, createContext } from 'react'
-import { nanoid } from 'nanoid'
+import React, { useState, useEffect, createContext } from 'react';
+import { nanoid } from 'nanoid';
 
-export const StockContext = createContext()
+export const StockContext = createContext();
 
 const StockContextProvider = props => {
+  // Set the state in local storage
   const initialStockState = JSON.parse(localStorage.getItem('stocks')) || [];
   const initialFavoriteState = JSON.parse(localStorage.getItem('favorites')) || [];
 
+  // states for stock list and favorites list
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
 
+  // update local storage on modification
   useEffect(() => {
     localStorage.setItem('stocks', JSON.stringify(stocks));
   }, [stocks]);
 
+  // update local storage on modification
   useEffect(() => {
     localStorage.setItem('favorites', JSON.stringify(favorites));
   }, [favorites]);
@@ -40,11 +44,11 @@ const StockContextProvider = props => {
   }
 
   // Add stocks
-  const addStock = (symbol, data, dataDaily, dataWeekly, dataMonthly, dataYearly, percentChange, timeline) => {
+  const addStock = (symbol, data, percentChange, timeline) => {
     setStocks([...stocks, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
-  // Remove stocks
+  // Remove stock by id
   const removeStock = id => {
     setStocks(stocks.filter(stock => stock.id !== id));
     let stock = findStock(id);
@@ -54,19 +58,23 @@ const StockContextProvider = props => {
     }
   }
 
-  // Clear stocks
-  const clearList = () => {
+  // Clear stocks and favorites 
+  const clearStocks = () => {
     setStocks([]);
     setFavorites([]);
   }
 
-  // Find stock
-  const findStock = id => {
-    const foundStock = stocks.find(stock => stock.id === id);
-    return foundStock;
+  // Clear stocks only
+  const clearStocksOnly = () => {
+    setStocks([]);
   }
 
-  // Find stock
+  // Find stock and return it
+  const findStock = id => {
+    return stocks.find(stock => stock.id === id);
+  }
+
+  // Find stock timeline and return it
   const getStockTime = id => {
     const stockToGet = stocks.find(stock => stock.id === id);
     return stockToGet.timeline;
@@ -82,24 +90,33 @@ const StockContextProvider = props => {
   }
 
   // Edit stock
-  const editStock = (symbol, data, dataDaily, dataWeekly, dataMonthly, dataYearly, percentChange, timeline, id) => {
+  const editStock = (symbol, data, percentChange, timeline, id) => {
+    // edit stock if it exists
     const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
     setStocks(newStocks);
   }
 
-  // Edit stock
+  // Set all stocks
+  const setNewStocks = (newStocks) => {
+    clearStocksOnly();
+    setStocks(newStocks);
+  }
+
+  // Edit favorite
   const editFavorite = (symbol, data, percentChange, timeline, id) => {
+    // edit favorite if it exists
     const newFavorites = favorites.map(favorite => (favorite.id === id ? { symbol, data, percentChange, timeline, id } : favorite));
     setFavorites(newFavorites);
   }
 
+  // export all functions, data, and components wrapped in context
   return (
     <StockContext.Provider
       value={{
         stocks,
         addStock,
         removeStock,
-        clearList,
+        clearStocks,
         findStock,
         favorites,
         addFavorite,
@@ -110,11 +127,12 @@ const StockContextProvider = props => {
         editStock,
         editFavorite,
         getStockTime,
+        setNewStocks,
       }}
     >
       {props.children}
     </StockContext.Provider>
-  )
+  );
 }
 
-export default StockContextProvider
+export default StockContextProvider;
