@@ -1,13 +1,72 @@
 import './News.css';
 import Nav from '../Nav/Nav';
-import Card from '../Card/Card';
+import CardList from '../CardList/CardList';
 import Footer from '../Footer/Footer';
 import { useState, useEffect } from "react";
 const axios = require('axios').default;
 
+// { data":[20 items
+//   0: {
+//     5 items
+//     "id": "3758156"
+//     "type": "news"
+//     "attributes": {
+//       6 items
+//       "publishOn": "2021-10-26T11:05:28-04:00"
+//       "isLockedPro": false
+//       "commentCount": 36
+//       "gettyImage": {...
+//       } 8 items
+//       "themes": { } 0 items
+//       "title": "Nvidia, Arista rise amid enthusiasm for Facebook's spending plans"
+//     }
+//     "relationships": {
+//       5 items
+//       "author": {
+//         1 item
+//         "data": {
+//           2 items
+//           "id": "54612473"
+//           "type": "newsAuthorUser"
+//         }
+//       }
+//       "sentiments": {
+//         1 item
+//         "data": [0 items
+//         ]
+//       }
+//       "primaryTickers": {
+//         1 item
+//         "data": []0 items
+//       }
+//       "secondaryTickers": {
+//         1 item
+//         "data": [1 item
+// 0: {
+//             2 items
+// "id": "146"
+// "type": "tag"
+//           }
+//         ]
+//       }
+//       "otherTags": {
+//         1 item
+//         "data": []0 items
+//       }
+//     }
+//     "links": {
+//       1 item
+//       "self": "/news/3758156-nvdia-arista-rise-amid-enthusiasm-for-facebooks-spending-plans"
+//     }
+//   }
+// }
+
+
+
 // Component to display the news cards
 function News() {
   const [news, setNews] = useState([]);
+  const [key, setKey] = useState("news");
 
   // News API
   const BingNewsOptions = {
@@ -31,10 +90,15 @@ function News() {
     }
   };
 
-
-  // useEffect(() => {
-
-  // }, []);
+  var SeekingAlphaIndividual = {
+    method: 'GET',
+    url: 'https://seeking-alpha.p.rapidapi.com/news/list',
+    params: { id: 'aapl', size: '20', until: '0' },
+    headers: {
+      'x-rapidapi-host': 'seeking-alpha.p.rapidapi.com',
+      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+    }
+  };
 
   // Fetches the stock data with the symbol and displays is in a graph
   const addNewsData = async () => {
@@ -46,13 +110,11 @@ function News() {
       if (BingResponse.data.status === "error") {
         console.log(BingResponse.data.message);
       } else {
-        //TODO set the data to the state
         let articles = [];
         for (const article of BingResponse.data.value) {
           articles.push(article);
         }
-        console.log(articles);
-        setNews(...news, ...articles);
+        setNews(articles);
       }
       // handle error
     } catch (error) {
@@ -60,9 +122,11 @@ function News() {
     }
   }
 
-  addNewsData();
+  useEffect(() => {
+    addNewsData();
+    setKey("updatedNews");
+  }, []);
 
-  //TODO make each set of cards a component???
   return (
     <div classname="News" id="NewsSection">
       {/* Navigation */}
@@ -71,43 +135,26 @@ function News() {
       </header>
       <div class="block"></div>
       {/* Column Layout */}
-      <section class="section">
-        <div class="columns is-mobile">
-          <div class="column is-2">
-          </div>
-          <div class="column is-8">
-            {/* Layout to add stocks and individual cards for stocks */}
-            <div class="columns is-mobile">
-              <div class="column is-4">
-                <Card article={news[0]} />
-                <Card article={news[3]} />
-                <Card article={news[6]} />
-                <Card article={news[9]} />
-              </div>
-              <div class="column is-4">
-                <Card article={news[1]} />
-                <Card article={news[4]} />
-                <Card article={news[7]} />
-                <Card article={news[10]} />
-              </div>
-              <div class="column is-4">
-                <Card article={news[2]} />
-                <Card article={news[5]} />
-                <Card article={news[8]} />
-                <Card article={news[11]} />
-              </div>
-            </div>
-          </div>
-          <div class="column is-2" id="SideMenu">
-          </div>
+
+      <div class="columns is-mobile">
+        <div class="column is-2">
         </div>
-      </section>
+        <div class="column is-8">
+          {/* Layout to add stocks and individual cards for stocks */}
+          <CardList key={key} news={news} />
+        </div>
+        <div class="column is-2" id="SideMenu">
+        </div>
+      </div>
+
       <div className="homeFooter">
         <Footer />
       </div>
 
-    </div>
+    </div >
   );
+  //TODO make each set of cards a component???
+
 }
 
 export default News;

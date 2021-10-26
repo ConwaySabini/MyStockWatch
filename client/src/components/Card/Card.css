@@ -1,3 +1,7 @@
 #news-content {
   height: 30%;
 }
+
+#news-card {
+  white-space: pre-wrap;
+}

@@ -230,6 +230,10 @@ const StockHub = () => {
             Enter a symbol or multiple symbols separated by a comma or space to filter the stocks. Then hit the
             <strong> Filter button or Enter</strong>, to filter the stocks.
           </h2>
+          <h2 class="subtitle">
+            Use the dropdown menu and select an option then press the
+            <strong> Sort button</strong>, to sort the stocks by change in price.
+          </h2>
         </div>
       </section>
       <div class="block" />

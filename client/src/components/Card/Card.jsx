@@ -3,6 +3,70 @@ import { useState } from "react";
 
 // Component for individual news card
 function Card({ article }) {
+  let name = "";
+  let count = 0;
+  let thumbnail = "https://bulma.io/images/placeholders/1280x960.png";
+  let image = "https://bulma.io/images/placeholders/1280x960.png";
+  let organization = "";
+  let description = "";
+  let date = "";
+  let link = "";
+  let lineCountTitle = 0;
+  let lineCountDescription = 0;
+
+  for (const letter of article.name) {
+    if (count < 60) {
+      name += letter;
+    } else {
+      name += "...";
+      break;
+    }
+    count++;
+  }
+
+  if (article.name.length < 48) {
+    name += "\r\n ";
+  }
+  if (article.description !== undefined) {
+    count = 0;
+    for (const letter of article.description) {
+      if (count < 120) {
+        description += letter;
+      } else {
+        description += "...";
+        break;
+      }
+      count++;
+    }
+  }
+  // if (description.length < 180) {
+  //   description += "\r\n ";
+  // }
+  // if (description.length < 150) {
+  //   description += "\r\n ";
+  // }
+
+  if (article.provider[0].image.thumbnail.contentUrl !== undefined) {
+    thumbnail = article.provider[0].image.thumbnail.contentUrl;
+  }
+  if (article.provider[0].name !== undefined) {
+    organization = article.provider[0].name;
+  }
+  if (article.datePublished !== undefined) {
+    for (let index = 0; index < 10; index++) {
+      date += article.datePublished[index];
+    }
+  }
+  if (article.image !== undefined) {
+    image = article.image.thumbnail.contentUrl;
+  }
+  if (article.url !== undefined) {
+    link = article.url;
+  }
+
+  const handleRedirect = () => {
+    window.open(link, "_blank");
+  }
 
   const launchModal = () => {
     //TODO set modal to is-active and display background
@@ -10,40 +74,31 @@ function Card({ article }) {
 
   return (
     <div class="card mt-6" id="news-card">
-      <header class="card-header">
-        <p class="card-header-title">
-          Component
-        </p>
-        <button class="card-header-icon" aria-label="more options">
-          <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </header>
       <div class="card-image">
         <figure class="image is-4by3">
-          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image" />
+          <img src={image} alt="main section" />
         </figure>
       </div>
       <div class="card-content" id="news-content">
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-              <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" />
+              <img src={thumbnail} alt="profile" />
             </figure>
           </div>
           <div class="media-content">
-            <p class="title is-4">{article.name}</p>
-            <p class="subtitle is-6">@johnsmith</p>
+            <p class="title is-4">{name}</p>
           </div>
         </div>
         <div class="content">
-          Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros.
-          Donec id elit non mi porta gravida at eget metus. Cum sociis natoque
-          penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-          Cras mattis consectetur purus sit amet fermentum.
+          {description}
         </div>
+        <time datetime={date}>Date: {date}</time>
+        <div class="block"></div>
         <button class="button is-link">Expand</button>
+        <button class="button is-link ml-4" onClick={handleRedirect}>
+          Read Article
+        </button>
 
         <div class="modal">
           <div class="modal-background"></div>

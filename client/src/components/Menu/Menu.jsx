@@ -47,7 +47,7 @@ function Menu() {
               </ul>
             </div>
           ) : (
-            <div className="no-favorites">No Gainers</div>
+            <div className="no-favorites">No Losers</div>
           )}
         </p>
         <ul class="menu-list">

@@ -17,7 +17,11 @@ const StockList = ({ handleTimeChange, filterSymbols, handleStockChange }) => {
             })}
           </div>
         ) : (
-          <div className="no-stocks">No Stocks</div>
+          <article class="message is-link mt-6 ml-6">
+            <div class="message-body ">
+              <strong>No Stocks</strong>
+            </div>
+          </article>
         )}
       </div>
     );
@@ -41,7 +45,11 @@ const StockList = ({ handleTimeChange, filterSymbols, handleStockChange }) => {
             })}
           </div>
         ) : (
-          <div className="no-stocks">No Stocks</div>
+          <article class="message is-link mt-6 ml-6">
+            <div class="message-body ">
+              <strong>No Stocks</strong>
+            </div>
+          </article>
         )}
       </div>
     );
