@@ -1,30 +1,30 @@
 import Card from "./../Card/Card";
 
 // Component to display a list of news cards
-const CardList = ({ news }) => {
+const CardList = ({ news, type }) => {
 
   return (
     <div className="CardList">
       {news.length ? (
         <div class="columns is-mobile">
           <div class="column is-4">
-            <Card article={news[0]} />
-            <Card article={news[3]} />
-            <Card article={news[6]} />
-            <Card article={news[9]} />
+            <Card article={news[0]} type={type} />
+            <Card article={news[3]} type={type} />
+            <Card article={news[6]} type={type} />
+            <Card article={news[9]} type={type} />
           </div>
           <div class="block"></div>
           <div class="column is-4">
-            <Card article={news[1]} />
-            <Card article={news[4]} />
-            <Card article={news[7]} />
-            <Card article={news[10]} />
+            <Card article={news[1]} type={type} />
+            <Card article={news[4]} type={type} />
+            <Card article={news[7]} type={type} />
+            <Card article={news[10]} type={type} />
           </div>
           <div class="column is-4">
-            <Card article={news[2]} />
-            <Card article={news[5]} />
-            <Card article={news[8]} />
-            <Card article={news[11]} />
+            <Card article={news[2]} type={type} />
+            <Card article={news[5]} type={type} />
+            <Card article={news[8]} type={type} />
+            <Card article={news[11]} type={type} />
           </div>
         </div>
       ) : (
@@ -36,8 +36,6 @@ const CardList = ({ news }) => {
       )}
     </div>
   );
-
-
 };
 
 export default CardList;

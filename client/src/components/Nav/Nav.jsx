@@ -1,5 +1,7 @@
 import './Nav.css';
 
+//import { useTheme } from "../../context/ThemeContext";
+
 //TODO add navbar links to hamburger menu
 
 // Component to render the navigation bar

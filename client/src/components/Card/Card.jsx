@@ -2,7 +2,7 @@ import './Card.css';
 import { useState } from "react";
 
 // Component for individual news card
-function Card({ article }) {
+function Card({ article, type }) {
   let name = "";
   let count = 0;
   let thumbnail = "https://bulma.io/images/placeholders/1280x960.png";
@@ -11,58 +11,77 @@ function Card({ article }) {
   let description = "";
   let date = "";
   let link = "";
-  let lineCountTitle = 0;
-  let lineCountDescription = 0;
 
-  for (const letter of article.name) {
-    if (count < 60) {
-      name += letter;
-    } else {
-      name += "...";
-      break;
-    }
-    count++;
-  }
+  //TODO set organization
 
-  if (article.name.length < 48) {
-    name += "\r\n ";
-  }
-  if (article.description !== undefined) {
-    count = 0;
-    for (const letter of article.description) {
-      if (count < 120) {
-        description += letter;
+  if (type === "trending") {
+    for (const letter of article.name) {
+      if (count < 60) {
+        name += letter;
       } else {
-        description += "...";
+        name += "...";
         break;
       }
       count++;
     }
-  }
-  // if (description.length < 180) {
-  //   description += "\r\n ";
-  // }
-  // if (description.length < 150) {
-  //   description += "\r\n ";
-  // }
-
-  if (article.provider[0].image.thumbnail.contentUrl !== undefined) {
-    thumbnail = article.provider[0].image.thumbnail.contentUrl;
-  }
-  if (article.provider[0].name !== undefined) {
-    organization = article.provider[0].name;
-  }
-  if (article.datePublished !== undefined) {
-    for (let index = 0; index < 10; index++) {
-      date += article.datePublished[index];
+    if (article.name.length < 55) {
+      name += "\r\n ";
+    }
+    if (article.description !== undefined) {
+      count = 0;
+      for (const letter of article.description) {
+        if (count < 120) {
+          description += letter;
+        } else {
+          description += "...";
+          break;
+        }
+        count++;
+      }
+    }
+    if (article.provider[0].image.thumbnail.contentUrl !== undefined) {
+      thumbnail = article.provider[0].image.thumbnail.contentUrl;
+    }
+    if (article.provider[0].name !== undefined) {
+      organization = article.provider[0].name;
+    }
+    if (article.datePublished !== undefined) {
+      for (let index = 0; index < 10; index++) {
+        date += article.datePublished[index];
+      }
+    }
+    if (article.image !== undefined) {
+      image = article.image.thumbnail.contentUrl;
+    }
+    if (article.url !== undefined) {
+      link = article.url;
+    }
+  } else {
+    for (const letter of article.attributes.title) {
+      if (count < 60) {
+        name += letter;
+      } else {
+        name += "...";
+        break;
+      }
+      count++;
+    }
+    if (article.attributes.title < 55) {
+      name += "\r\n ";
+    }
+    if (article.attributes.gettyImage.crop_4_3 !== undefined) {
+      image = article.attributes.gettyImage.crop_4_3;
+    }
+    if (article.attributes.publishOn !== undefined) {
+      for (let index = 0; index < 10; index++) {
+        date += article.attributes.publishOn[index];
+      }
+    }
+    if (article.links.self !== undefined) {
+      link = article.links.self;
     }
   }
-  if (article.image !== undefined) {
-    image = article.image.thumbnail.contentUrl;
-  }
-  if (article.url !== undefined) {
-    link = article.url;
-  }
+
 
   const handleRedirect = () => {
     window.open(link, "_blank");
@@ -72,53 +91,99 @@ function Card({ article }) {
     //TODO set modal to is-active and display background
   }
 
-  return (
-    <div class="card mt-6" id="news-card">
-      <div class="card-image">
-        <figure class="image is-4by3">
-          <img src={image} alt="main section" />
-        </figure>
-      </div>
-      <div class="card-content" id="news-content">
-        <div class="media">
-          <div class="media-left">
-            <figure class="image is-48x48">
-              <img src={thumbnail} alt="profile" />
-            </figure>
-          </div>
-          <div class="media-content">
-            <p class="title is-4">{name}</p>
-          </div>
+  if (type === "trending") {
+    return (
+      <div class="card mt-6" id="news-card">
+        <div class="card-image">
+          <figure class="image is-4by3">
+            <img src={image} alt="main section" />
+          </figure>
         </div>
-        <div class="content">
-          {description}
-        </div>
-        <time datetime={date}>Date: {date}</time>
-        <div class="block"></div>
-        <button class="button is-link">Expand</button>
-        <button class="button is-link ml-4" onClick={handleRedirect}>
-          Read Article
-        </button>
+        <div class="card-content" id="news-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src={thumbnail} alt="profile" />
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">{name}</p>
+            </div>
+          </div>
+          <div class="content">
+            {description}
+          </div>
+          <time datetime={date}>Date: {date}</time>
+          <div class="block"></div>
+          {/* <button class="button is-link">Expand</button> */}
+          <button class="button is-link" onClick={handleRedirect}>
+            Read Article
+          </button>
 
-        <div class="modal">
-          <div class="modal-background"></div>
-          <div class="modal-card">
-            <header class="modal-card-head">
-              <p class="modal-card-title">Modal title</p>
-              <button class="delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-              {/* <!-- Content ... --> */}
-            </section>
-            <footer class="modal-card-foot">
-              <button class="button is-success">Save changes</button>
-              <button class="button">Cancel</button>
-            </footer>
+          <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Modal title</p>
+                <button class="delete" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                {/* <!-- Content ... --> */}
+              </section>
+              <footer class="modal-card-foot">
+                <button class="button is-success">Save changes</button>
+                <button class="button">Cancel</button>
+              </footer>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div class="card mt-6" id="news-card">
+        <div class="card-image">
+          <figure class="image is-4by3">
+            <img src={image} alt="main section" />
+          </figure>
+        </div>
+        <div class="card-content" id="news-content">
+          <div class="media">
+            <div class="media-left">
+            </div>
+            <div class="media-content">
+              <p class="title is-4">{name}</p>
+            </div>
+          </div>
+          <time datetime={date}>Date: {date}</time>
+          <div class="block"></div>
+          {/* <button class="button is-link">Expand</button> */}
+          <button class="button is-link" onClick={handleRedirect}>
+            Read Article
+          </button>
+
+          <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Modal title</p>
+                <button class="delete" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                {/* <!-- Content ... --> */}
+              </section>
+              <footer class="modal-card-foot">
+                <button class="button is-success">Save changes</button>
+                <button class="button">Cancel</button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
 }
 
 export default Card;

@@ -6,7 +6,12 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Home from './components/Home/Home';
 import News from './components/News/News.jsx';
 
+// import { ThemeProvider } from "./context/ThemeContext";
+// import "./theme.css";
+
+
 function App() {
+
   //Router for the application
   return (
     <div className="app">

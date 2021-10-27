@@ -16,17 +16,14 @@ function Dashboard() {
           <Nav />
         </header>
         <div class="block"></div>
-
         {/* Column Layout */}
         <div class="columns is-mobile">
           <div class="column is-2">
-
           </div>
           <div class="column is-8">
             {/* Layout to add stocks and individual cards for stocks */}
             <section class="section">
               <div class="container">
-
                 <div class="block"></div>
                 <StockHub />
                 <div class="block"></div>
@@ -43,6 +40,7 @@ function Dashboard() {
         </div>
       </div >
     </StockContextProvider>
+
   );
 }
 
