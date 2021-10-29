@@ -12,8 +12,6 @@ function Card({ article, type }) {
   let date = "";
   let link = "";
 
-  //TODO set organization
-
   if (type === "trending") {
     for (const letter of article.name) {
       if (count < 60) {
@@ -24,7 +22,7 @@ function Card({ article, type }) {
       }
       count++;
     }
-    if (article.name.length < 55) {
+    if (article.name.length < 49) {
       name += "\r\n ";
     }
     if (article.description !== undefined) {
@@ -66,10 +64,11 @@ function Card({ article, type }) {
       }
       count++;
     }
-    if (article.attributes.title < 55) {
+    if (name.length < 49) {
       name += "\r\n ";
     }
-    if (article.attributes.gettyImage.crop_4_3 !== undefined) {
+    console.log(article.attributes);
+    if (article.attributes.gettyImage !== undefined && article.attributes.gettyImage !== null) {
       image = article.attributes.gettyImage.crop_4_3;
     }
     if (article.attributes.publishOn !== undefined) {
@@ -93,7 +92,7 @@ function Card({ article, type }) {
 
   if (type === "trending") {
     return (
-      <div class="card mt-6" id="news-card">
+      <div class="card" id="news-card">
         <div class="card-image">
           <figure class="image is-4by3">
             <img src={image} alt="main section" />
@@ -111,6 +110,7 @@ function Card({ article, type }) {
             </div>
           </div>
           <div class="content">
+            {organization}<br /><br />
             {description}
           </div>
           <time datetime={date}>Date: {date}</time>
@@ -137,7 +137,7 @@ function Card({ article, type }) {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     );
   } else {
     return (
@@ -182,8 +182,6 @@ function Card({ article, type }) {
       </div>
     );
   }
-
-
 }
 
 export default Card;

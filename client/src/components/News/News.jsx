@@ -2,7 +2,7 @@ import './News.css';
 import Nav from '../Nav/Nav';
 import CardList from '../CardList/CardList';
 import Footer from '../Footer/Footer';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 const axios = require('axios').default;
 
 // Component to display the news cards
@@ -41,7 +41,7 @@ function News() {
   var SeekingAlphaIndividual = {
     method: 'GET',
     url: 'https://seeking-alpha.p.rapidapi.com/news/list',
-    params: { id: 'aapl', size: '12', until: '0' },
+    params: { id: `${symbol}`, size: '20', until: '0' },
     headers: {
       'x-rapidapi-host': 'seeking-alpha.p.rapidapi.com',
       'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
@@ -93,19 +93,24 @@ function News() {
     setLoading(true);
     if (type === 'trending') {
       addNewsData();
-    } else {
-      addNewsForSymbol();
     }
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (news.length === 20) {
+      setType('individual');
+    } else {
+      setType('trending');
+    }
+    setLoading(false);
+  }, [news]);
 
   // Add the news data for the current symbol in input bar
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
-    setType('individual');
     addNewsForSymbol();
-    setLoading(false);
   }
 
   // Change symbol state to match with the input 
@@ -116,71 +121,77 @@ function News() {
 
   // set the articles back to trending news
   const clear = e => {
+    e.preventDefault();
     setLoading(true);
-    setType('trending');
     addNewsData();
-    setLoading(false);
   }
 
-  return (
-    <div classname="News" id="NewsSection">
-      {/* Navigation */}
-      <header className="app-header">
-        <Nav />
-      </header>
-      <div class="block"></div>
+  if (loading) {
+    return (
+      <div></div>
+    );
+  } else {
+    return (
+      <div classname="News" id="NewsSection">
+        {/* Navigation */}
+        <header className="app-header">
+          <Nav />
+        </header>
+        <div class="block"></div>
 
-      {/* Column Layout */}
-      <div class="columns is-mobile">
-        <div class="column is-2">
-        </div>
-        <div class="column is-8">
-          <div className="button-and-forms mt-4">
-            <div class="columns">
-              <div class="column is-6">
-                <section class="hero is-link" id="hero-dash">
-                  <div class="hero-body">
-                    <p class="subtitle">
-                      Enter the symbol and click the <strong>Add News button or Enter</strong>, to get news pertaining to the stock.
-                    </p>
-                  </div>
-                </section>
-              </div>
-              <div class="column is-6 mt-6">
-                <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add News</button>
-                <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
-                  Clear Filter
-                </button>
-                <form onSubmit={handleSubmit}>
-                  <div className="stock-form" id="stock-search">
-                    <input
-                      id="StockInput"
-                      type="text"
-                      placeholder="Enter Symbol..."
-                      value={symbol}
-                      onChange={handleChange}
-                      required
-                      class="input is-rounded is-link mt-4"
-                      disabled={loading}
-                    />
-                  </div>
-                </form>
+        {/* Column Layout */}
+        <div class="columns is-mobile">
+          <div class="column is-2">
+          </div>
+          <div class="column is-8">
+            <div className="button-and-forms mt-4">
+              <div class="columns">
+                <div class="column is-6">
+                  <section class="hero is-link" id="hero-dash">
+                    <div class="hero-body">
+                      <p class="subtitle">
+                        Enter the symbol and click the <strong>Add News button or Enter</strong>, to get news pertaining to the stock.
+                      </p>
+                    </div>
+                  </section>
+                </div>
+                <div class="column is-6 mt-6">
+                  <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add News</button>
+                  <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
+                    Clear Filter
+                  </button>
+                  <form onSubmit={handleSubmit}>
+                    <div className="stock-form" id="stock-search">
+                      <input
+                        id="StockInput"
+                        type="text"
+                        placeholder="Enter Symbol..."
+                        value={symbol}
+                        onChange={handleChange}
+                        required
+                        class="input is-rounded is-link mt-4"
+                        disabled={loading}
+                      />
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
+            {/* Layout to add stocks and individual cards for stocks */}
+            <CardList key={news} news={news} type={type} />
           </div>
-          {/* Layout to add stocks and individual cards for stocks */}
-          <CardList key={news} news={news} type={type} />
+          <div class="column is-2" id="SideMenu">
+          </div>
         </div>
-        <div class="column is-2" id="SideMenu">
+
+        <div className="homeFooter">
+          <Footer />
         </div>
-      </div>
 
-      <div className="homeFooter">
-        <Footer />
-      </div>
+      </div >
+    );
+  }
 
-    </div >
-  );
 }
 
 export default News;

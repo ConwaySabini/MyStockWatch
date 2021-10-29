@@ -2,6 +2,8 @@ import './Register.css';
 
 // component to register new users
 function Register() {
+
+  // Register Panel
   return (
     <div className="search-panel">
       <body id="register-body">
@@ -16,8 +18,11 @@ function Register() {
                   <br />
                   <div class="block" />
                   <small><em>Already Have and account? Login below.</em></small>
-                  <a href="login">
+                  <a href="/login">
                     <button class="button is-block is-primary is-fullwidth is-medium mt-5">Login</button>
+                  </a>
+                  <a href="/home">
+                    <button class="button is-block is-primary is-fullwidth is-medium mt-5">Home</button>
                   </a>
                 </div>
                 <div class="column right has-text-centered">

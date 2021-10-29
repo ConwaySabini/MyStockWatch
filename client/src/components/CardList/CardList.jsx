@@ -4,7 +4,7 @@ import Card from "./../Card/Card";
 const CardList = ({ news, type }) => {
 
   return (
-    <div className="CardList">
+    <div class="CardList">
       {news.length ? (
         <div class="columns is-mobile">
           <div class="column is-4">
@@ -13,7 +13,6 @@ const CardList = ({ news, type }) => {
             <Card article={news[6]} type={type} />
             <Card article={news[9]} type={type} />
           </div>
-          <div class="block"></div>
           <div class="column is-4">
             <Card article={news[1]} type={type} />
             <Card article={news[4]} type={type} />

@@ -16,6 +16,17 @@
   background: linear-gradient(52deg, #a6b2e4 40%, #00d1b2 70%);
 }
 
+#modal-section {
+  background: linear-gradient(52deg, #485FC7 30%, #00d1b2 70%);
+  background-color: #F7F7F7;
+  border-radius: 25px;
+}
+
+#modal-heading {
+  color: #ffffff;
+  font-weight: bold;
+}
+
 /* #dropdown-button:focus {
   background-color: #263680;
 } */

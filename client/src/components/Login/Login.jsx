@@ -39,7 +39,8 @@ function Login() {
               <p id="login-p" class="has-text-grey">
                 <a href="register">Sign Up</a> &nbsp; ·&nbsp;
                 <a href="../">Forgot Password</a> &nbsp; ·&nbsp;
-                <a href="../">Need Help?</a>
+                <a href="../">Need Help?</a> &nbsp; ·&nbsp;
+                <a href="/home">Home</a>
               </p>
             </div>
           </div>

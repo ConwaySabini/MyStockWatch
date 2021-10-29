@@ -8,7 +8,7 @@ const StockContextProvider = props => {
   const initialStockState = JSON.parse(localStorage.getItem('stocks')) || [];
   const initialFavoriteState = JSON.parse(localStorage.getItem('favorites')) || [];
 
-  // states for stock list and favorites list
+  // states for stock, favorites, and news list
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
 
@@ -98,7 +98,6 @@ const StockContextProvider = props => {
 
   // Set all stocks
   const setNewStocks = (newStocks) => {
-    clearStocksOnly();
     setStocks(newStocks);
   }
 

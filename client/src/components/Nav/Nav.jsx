@@ -12,7 +12,7 @@ function Nav() {
         <div class="navbar-brand">
           <a class="navbar-item" href="/#title">
             <i class="fas fa-chart-line fa-2x"></i>
-            <a class="nav-title fa-2x" href="#title">
+            <a class="nav-title fa-2x" href="/dashboard/#title">
               MyStockWatch
             </a>
             {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}
@@ -26,26 +26,26 @@ function Nav() {
 
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item" href="home">
+            <a class="navbar-item" href="/home">
               Home
             </a>
-            <a class="navbar-item" href="dashboard">
+            <a class="navbar-item" href="/dashboard">
               Dashboard
             </a>
-            <a class="navbar-item" href="news">
+            <a class="navbar-item" href="/news">
               News
             </a>
-            <a class="navbar-item" href="about">
+            {/* <a class="navbar-item" href="about">
               About
-            </a>
+            </a> */}
           </div>
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                <a class="button is-link" href="Register">
+                <a class="button is-link" href="/Register">
                   <strong>Sign up</strong>
                 </a>
-                <a class="button is-light" href="Login">
+                <a class="button is-light" href="/Login">
                   Log in
                 </a>
               </div>
