@@ -7,10 +7,12 @@ const StockContextProvider = props => {
   // Set the state in local storage
   const initialStockState = JSON.parse(localStorage.getItem('stocks')) || [];
   const initialFavoriteState = JSON.parse(localStorage.getItem('favorites')) || [];
+  const initialListsState = JSON.parse(localStorage.getItem('lists')) || [];
 
   // states for stock, favorites, and news list
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
+  const [lists, setLists] = useState(initialListsState);
 
   // update local storage on modification
   useEffect(() => {
@@ -21,6 +23,11 @@ const StockContextProvider = props => {
   useEffect(() => {
     localStorage.setItem('favorites', JSON.stringify(favorites));
   }, [favorites]);
+
+  // update local storage on modification
+  useEffect(() => {
+    localStorage.setItem('lists', JSON.stringify(lists));
+  }, [lists]);
 
   // Add favorites
   const addFavorite = (symbol, data, percentChange, timeline) => {
@@ -41,6 +48,16 @@ const StockContextProvider = props => {
   const findFavorite = symbol => {
     const favoriteStock = favorites.find(favorite => favorite.symbol === symbol);
     return favoriteStock;
+  }
+
+  // Add List
+  const addList = (name, stocks) => {
+    setLists([...lists, { name, stocks, id: nanoid() }]);
+  }
+
+  // Find and remove List
+  const removeList = name => {
+    setLists(lists.filter(list => list.name !== name));
   }
 
   // Add stocks
@@ -127,6 +144,8 @@ const StockContextProvider = props => {
         editFavorite,
         getStockTime,
         setNewStocks,
+        removeList,
+        addList,
       }}
     >
       {props.children}
