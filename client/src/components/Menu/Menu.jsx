@@ -6,9 +6,11 @@ import Favorite from '../Favorite/Favorite';
 // Component to display all favorite stocks
 function Menu() {
   // use context api
-  const { favorites, clearFavorites, addList, removeList } = useContext(StockContext);
+  const { favorites, clearFavorites, addList, removeList, clearLists, getLists } = useContext(StockContext);
   // list name to add
   const [listName, setListName] = useState("");
+  // list of lists
+  const [lists, setLists] = useState(getLists());
 
   let index = 0;
   let gainers = [];
@@ -30,7 +32,7 @@ function Menu() {
 
   // Add a new list with the name
   const addStockList = (name) => {
-    //addList(name, []);
+    addList(name, []);
   }
 
   // Change symbol state to match with the input 
@@ -43,11 +45,19 @@ function Menu() {
   const handleSubmit = e => {
     e.preventDefault();
     addStockList(listName);
+    setListName("");
   }
 
+  // Clear all custom lists
+  const handleClear = (e) => {
+    e.preventDefault();
+    clearLists();
+  }
+
+  //TODO debug
   // hide the list
   const hideList = (name) => {
-    var list = document.getElementById(name);
+    const list = document.getElementById(name);
     if (list.style.display === "none") {
       list.style.display = "block";
     } else {
@@ -60,7 +70,7 @@ function Menu() {
       <aside class="menu">
         <form onSubmit={handleSubmit}>
           <a>
-            <i class="fas fa-plus-circle fa-2x mb-3 mr-5 mt-1" onClick={addStockList(listName)}></i>
+            <i class="fas fa-plus-circle fa-2x mb-3 mr-5 mt-1" onClick={handleSubmit}></i>
           </a>
           <input
             id="menu-input"
@@ -72,12 +82,13 @@ function Menu() {
           />
         </form>
         <br />
+        <button class="button is-danger" onClick={handleClear}>Clear All Lists</button>
         <p class="menu-label">
           <strong id="menu-label">Gainers</strong>
-          <a>
+          <a onClientClick={() => hideList("gainers")}>
             <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
           </a>
-          <p>
+          <p id="gainers">
             {gainers.length ? (
               <div className="list">
                 <ul class="menu-list">
@@ -93,39 +104,44 @@ function Menu() {
         </p>
         <p class="menu-label">
           <strong id="menu-label">Losers</strong>
-          <a>
+          <a onClientClick={() => hideList("losers")}>
             <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
           </a>
-          {losers.length ? (
-            <div className="list">
-              <ul class="menu-list">
-                {losers.map(favorite => {
-                  return <Favorite favorite={favorite} key={favorite.id} />;
-                })}
-              </ul>
-            </div>
-          ) : (
-            <div className="no-favorites">No Losers</div>
-          )}
+          <p id="losers">
+            {losers.length ? (
+              <div className="list">
+                <ul class="menu-list">
+                  {losers.map(favorite => {
+                    return <Favorite favorite={favorite} key={favorite.id} />;
+                  })}
+                </ul>
+              </div>
+            ) : (
+              <div className="no-favorites">No Losers</div>
+            )}
+          </p>
         </p>
         <p class="menu-label">
           <strong id="menu-label">Favorites</strong>
-          <a>
+          <a onClientClick={() => hideList("favorites")}>
             <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
           </a>
-          {favorites.length ? (
-            <div className="list">
-              <ul class="menu-list">
-                {favorites.map(favorite => {
-                  return <Favorite favorite={favorite} key={favorite.id} />;
-                })}
-              </ul>
-            </div>
-          ) : (
-            <div className="no-favorites">No Favorites</div>
-          )}
+          <p id="favorites">
+            {favorites.length ? (
+              <div className="list">
+                <ul class="menu-list">
+                  {favorites.map(favorite => {
+                    return <Favorite favorite={favorite} key={favorite.id} />;
+                  })}
+                </ul>
+              </div>
+            ) : (
+              <div className="no-favorites">No Favorites</div>
+            )}
+          </p>
         </p>
         <button class="button is-danger ml-4 pr-4 pl-4 mt-5 mb-2" onClick={() => clearFavorites()}>Clear Favorites</button>
+        //TODO render lists here
       </aside>
     </div>
   );

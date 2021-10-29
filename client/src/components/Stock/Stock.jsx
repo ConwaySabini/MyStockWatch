@@ -33,12 +33,28 @@ import {
 //TODO make chart work with month and longer time periods 
 //TODO hint: datetime include military time after date with shorter time periods while longer time periods do not include this
 
+//TODO make the technical chart a separate component
+
 // Component to display the individual stock
 function Stock({ stock, handleTimeChange, handleStockChange }) {
   // stock context api shared data across components
-  const { removeStock, addFavorite, findFavorite } = useContext(StockContext);
+  const { removeStock, addFavorite, findFavorite, addStockToList, getLists } = useContext(StockContext);
   // State to track which chart to display (simple or technical)
   const [simpleChart, setSimpleChart] = useState(true);
+  // State to track which list to add the stock to
+  const [list, setList] = useState("");
+  // State to track all lists
+  const [lists, setLists] = useState(getLists());
+  // loading state to have components wait for data to load
+  const [loading, setLoading] = useState(false);
+
+  // function to add a stock to a list
+  const addToList = (list) => {
+    setLoading(true);
+
+
+    setLoading(false);
+  }
 
   // dates of the stock for the graph
   const labels = [];
@@ -172,16 +188,20 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
 
   // When the user changes the timeframe of the stock, update the graph
   const handleTime = (time) => {
+    setLoading(true);
     handleTimeChange(time, stock);
     handleStockChange(time);
+    setLoading(false);
   }
 
   // When the user adds a favorite to their list update the list
   const handleFavorite = () => {
+    setLoading(true);
     const favorite = findFavorite(stock.symbol);
     if (favorite === undefined) {
       addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline);
     }
+    setLoading(false);
   }
 
   // function to set the chart to simple or technical
@@ -288,6 +308,38 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
           <button className="favorite" class="button is-warning ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</button>
           <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(false)}>Technical Graph</button>
           <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(true)}>Simple Graph</button>
+          <div class="dropdown is-hoverable ml-2 mt-4">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading}>
+                <span>Lists</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="sort-dropdown" role="menu">
+              <div class="dropdown-content" id="sort-dropdown">
+                <div class="dropdown-item">
+                  {lists.length ? (
+                    <div className="list">
+                      {lists.map(list => {
+                        return <button class="button is-link" id="dropdown-buton" onClick={() => setList(list.name)} disabled={loading}>{list.name}</button>
+                      })}
+                    </div>
+                  ) : (
+                    <article class="message is-link">
+                      <div class="message-body ">
+                        <strong>No Lists</strong>
+                      </div>
+                    </article>
+                  )}
+                  {/* <button class="button is-link" id="dropdown-buton" onClick={setDescendingFalse} disabled={loading}>Ascending</button>
+                  <button class="button is-link mt-4" id="dropdown-buton" onClick={setDescendingTrue} disabled={loading}>Descending</button> */}
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => addToList}>Add Stock To List</button>
           <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
             <i className="fas fa-trash-alt"></i>
           </button>

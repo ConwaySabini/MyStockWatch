@@ -60,6 +60,27 @@ const StockContextProvider = props => {
     setLists(lists.filter(list => list.name !== name));
   }
 
+  // Edit lists
+  const addStockToList = (name, symbol) => {
+    // edit stock if it exists
+    const foundStock = stocks.find(stock => stock.symbol === symbol);
+    const foundList = lists.find(list => list.name === name);
+    let newStocks = [...foundList.stocks, foundStock];
+    let id = foundList.id;
+    const newLists = stocks.map(list => (list.name === name ? { name, newStocks, id } : list));
+    setLists(newLists);
+  }
+
+  // Get the lists
+  const getLists = () => {
+    return lists;
+  }
+
+  // Clear favorites
+  const clearLists = () => {
+    setLists([]);
+  }
+
   // Add stocks
   const addStock = (symbol, data, percentChange, timeline) => {
     setStocks([...stocks, { symbol, data, percentChange, timeline, id: nanoid() }]);
@@ -146,6 +167,9 @@ const StockContextProvider = props => {
         setNewStocks,
         removeList,
         addList,
+        addStockToList,
+        getLists,
+        clearLists,
       }}
     >
       {props.children}
