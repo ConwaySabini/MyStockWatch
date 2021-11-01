@@ -154,6 +154,7 @@ const StockContextProvider = props => {
         addStock,
         removeStock,
         clearStocks,
+        clearStocksOnly,
         findStock,
         favorites,
         addFavorite,

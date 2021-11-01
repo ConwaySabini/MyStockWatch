@@ -1,5 +1,5 @@
 import './Stock.css';
-import { useContext, useState, useRef, createRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
 import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
@@ -7,18 +7,11 @@ import StockButtons from './StockButtons';
 
 // Component to display the individual stock
 function Stock({ stock, handleTimeChange, handleStockChange }) {
-  // stock context api shared data across components
-  const { removeStock, addFavorite, findFavorite, addStockToList, getLists } = useContext(StockContext);
+
   // State to track which chart to display (simple or technical)
   const [simpleChart, setSimpleChart] = useState(true);
-  // State to track which list to add the stock to
-  const [list, setList] = useState("");
-  // State to track all lists
-  const [lists, setLists] = useState(getLists());
   // loading state to have components wait for data to load
   const [loading, setLoading] = useState(false);
-  // // Ref for the chart
-  // const graphRef = useRef();
   // responsive width
   const [width, setWidth] = useState(0);
   // responsive height
@@ -43,14 +36,7 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     window.addEventListener("resize", getSize);
   }, []);
 
-  //TODO implement
-  // function to add a stock to a list
-  const addToList = (list) => {
-    setLoading(true);
 
-
-    setLoading(false);
-  }
 
   // dates of the stock for the graph
   const labels = [];
@@ -59,7 +45,6 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
 
   let timeline = "";
   switch (stock.timeline) {
-    default: break;
     case '1min': timeline = "30 minutes";
       break;
     case '5min': timeline = "2.5 hours";
@@ -78,11 +63,11 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
       break;
     case '1month': timeline = "2.5 years";
       break;
-
+    default: break;
   }
 
   // 30 dates and prices for the graph
-  let index = 29;
+  let index = stock.data.values.length - 1;
 
   // Loop through each date and price for the stock and add it to the arrays
   for (let i = 0; i < stock.data.values.length; i++) {
@@ -189,16 +174,6 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     setLoading(false);
   }
 
-  // When the user adds a favorite to their list update the list
-  const handleFavorite = () => {
-    setLoading(true);
-    const favorite = findFavorite(stock.symbol);
-    if (favorite === undefined) {
-      addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline);
-    }
-    setLoading(false);
-  }
-
   // function to set the chart to simple or technical
   const handleChart = (flag) => {
     setSimpleChart(flag);
@@ -213,13 +188,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
           <Line data={ChartData} options={options} />
           <StockButtons
             handleTime={handleTime}
-            handleFavorite={handleFavorite}
             handleChart={handleChart}
             loading={loading}
-            setList={setList}
-            removeStock={removeStock}
-            lists={lists}
-            addToList={addToList}
+            setLoading={setLoading}
             stock={stock} />
         </div >
       );
@@ -230,13 +201,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
           <TechnicalGraph stock={stock} width={width} height={height} />
           <StockButtons
             handleTime={handleTime}
-            handleFavorite={handleFavorite}
             handleChart={handleChart}
             loading={loading}
-            setList={setList}
-            removeStock={removeStock}
-            lists={lists}
-            addToList={addToList}
+            setLoading={setLoading}
             stock={stock} />
         </div >
       );
@@ -250,13 +217,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
           <Line data={redData} options={options} />
           <StockButtons
             handleTime={handleTime}
-            handleFavorite={handleFavorite}
             handleChart={handleChart}
             loading={loading}
-            setList={setList}
-            removeStock={removeStock}
-            lists={lists}
-            addToList={addToList}
+            setLoading={setLoading}
             stock={stock} />
         </div >
       );
@@ -267,13 +230,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
           <TechnicalGraph stock={stock} width={width} height={height} />
           <StockButtons
             handleTime={handleTime}
-            handleFavorite={handleFavorite}
             handleChart={handleChart}
             loading={loading}
-            setList={setList}
-            removeStock={removeStock}
-            lists={lists}
-            addToList={addToList}
+            setLoading={setLoading}
             stock={stock} />
         </div >
       );
