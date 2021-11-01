@@ -1,39 +1,9 @@
 import './Stock.css';
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, createRef, useEffect } from "react";
 import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
-import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
-import {
-  elderRay,
-  ema,
-  discontinuousTimeScaleProviderBuilder,
-  Chart,
-  ChartCanvas,
-  CurrentCoordinate,
-  BarSeries,
-  CandlestickSeries,
-  ElderRaySeries,
-  LineSeries,
-  MovingAverageTooltip,
-  OHLCTooltip,
-  SingleValueTooltip,
-  lastVisibleItemBasedZoomAnchor,
-  XAxis,
-  YAxis,
-  CrossHairCursor,
-  EdgeIndicator,
-  MouseCoordinateX,
-  MouseCoordinateY,
-  ZoomButtons,
-  withDeviceRatio,
-  withSize
-} from "react-financial-charts";
-
-//TODO make chart work with month and longer time periods 
-//TODO hint: datetime include military time after date with shorter time periods while longer time periods do not include this
-
-//TODO make the technical chart a separate component
+import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
+import StockButtons from './StockButtons';
 
 // Component to display the individual stock
 function Stock({ stock, handleTimeChange, handleStockChange }) {
@@ -47,7 +17,33 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
   const [lists, setLists] = useState(getLists());
   // loading state to have components wait for data to load
   const [loading, setLoading] = useState(false);
+  // // Ref for the chart
+  // const graphRef = useRef();
+  // responsive width
+  const [width, setWidth] = useState(0);
+  // responsive height
+  const [height, setHeight] = useState(0);
 
+  // get the width and height of the chart
+  const getSize = () => {
+    const div = document.querySelector('#StockChart');
+    const newWidth = div.clientWidth;
+    setWidth(newWidth);
+    const newHeight = div.clientHeight;
+    setHeight(newHeight);
+  };
+
+  // update the size on render
+  useEffect(() => {
+    getSize();
+  }, []);
+
+  // update the size on resize
+  useEffect(() => {
+    window.addEventListener("resize", getSize);
+  }, []);
+
+  //TODO implement
   // function to add a stock to a list
   const addToList = (list) => {
     setLoading(true);
@@ -84,7 +80,6 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
       break;
 
   }
-
 
   // 30 dates and prices for the graph
   let index = 29;
@@ -209,275 +204,40 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     setSimpleChart(flag);
   }
 
-
-
-
-
-
-  // Technical Chart Initialization
-
-  let stockData = [];
-  let idx = 0;
-  for (let i = 29; i >= 0; i--) {
-    stockData[idx] = stock.data.values[i];
-    idx++;
-  }
-
-  const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
-    (d) => new Date(d.datetime)
-  );
-  //TODO make the height and width and margin responsive
-  const height = 700;
-  const width = 900;
-  const margin = { left: 0, right: 48, top: 0, bottom: 24 };
-
-  const ema12 = ema()
-    .id(1)
-    .options({ windowSize: 12 })
-    .merge((d, c) => {
-      d.ema12 = c;
-    })
-    .accessor((d) => d.ema12);
-
-  const ema26 = ema()
-    .id(2)
-    .options({ windowSize: 26 })
-    .merge((d, c) => {
-      d.ema26 = c;
-    })
-    .accessor((d) => d.ema26);
-
-  const elder = elderRay();
-
-  const calculatedData = elder(ema26(ema12(stockData)));
-  const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
-    stockData
-  );
-  const pricesDisplayFormat = format(".2f");
-  const max = xAccessor(data[data.length - 1]);
-  const min = xAccessor(data[Math.max(0, data.length - 100)]);
-  const xExtents = [min, max + 5];
-
-  const gridHeight = height - margin.top - margin.bottom;
-
-  //TODO elderRayHeight responsive
-  const elderRayHeight = 100;
-  const elderRayOrigin = (_, h) => [0, h - elderRayHeight];
-  const barChartHeight = gridHeight / 4;
-  const barChartOrigin = (_, h) => [0, h - barChartHeight - elderRayHeight];
-  const chartHeight = gridHeight - elderRayHeight;
-  const yExtents = (data) => {
-    return [data.high, data.low];
-  };
-  const dateTimeFormat = "%d %b";
-  const timeDisplayFormat = timeFormat(dateTimeFormat);
-
-  const candleChartExtents = (data) => {
-    return [data.high, data.low];
-  };
-
-  const barChartExtents = (data) => {
-    return data.volume;
-  };
-
-  const yEdgeIndicator = (data) => {
-    return data.close;
-  };
-
-  const volumeColor = (data) => {
-    return data.close > data.open
-      ? "rgba(38, 166, 154, 0.3)"
-      : "rgba(239, 83, 80, 0.3)";
-  };
-
-  const volumeSeries = (data) => {
-    return data.volume;
-  };
-
-  const openCloseColor = (data) => {
-    return data.close > data.open ? "#ef5350" : "#26a69a";
-  };
-
   if (stock.percentChange >= 0) {
     // Return the graph
     if (simpleChart) {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
+        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
           <Line data={ChartData} options={options} />
-          <button className="favorite" class="button is-warning ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(false)}>Technical Graph</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(true)}>Simple Graph</button>
-          <div class="dropdown is-hoverable ml-2 mt-4">
-            <div class="dropdown-trigger">
-              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading}>
-                <span>Lists</span>
-                <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-            <div class="dropdown-menu" id="sort-dropdown" role="menu">
-              <div class="dropdown-content" id="sort-dropdown">
-                <div class="dropdown-item">
-                  {lists.length ? (
-                    <div className="list">
-                      {lists.map(list => {
-                        return <button class="button is-link" id="dropdown-buton" onClick={() => setList(list.name)} disabled={loading}>{list.name}</button>
-                      })}
-                    </div>
-                  ) : (
-                    <article class="message is-link">
-                      <div class="message-body ">
-                        <strong>No Lists</strong>
-                      </div>
-                    </article>
-                  )}
-                  {/* <button class="button is-link" id="dropdown-buton" onClick={setDescendingFalse} disabled={loading}>Ascending</button>
-                  <button class="button is-link mt-4" id="dropdown-buton" onClick={setDescendingTrue} disabled={loading}>Descending</button> */}
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => addToList}>Add Stock To List</button>
-          <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
-            <i className="fas fa-trash-alt"></i>
-          </button>
-          <br />
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
+          <StockButtons
+            handleTime={handleTime}
+            handleFavorite={handleFavorite}
+            handleChart={handleChart}
+            loading={loading}
+            setList={setList}
+            removeStock={removeStock}
+            lists={lists}
+            addToList={addToList}
+            stock={stock} />
         </div >
       );
     } else {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
+        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
-          {/* <Line data={ChartData} options={options} /> */}
-          <ChartCanvas
-            height={height}
-            ratio={3}
-            width={width}
-            margin={margin}
-            data={data}
-            displayXAccessor={displayXAccessor}
-            seriesName="Data"
-            xScale={xScale}
-            xAccessor={xAccessor}
-            xExtents={xExtents}
-            zoomAnchor={lastVisibleItemBasedZoomAnchor}
-          >
-            {/* Chart for the volume in the background of the chart */}
-            {/* <Chart
-            id={2}
-            height={barChartHeight}
-            origin={barChartOrigin}
-            yExtents={barChartExtents}
-          >
-            <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
-          </Chart> */}
-            <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
-              <XAxis showGridLines showTickLabel={false} />
-              <YAxis showGridLines tickFormat={pricesDisplayFormat} />
-              {/* This is the main chart of candlesticks */}
-              <CandlestickSeries />
-              {/* <LineSeries yAccessor={ema26.accessor()} strokeStyle={ema26.stroke()} /> */}
-              {/* <CurrentCoordinate
-              yAccessor={ema26.accessor()}
-              fillStyle={ema26.stroke()}
-            />
-            <LineSeries yAccessor={ema12.accessor()} strokeStyle={ema12.stroke()} />
-            <CurrentCoordinate
-              yAccessor={ema12.accessor()}
-              fillStyle={ema12.stroke()}
-            /> */}
-              <MouseCoordinateY
-                rectWidth={margin.right}
-                displayFormat={pricesDisplayFormat}
-              />
-              <EdgeIndicator
-                itemType="last"
-                rectWidth={margin.right}
-                fill={openCloseColor}
-                lineStroke={openCloseColor}
-                displayFormat={pricesDisplayFormat}
-                yAccessor={yEdgeIndicator}
-              />
-              <MovingAverageTooltip
-                origin={[8, 24]}
-                options={[
-                  {
-                    yAccessor: ema26.accessor(),
-                    type: "EMA",
-                    stroke: ema26.stroke(),
-                    windowSize: ema26.options().windowSize
-                  },
-                  {
-                    yAccessor: ema12.accessor(),
-                    type: "EMA",
-                    stroke: ema12.stroke(),
-                    windowSize: ema12.options().windowSize
-                  }
-                ]}
-              />
-
-              <ZoomButtons />
-              <OHLCTooltip origin={[8, 16]} />
-            </Chart>
-            {/* Elder Ray chart below */}
-            <Chart
-              id={4}
-              height={elderRayHeight}
-              yExtents={[0, elder.accessor()]}
-              origin={elderRayOrigin}
-              padding={{ top: 8, bottom: 8 }}
-            >
-              <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-              <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-
-              <MouseCoordinateX displayFormat={timeDisplayFormat} />
-              <MouseCoordinateY
-                rectWidth={margin.right}
-                displayFormat={pricesDisplayFormat}
-              />
-
-              <ElderRaySeries yAccessor={elder.accessor()} />
-
-              <SingleValueTooltip
-                yAccessor={elder.accessor()}
-                yLabel="Elder Ray"
-                yDisplayFormat={(d) =>
-                  `${pricesDisplayFormat(d.bullPower)}, ${pricesDisplayFormat(
-                    d.bearPower
-                  )}`
-                }
-                origin={[8, 16]}
-              />
-            </Chart>
-            <CrossHairCursor />
-          </ChartCanvas>
-          <button className="favorite" class="button is-warning ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(false)}>Technical Graph</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(true)}>Simple Graph</button>
-          <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
-            <i className="fas fa-trash-alt"></i>
-          </button>
-          <br />
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
+          <TechnicalGraph stock={stock} width={width} height={height} />
+          <StockButtons
+            handleTime={handleTime}
+            handleFavorite={handleFavorite}
+            handleChart={handleChart}
+            loading={loading}
+            setList={setList}
+            removeStock={removeStock}
+            lists={lists}
+            addToList={addToList}
+            stock={stock} />
         </div >
       );
     }
@@ -485,155 +245,36 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     // Return the graph
     if (simpleChart) {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
+        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
           <Line data={redData} options={options} />
-          <button className="favorite" class="button is-warning ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(false)}>Technical Graph</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(true)}>Simple Graph</button>
-          <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
-            <i className="fas fa-trash-alt"></i>
-          </button>
-          <br />
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
-          <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
-            <i className="fas fa-trash-alt"></i>
-          </button>
+          <StockButtons
+            handleTime={handleTime}
+            handleFavorite={handleFavorite}
+            handleChart={handleChart}
+            loading={loading}
+            setList={setList}
+            removeStock={removeStock}
+            lists={lists}
+            addToList={addToList}
+            stock={stock} />
         </div >
       );
     } else {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4">
+        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
-          <ChartCanvas
-            height={height}
-            ratio={3}
-            width={width}
-            margin={margin}
-            data={data}
-            displayXAccessor={displayXAccessor}
-            seriesName="Data"
-            xScale={xScale}
-            xAccessor={xAccessor}
-            xExtents={xExtents}
-            zoomAnchor={lastVisibleItemBasedZoomAnchor}
-          >
-            {/* Chart for the volume in the background of the chart */}
-            {/* <Chart
-            id={2}
-            height={barChartHeight}
-            origin={barChartOrigin}
-            yExtents={barChartExtents}
-          >
-            <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
-          </Chart> */}
-            <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
-              <XAxis showGridLines showTickLabel={false} />
-              <YAxis showGridLines tickFormat={pricesDisplayFormat} />
-              {/* This is the main chart of candlesticks */}
-              <CandlestickSeries />
-              {/* <LineSeries yAccessor={ema26.accessor()} strokeStyle={ema26.stroke()} /> */}
-              {/* <CurrentCoordinate
-              yAccessor={ema26.accessor()}
-              fillStyle={ema26.stroke()}
-            />
-            <LineSeries yAccessor={ema12.accessor()} strokeStyle={ema12.stroke()} />
-            <CurrentCoordinate
-              yAccessor={ema12.accessor()}
-              fillStyle={ema12.stroke()}
-            /> */}
-              <MouseCoordinateY
-                rectWidth={margin.right}
-                displayFormat={pricesDisplayFormat}
-              />
-              <EdgeIndicator
-                itemType="last"
-                rectWidth={margin.right}
-                fill={openCloseColor}
-                lineStroke={openCloseColor}
-                displayFormat={pricesDisplayFormat}
-                yAccessor={yEdgeIndicator}
-              />
-              <MovingAverageTooltip
-                origin={[8, 24]}
-                options={[
-                  {
-                    yAccessor: ema26.accessor(),
-                    type: "EMA",
-                    stroke: ema26.stroke(),
-                    windowSize: ema26.options().windowSize
-                  },
-                  {
-                    yAccessor: ema12.accessor(),
-                    type: "EMA",
-                    stroke: ema12.stroke(),
-                    windowSize: ema12.options().windowSize
-                  }
-                ]}
-              />
-
-              <ZoomButtons />
-              <OHLCTooltip origin={[8, 16]} />
-            </Chart>
-            {/* Elder Ray chart below */}
-            <Chart
-              id={4}
-              height={elderRayHeight}
-              yExtents={[0, elder.accessor()]}
-              origin={elderRayOrigin}
-              padding={{ top: 8, bottom: 8 }}
-            >
-              <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-              <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-
-              <MouseCoordinateX displayFormat={timeDisplayFormat} />
-              <MouseCoordinateY
-                rectWidth={margin.right}
-                displayFormat={pricesDisplayFormat}
-              />
-
-              <ElderRaySeries yAccessor={elder.accessor()} />
-
-              <SingleValueTooltip
-                yAccessor={elder.accessor()}
-                yLabel="Elder Ray"
-                yDisplayFormat={(d) =>
-                  `${pricesDisplayFormat(d.bullPower)}, ${pricesDisplayFormat(
-                    d.bearPower
-                  )}`
-                }
-                origin={[8, 16]}
-              />
-            </Chart>
-            <CrossHairCursor />
-          </ChartCanvas>
-          <button className="favorite" class="button is-warning ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(false)}>Technical Graph</button>
-          <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(true)}>Simple Graph</button>
-          <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
-            <i className="fas fa-trash-alt"></i>
-          </button>
-          <br />
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
-          <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
-          <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
-            <i className="fas fa-trash-alt"></i>
-          </button>
+          <TechnicalGraph stock={stock} width={width} height={height} />
+          <StockButtons
+            handleTime={handleTime}
+            handleFavorite={handleFavorite}
+            handleChart={handleChart}
+            loading={loading}
+            setList={setList}
+            removeStock={removeStock}
+            lists={lists}
+            addToList={addToList}
+            stock={stock} />
         </div >
       );
     }

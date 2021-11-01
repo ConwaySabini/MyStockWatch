@@ -9,3 +9,11 @@
 #stock-heading {
   text-align: center;
 }
+
+#stock-dropdown {
+  background-color: #00D1B2;
+}
+
+#dropdown-font {
+  color: white;
+}

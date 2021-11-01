@@ -65,6 +65,7 @@ function Menu() {
     }
   }
 
+  //TODO make each list component and conditionalally render it for hiding
   return (
     <div>
       <aside class="menu">
