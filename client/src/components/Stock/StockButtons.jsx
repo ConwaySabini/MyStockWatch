@@ -4,11 +4,9 @@ import { StockContext } from "../../context/StockContext";
 //Component to render the buttons and handle changes to data
 function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
   // stock context api shared data across components
-  const { removeStock, addFavorite, findFavorite, addStockToList, getLists } = useContext(StockContext);
+  const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
   // State to track which list to add the stock to
   const [list, setList] = useState("");
-  // State to track all lists
-  const [lists, setLists] = useState(getLists());
 
   // When the user adds a favorite to their list update the list
   const handleFavorite = () => {
@@ -20,12 +18,21 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
     setLoading(false);
   }
 
-  //TODO debug
+  const handleListChange = (name) => {
+    setList(name);
+  }
+
   // function to add a stock to a list
   const addToList = () => {
     setLoading(true);
     addStockToList(list, stock.symbol);
-    console.log("symbol", stock.symbol);
+    setLoading(false);
+  }
+
+  // function to remove a stock from a list
+  const removeFromList = () => {
+    setLoading(true);
+    removeStockFromList(list, stock.symbol);
     setLoading(false);
   }
 
@@ -52,7 +59,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
                     {lists.map(list => {
                       return (
                         <li>
-                          <button class="button is-link mt-2" id="dropdown-buton" onClick={() => setList(list.name)} disabled={loading}>{list.name}</button>
+                          <button class="button is-link mt-2" id="dropdown-buton" onClick={() => handleListChange(list.name)} disabled={loading}>{list.name}</button>
                         </li>
                       )
                     })}
@@ -69,7 +76,8 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
           </div>
         </div>
       </div>
-      <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => addToList}>Add Stock To List</button>
+      <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => addToList()}>Add To List</button>
+      <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => removeFromList()}>Remove From List</button>
       <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
         <i className="fas fa-trash-alt"></i>
       </button>

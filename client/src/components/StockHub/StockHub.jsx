@@ -199,6 +199,7 @@ const StockHub = () => {
 
   // clear the list of stocks on the screen
   const clear = e => {
+    e.preventDefault();
     clearStocks();
     setModal(false);
   }
@@ -329,7 +330,7 @@ const StockHub = () => {
           <div class="section" id="modal-section">
             <h3 id="modal-heading">Are you sure you want to clear all stocks?</h3>
             <button class="button is-danger mt-4" onClick={clear}>Clear All Stocks</button>
-            <button class="button is-link mt-4 ml-4" onClick={clearModal}>Cancel</button>
+            <button class="button is-primary mt-4 ml-4" onClick={clearModal}>Cancel</button>
           </div>
 
         </div>

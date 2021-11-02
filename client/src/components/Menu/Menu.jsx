@@ -7,29 +7,30 @@ import RenderLists from './RenderLists';
 // Component to display all favorite stocks
 function Menu() {
   // use context api
-  const { favorites, clearFavorites, addList, removeList, clearLists, getLists } = useContext(StockContext);
+  const { favorites, clearFavorites, addList, removeList, lists, clearLists } = useContext(StockContext);
   // list name to add
   const [listName, setListName] = useState("");
-  // list of lists
-  const [lists, setLists] = useState([]);
   // list of lists to conditionally render in dropdown
   const [listsToRender, setListsToRender] = useState({});
   // state for first 3 lists to render
   const [renderGainers, setRenderGainers] = useState(true);
   const [renderLosers, setRenderLosers] = useState(true);
   const [renderFavorites, setRenderFavorites] = useState(true);
+  // state to trigger render
+  const [render, setRender] = useState(false);
+  // modal for confirming events
+  const [FavoritesModal, setFavoritesModal] = useState(false);
+  // modal for confirming events
+  const [ListsModal, setListModal] = useState(false);
 
   useEffect(() => {
-    setLists(getLists());
-  }, []);
-
-  useEffect(() => {
-    let renderLists = {};
+    let renderLists = listsToRender;
     for (const list of lists) {
-      renderLists[list.name] = true;
+      if (renderLists[list.name] !== false) {
+        renderLists[list.name] = true;
+      }
     }
     setListsToRender(renderLists);
-    console.log(lists);
   }, [lists]);
 
   let index = 0;
@@ -80,6 +81,7 @@ function Menu() {
       let renderLists = listsToRender
       renderLists[name] = false;
       setListsToRender(renderLists);
+      setRender(!render);
     }
   }
 
@@ -95,151 +97,223 @@ function Menu() {
       let renderLists = listsToRender
       renderLists[name] = true;
       setListsToRender(renderLists);
+      setRender(!render);
     }
   }
 
-  return (
-    <div>
-      <aside class="menu">
-        <form onSubmit={handleSubmit}>
-          <a>
-            <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" onClick={handleSubmit}></i>
-          </a>
-          <input
-            id="menu-input"
-            class="input is-primary"
-            type="text"
-            placeholder="Create new list"
-            onChange={handleChange}
-            value={listName}
-          />
-        </form>
-        <br />
-        <button class="button is-danger pr-4 pl-4 mb-2" onClick={() => clearFavorites()}>Clear Favorites</button>
-        {
-          renderGainers ? (
-            <p class="menu-label">
-              <strong id="menu-label">Gainers</strong>
-              <a onClick={() => hideList("gainers")}>
-                <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
-              </a>
-              <p id="gainers">
-                {
-                  gainers.length ? (
-                    <div className="list">
-                      <ul class="menu-list">
-                        {gainers.map(favorite => {
-                          return <Favorite favorite={favorite} key={favorite.id} />;
-                        })}
-                      </ul>
-                    </div>
-                  ) : (
-                    <div className="no-favorites">No Gainers</div>
-                  )
-                }
+  // clear the list of stocks on the screen
+  const clearFavoritesConfirmed = e => {
+    e.preventDefault();
+    clearFavorites();
+    setFavoritesModal(false);
+  }
+
+  // clear the list of stocks on the screen
+  const clearListsConfirmed = e => {
+    e.preventDefault();
+    clearLists();
+    setListModal(false);
+  }
+
+  // function to confirm the deletion of all stocks
+  const confirmFavoriteClear = () => {
+    setFavoritesModal(true);
+  }
+
+  // function to set modal to false and close confirmation dialogue 
+  const clearFavoriteModal = () => {
+    setFavoritesModal(false);
+  }
+
+  // function to confirm the deletion of all stocks
+  const confirmListsModal = () => {
+    setListModal(true);
+  }
+
+  // function to set modal to false and close confirmation dialogue 
+  const clearListsModal = () => {
+    setListModal(false);
+  }
+
+  if (!FavoritesModal && !ListsModal) {
+    return (
+      <div>
+        <aside class="menu">
+          <form onSubmit={handleSubmit}>
+            <a>
+              <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" onClick={handleSubmit}></i>
+            </a>
+            <input
+              id="menu-input"
+              class="input is-primary"
+              type="text"
+              placeholder="Create new list"
+              onChange={handleChange}
+              value={listName}
+            />
+          </form>
+          <br />
+          <button class="button is-danger pr-4 pl-4 mb-2" onClick={() => confirmFavoriteClear()}>Clear Favorites</button>
+          {
+            renderGainers ? (
+              <p class="menu-label">
+                <strong id="menu-label">Gainers</strong>
+                <a onClick={() => hideList("gainers")}>
+                  <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                </a>
+                <p id="gainers">
+                  {
+                    gainers.length ? (
+                      <div className="list">
+                        <ul class="menu-list">
+                          {gainers.map(favorite => {
+                            return <Favorite favorite={favorite} key={favorite.id} />;
+                          })}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="no-favorites">No Gainers</div>
+                    )
+                  }
+                </p>
               </p>
-            </p>
-          ) : (
-            <p class="menu-label">
-              <strong id="menu-label">Gainers</strong>
-              <a onClick={() => showList("gainers")}>
-                <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
-              </a>
-            </p>
-          )
-        }
-        {
-          renderLosers ? (
-            <p class="menu-label">
-              <strong id="menu-label">Losers</strong>
-              <a onClick={() => hideList("losers")}>
-                <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
-              </a>
-              <p id="losers">
-                {
-                  losers.length ? (
-                    <div className="list">
-                      <ul class="menu-list">
-                        {losers.map(favorite => {
-                          return <Favorite favorite={favorite} key={favorite.id} />;
-                        })}
-                      </ul>
-                    </div>
-                  ) : (
-                    <div className="no-favorites">No Losers</div>
-                  )
-                }
+            ) : (
+              <p class="menu-label">
+                <strong id="menu-label">Gainers</strong>
+                <a onClick={() => showList("gainers")}>
+                  <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                </a>
               </p>
-            </p>
-          ) : (
-            <p class="menu-label">
-              <strong id="menu-label">Losers</strong>
-              <a onClick={() => showList("losers")}>
-                <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
-              </a>
-            </p>
-          )
-        }
-        {
-          renderFavorites ? (
-            <p class="menu-label">
-              <strong id="menu-label">Favorites</strong>
-              <a onClick={() => hideList("favorites")}>
-                <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
-              </a>
-              <p id="favorites">
-                {
-                  favorites.length ? (
-                    <div className="list">
-                      <ul class="menu-list">
-                        {favorites.map(favorite => {
-                          return <Favorite favorite={favorite} key={favorite.id} />;
-                        })}
-                      </ul>
-                    </div>
-                  ) : (
-                    <div className="no-favorites">No Favorites</div>
-                  )
-                }
+            )
+          }
+          {
+            renderLosers ? (
+              <p class="menu-label">
+                <strong id="menu-label">Losers</strong>
+                <a onClick={() => hideList("losers")}>
+                  <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                </a>
+                <p id="losers">
+                  {
+                    losers.length ? (
+                      <div className="list">
+                        <ul class="menu-list">
+                          {losers.map(favorite => {
+                            return <Favorite favorite={favorite} key={favorite.id} />;
+                          })}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="no-favorites">No Losers</div>
+                    )
+                  }
+                </p>
               </p>
-            </p>
-          ) : (
-            <p class="menu-label">
-              <strong id="menu-label">Favorites</strong>
-              <a onClick={() => showList("favorites")}>
-                <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
-              </a>
-            </p>
-          )
-        }
-        {
-          lists.length ? (
-            <div className="list">
-              {lists.map(list => {
-                if (listsToRender[list.name] === true) {
-                  return <RenderLists list={list} hideList={hideList} listsToRender={listsToRender} />;
-                } else {
-                  return (
-                    <p class="menu-label">
-                      <strong id="menu-label">{list.name}</strong>
-                      <a onClick={() => showList(list.name)}>
-                        <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
-                      </a>
-                    </p>
-                  );
-                }
-              })}
-            </div>
-          ) : (
-            <div className="no-favorites">No Custom Lists</div>
-          )
-        }
-      </aside>
-    </div>
-  );
+            ) : (
+              <p class="menu-label">
+                <strong id="menu-label">Losers</strong>
+                <a onClick={() => showList("losers")}>
+                  <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                </a>
+              </p>
+            )
+          }
+          {
+            renderFavorites ? (
+              <p class="menu-label">
+                <strong id="menu-label">Favorites</strong>
+                <a onClick={() => hideList("favorites")}>
+                  <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                </a>
+                <p id="favorites">
+                  {
+                    favorites.length ? (
+                      <div className="list">
+                        <ul class="menu-list">
+                          {favorites.map(favorite => {
+                            return <Favorite favorite={favorite} key={favorite.id} />;
+                          })}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="no-favorites">No Favorites</div>
+                    )
+                  }
+                </p>
+              </p>
+            ) : (
+              <p class="menu-label">
+                <strong id="menu-label">Favorites</strong>
+                <a onClick={() => showList("favorites")}>
+                  <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                </a>
+              </p>
+            )
+          }
+          <button class="button is-danger mt-2 mb-4" onClick={() => confirmListsModal()}>Clear Lists</button>
+          {
+            lists.length ? (
+              <div className="list">
+                {lists.map(list => {
+                  if (listsToRender[list.name] === true) {
+                    return <RenderLists list={list} hideList={hideList} listsToRender={listsToRender} removeList={removeList} />;
+                  } else {
+                    return (
+                      <p class="menu-label mt-5">
+                        <strong id="menu-label">{list.name}</strong>
+                        <a onClick={() => showList(list.name)}>
+                          <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                        </a>
+                        <button class="button is-danger is-small ml-6" onClick={() => removeList(list.name)}>Delete</button>
+                      </p>
+                    );
+                  }
+                })}
+              </div>
+            ) : (
+              <div className="no-favorites">No Custom Lists</div>
+            )
+          }
+        </aside>
+      </div>
+    );
+  } else if (FavoritesModal) {
+    return (
+      <div class="modal is-active">
+        <div class="modal-background"> </div>
+        <div class="modal-content">
+          {/* <!-- Any other Bulma elements you want --> */}
+          <div class="section" id="modal-section">
+            <h3 id="modal-heading">Are you sure you want to clear all Favorites?</h3>
+            <button class="button is-danger mt-4" onClick={clearFavoritesConfirmed}>Clear All Favorites</button>
+            <button class="button is-primary mt-4 ml-4" onClick={clearFavoriteModal}>Cancel</button>
+          </div>
+
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+      </div>
+    );
+  } else if (ListsModal) {
+    return (
+      <div class="modal is-active">
+        <div class="modal-background"> </div>
+        <div class="modal-content">
+          {/* <!-- Any other Bulma elements you want --> */}
+          <div class="section" id="modal-section">
+            <h3 id="modal-heading">Are you sure you want to clear all lists?</h3>
+            <button class="button is-danger mt-4" onClick={clearListsConfirmed}>Clear All Lists</button>
+            <button class="button is-primary mt-4 ml-4" onClick={clearListsModal}>Cancel</button>
+          </div>
+
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+      </div>
+    );
+  } else {
+    return null
+  }
+
+
 }
-
-
-
 
 export default Menu;

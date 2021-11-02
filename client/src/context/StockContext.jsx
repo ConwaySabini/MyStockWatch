@@ -55,20 +55,32 @@ const StockContextProvider = props => {
     setLists([...lists, { name, stocks, id: nanoid() }]);
   }
 
+  // Find List
+  const findList = name => {
+    const foundList = lists.find(list => list.name === name);
+    return foundList;
+  }
+
   // Find and remove List
   const removeList = name => {
     setLists(lists.filter(list => list.name !== name));
   }
 
-  // Edit lists
+  // Add a stock to a list
   const addStockToList = (name, symbol) => {
     // edit stock if it exists
     const foundStock = stocks.find(stock => stock.symbol === symbol);
     const foundList = lists.find(list => list.name === name);
     let newStocks = [...foundList.stocks, foundStock];
-    let id = foundList.id;
-    const newLists = stocks.map(list => (list.name === name ? { name, newStocks, id } : list));
-    setLists(newLists);
+    foundList.stocks = newStocks;
+  }
+
+  // remove a stock from a list
+  const removeStockFromList = (name, symbol) => {
+    // edit stock if it exists
+    const foundStock = stocks.find(stock => stock.symbol === symbol);
+    const foundList = lists.find(list => list.name === name);
+    foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== foundStock.symbol);
   }
 
   // Get the lists
@@ -171,6 +183,9 @@ const StockContextProvider = props => {
         addStockToList,
         getLists,
         clearLists,
+        findList,
+        lists,
+        removeStockFromList,
       }}
     >
       {props.children}
