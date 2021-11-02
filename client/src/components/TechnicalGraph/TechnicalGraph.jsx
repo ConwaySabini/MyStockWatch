@@ -25,17 +25,11 @@ function TechnicalGraph({ stock, width, height }) {
   let low = stock.data.values[0].close;
   let high = stock.data.values[0].close;
   for (let i = stock.data.values.length - 1; i >= 0; i--) {
-    if (stock.data.values[idx].close < low) {
-      low = stock.data.values[idx].close;
-    }
-    if (stock.data.values[idx].close > high) {
-      high = stock.data.values[idx].close;
-    }
+    low = Math.min(low, stock.data.values[i].close);
+    high = Math.max(high, stock.data.values[i].close);
     stockData[idx] = stock.data.values[i];
     idx++;
   }
-  //TODO debug
-  console.log(low, high);
 
   const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
     (d) => new Date(d.datetime)
@@ -54,9 +48,8 @@ function TechnicalGraph({ stock, width, height }) {
   const dateTimeFormat = "%Y %B %d";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
-  //TODO debug
   const candleChartExtents = (data) => {
-    return [data.high, data.low];
+    return [high, low];
   };
 
   const yEdgeIndicator = (data) => {

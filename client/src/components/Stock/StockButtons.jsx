@@ -18,6 +18,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
     setLoading(false);
   }
 
+  // set the list to add the stock to
   const handleListChange = (name) => {
     setList(name);
   }

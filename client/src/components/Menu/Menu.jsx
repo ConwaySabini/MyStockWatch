@@ -162,7 +162,7 @@ function Menu() {
       return (
         <div>
           <aside class="menu">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="AddListsForm">
               <a onClick={() => hideMenuFunc()}>
                 <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
               </a>
@@ -179,7 +179,6 @@ function Menu() {
               />
             </form>
             <br />
-            <button class="button is-danger pr-4 pl-4 mb-2" onClick={() => confirmFavoriteClear()}>Clear Favorites</button>
             {
               renderGainers ? (
                 <p class="menu-label">
@@ -276,7 +275,7 @@ function Menu() {
                 </p>
               )
             }
-            <button class="button is-danger mt-2 mb-4" onClick={() => confirmListsModal()}>Clear Lists</button>
+            <button class="button is-danger pr-4 pl-4 mb-2 mt-4" onClick={() => confirmFavoriteClear()}>Clear Favorites</button>
             {
               lists.length ? (
                 <div className="list">
@@ -295,6 +294,7 @@ function Menu() {
                       );
                     }
                   })}
+                  <button class="button is-danger mt-2 mb-4" onClick={() => confirmListsModal()}>Clear Lists</button>
                 </div>
               ) : (
                 <div className="no-favorites">No Custom Lists</div>
