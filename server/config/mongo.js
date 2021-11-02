@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 import config from './index.js'
+require('dotenv').config();
 
-const CONNECTION_URL = `mongodb://${config.db.url}/${config.db.name}`
+const CONNECTION_URL = process.env.MONGODB_CONNECTION;
 
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,

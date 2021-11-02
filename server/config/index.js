@@ -4,5 +4,4 @@ const config = {
     name: 'project'
   }
 }
-
 export default config;

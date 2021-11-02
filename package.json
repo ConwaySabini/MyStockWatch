@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "npm run build:clean",
+    "build": "babel ./server --out-dir ./dist --source-maps",
+    "build:clean": "rm -rf dist",
+    "start": "npm run build && nodemon --exec babel-node ./server",
+    "start:prod": "npm run build && node ./dist/index.js",
+    "start-server": "node server/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +25,19 @@
   "homepage": "https://github.com/ConwaySabini/stonks#readme",
   "dependencies": {
     "axios": "^0.23.0",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12",
+    "morgan": "^1.10.0",
     "nanoid": "^3.1.29"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "nodemon": "^2.0.14"
   }
 }

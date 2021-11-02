@@ -1,54 +1,59 @@
+"use strict";
+
+var _http = _interopRequireDefault(require("http"));
+
+var _express = _interopRequireDefault(require("express"));
+
+var _morgan = _interopRequireDefault(require("morgan"));
+
+var _cors = _interopRequireDefault(require("cors"));
+
+require("./config/mongo.js");
+
+var _index = _interopRequireDefault(require("./routes/index.js"));
+
+var _user = _interopRequireDefault(require("./routes/user.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 const dotenv = require('dotenv');
-import http from "http";
-import express from "express";
-import logger from "morgan";
-import cors from "cors";
-// mongo connection
-import "./config/mongo.js";
-// socket configuration
-// routes
-import indexRouter from "./routes/index.js";
-import userRouter from "./routes/user.js";
 
 // Redis configuration
 // const redis = require("redis"),
 //   client = redis.createClient();
-
 // // client middleware for redis
 // const { promisify } = require('util');
 // const getAsync = promisify(client.get).bind(client);
-
 const envConfig = dotenv.config();
+
 if (envConfig.error) {
   throw envConfig.error;
 }
-//console.log(envConfig.parsed);
 
-
-const app = express();
+console.log(envConfig.parsed);
+const app = (0, _express.default)();
 /** Get port from environment and store in Express. */
+
 const port = process.env.PORT || "3000";
 app.set("port", port);
-
-
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors({ origin: 'https://localhost:3001' }));
-
-app.use("/", indexRouter);
-app.use("/users", userRouter);
-
+app.use((0, _morgan.default)("dev"));
+app.use(_express.default.json());
+app.use(_express.default.urlencoded({
+  extended: false
+}));
+app.use((0, _cors.default)({
+  origin: 'https://localhost:3001'
+}));
+app.use("/", _index.default);
+app.use("/users", _user.default);
 /** catch 404 and forward to error handler */
+
 app.use('*', (req, res) => {
   return res.status(404).json({
     success: false,
     message: 'API endpoint doesnt exist'
-  })
-});
-
-// Get the information from the api 
+  });
+}); // Get the information from the api 
 // app.get('/api/jobs', async (req, res) => {
 //   const jobs = await getAsync('github');
 //   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -56,20 +61,18 @@ app.use('*', (req, res) => {
 // });
 
 /** Create HTTP server. */
-const server = http.createServer(app);
 
+const server = _http.default.createServer(app);
 /** Listen on provided port, on all network interfaces. */
+
+
 server.listen(port);
 /** Event listener for HTTP server "listening" event. */
+
 server.on("listening", () => {
   console.log(`Listening on port:: http://localhost:${port}/`);
-});
-
-
-
-
-// const fetchGithub = require('./fetch/fetch-github')
-
+}); // const fetchGithub = require('./fetch/fetch-github')
 // const Cron = require('cron').CronJob;
 // // sends request every minute
 // new Cron('* * * * *', fetchGithub, null, true, 'America/Los_Angeles');
+//# sourceMappingURL=index.js.map

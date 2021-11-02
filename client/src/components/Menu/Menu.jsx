@@ -152,7 +152,7 @@ function Menu() {
       <div>
         <aside class="menu">
           <a onClick={() => showMenu()}>
-            <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+            <i class="fas fa-angle-up fa-2x" aria-hidden="true"></i>
           </a>
         </aside>
       </div>
@@ -164,7 +164,7 @@ function Menu() {
           <aside class="menu">
             <form onSubmit={handleSubmit} className="AddListsForm">
               <a onClick={() => hideMenuFunc()}>
-                <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                <i class="fas fa-angle-down fa-2x" aria-hidden="true"></i>
               </a>
               <a>
                 <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" onClick={handleSubmit}></i>

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../server/config/index.js"],"names":["config","db","url","name"],"mappings":";;;;;;AAAA,MAAMA,MAAM,GAAG;AACbC,EAAAA,EAAE,EAAE;AACFC,IAAAA,GAAG,EAAE,iBADH;AAEFC,IAAAA,IAAI,EAAE;AAFJ;AADS,CAAf;eAMeH,M","sourcesContent":["const config = {\n  db: {\n    url: 'localhost:27017',\n    name: 'project'\n  }\n}\nexport default config;\n"],"file":"index.js"}
