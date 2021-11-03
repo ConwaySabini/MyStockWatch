@@ -67,7 +67,6 @@ function Card({ article, type }) {
     if (name.length < 49) {
       name += "\r\n ";
     }
-    console.log(article.attributes);
     if (article.attributes.gettyImage !== undefined && article.attributes.gettyImage !== null) {
       image = article.attributes.gettyImage.crop_4_3;
     }
@@ -78,12 +77,17 @@ function Card({ article, type }) {
     }
     if (article.links.self !== undefined) {
       link = article.links.self;
+
     }
   }
 
-
   const handleRedirect = () => {
     window.open(link, "_blank");
+  }
+
+  const handleNewsRedirect = () => {
+    const newLink = 'http://www.google.com/search?q=' + link;
+    window.open(newLink, "_blank");
   }
 
   const launchModal = () => {
@@ -158,7 +162,7 @@ function Card({ article, type }) {
           <time datetime={date}>Date: {date}</time>
           <div class="block"></div>
           {/* <button class="button is-link">Expand</button> */}
-          <button class="button is-link" onClick={handleRedirect}>
+          <button class="button is-link" onClick={handleNewsRedirect}>
             Read Article
           </button>
 
