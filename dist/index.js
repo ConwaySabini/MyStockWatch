@@ -28,9 +28,9 @@ const envConfig = dotenv.config();
 
 if (envConfig.error) {
   throw envConfig.error;
-}
+} //console.log(envConfig.parsed);
 
-console.log(envConfig.parsed);
+
 const app = (0, _express.default)();
 /** Get port from environment and store in Express. */
 

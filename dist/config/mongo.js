@@ -2,16 +2,11 @@
 
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
-var _index = _interopRequireDefault(require("./index.js"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const dotenv = require('dotenv').config({
-  path: '../../.env'
-});
+require('dotenv').config();
 
-const CONNECTION_URL = process.env.CONNECTION_URL;
-stdout.write(CONNECTION_URL);
+const CONNECTION_URL = process.env.MONGODB_CONNECTION;
 
 _mongoose.default.connect(CONNECTION_URL, {
   useNewUrlParser: true,
