@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 import bcrypt from 'bcrypt';
 
+// Schema for the user model
 const userSchema = new mongoose.Schema(
   {
     _id: {
@@ -20,25 +21,20 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-/**
- * @param {String} firstName
- * @param {String} lastName
- * @returns {Object} new user object created
- */
+// Creates a new user with the given email, password, firstName, lastName, and type
+// Returns the newly created user
 userSchema.statics.createUser = async function (firstName, lastName, type, email, pass) {
   try {
+    // Hash the password with 10 rounds of salting
     const password = await bcrypt.hash(pass, 10);
-    const user = await this.create({ firstName, lastName, type, email, password });
-    return user;
+    // create the user
+    return await this.create({ firstName, lastName, type, email, password });
   } catch (error) {
     throw error;
   }
 }
 
-/**
- * @param {String} id, user id
- * @return {Object} User profile object
- */
+// Get the user by their id and return the found user if they exist
 userSchema.statics.getUserById = async function (id) {
   try {
     const user = await this.findOne({ _id: id });
@@ -49,52 +45,41 @@ userSchema.statics.getUserById = async function (id) {
   }
 }
 
-/**
- * @return {Array} List of all users
- */
+// Get all users in the database and return them
 userSchema.statics.getUsers = async function () {
   try {
-    const users = await this.find();
-    return users;
+    return await this.find();
   } catch (error) {
     throw error;
   }
 }
 
-/**
- * @param {Array} ids, string of user ids
- * @return {Array of Objects} users list
- */
-userSchema.statics.deleteByUserById = async function (id) {
+// Delete a user with the given id and return the result
+userSchema.statics.deleteByUserId = async function (id) {
   try {
-    const result = await this.deleteOne({ _id: id });
-    return result;
+    return await this.deleteOne({ _id: id });
   } catch (error) {
     throw error;
   }
 }
 
 
-/**
- * @param {Array} ids, string of user ids
- * @return {Array of Objects} users list
- */
+// Get users by their ids and return the found users
 userSchema.statics.getUserByIds = async function (ids) {
   try {
     const users = await this.find({ _id: { $in: ids } });
+    if (!users) throw ({ error: 'No users with these ids were found' });
     return users;
   } catch (error) {
     throw error;
   }
 }
 
-/**
- * @param {String} userEmail, string of user email
- * @return {Object} user with email
- */
+// Get a user with the given email and return the found user if they exist
 userSchema.statics.getUserByEmail = async function (userEmail) {
   try {
     const user = await this.findOne({ "email": userEmail });
+    // return null if the user doesn't exist
     if (!user) return null;
     return user;
   } catch (error) {
@@ -102,12 +87,16 @@ userSchema.statics.getUserByEmail = async function (userEmail) {
   }
 }
 
+// Verify the email and password of the user
 userSchema.statics.verifyPassword = async function (email, password) {
   try {
-    //Get hashed password from the database and compare
+    // Get hashed password from the database and compare
     const user = await this.findOne({ "email": email });
+    // Throw error if user doesn't exist
     if (!user) throw ({ error: 'No user with this email' });
+    // Compare the password with the hashed password
     const isPassword = bcrypt.compareSync(password, user.password);
+    // Throw error if password is incorrect
     if (!isPassword) throw ({ error: 'Password is incorrect' });
     return user;
   } catch (error) {

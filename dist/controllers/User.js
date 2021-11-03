@@ -5,19 +5,48 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _UserModel = _interopRequireWildcard(require("../models/UserModel.js"));
+// libraries
+const validator = require('validator'); // Export User Controller
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-// utils
-//import makeValidation from '@withvoid/make-validation';
-// models
 var _default = {
+  // Finds a user by their id and returns the user on success
+  onGetUserById: async (req, res) => {
+    try {
+      const user = await UserModel.getUserById(req.params.id);
+      return res.status(200).json({
+        success: true,
+        user
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: error
+      });
+    }
+  },
+  // Finds a user with their email and returns the user if they exist, 
+  // otherwise returns an error
+  onGetUserByEmail: async (req, res) => {
+    try {
+      // get the user and return the user if available
+      const user = await UserModel.getUserByEmail(req.params.email);
+      return res.status(200).json({
+        success: true,
+        user
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: error
+      });
+    }
+  },
+  // Returns a list of all users
   onGetAllUsers: async (req, res) => {
     try {
-      const users = await _UserModel.default.getUsers();
+      // finds all users and returns them if there are any users
+      const users = await UserModel.getUsers();
       return res.status(200).json({
         success: true,
         users
@@ -29,60 +58,47 @@ var _default = {
       });
     }
   },
-  onGetUserById: async (req, res) => {
-    try {
-      const user = await _UserModel.default.getUserById(req.params.id);
-      return res.status(200).json({
-        success: true,
-        user
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: error
-      });
-    }
-  },
-  onGetUserByEmail: async (req, res) => {
-    try {
-      const user = await _UserModel.default.getUserByEmail(req.params.email);
-      return res.status(200).json({
-        success: true,
-        user
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: error
-      });
-    }
-  },
+  // Tries to create a user, returns the user on success, 
+  // otherwise returns an error
   onCreateUser: async (req, res) => {
     try {
-      // const validation = makeValidation(types => ({
-      //   payload: req.body,
-      //   checks: {
-      //     firstName: { type: types.string },
-      //     lastName: { type: types.string },
-      //     type: { type: types.enum, options: { enum: USER_TYPES } },
-      //     email: { type: types.string },
-      //     password: { type: types.string },
-      //   }
-      // }));
-      // if (!validation.success) return res.status(400).json(validation);
+      let validation = true;
       const {
+        email,
+        password,
         firstName,
         lastName,
-        type,
-        email,
-        password
-      } = req.body;
-      const found = await _UserModel.default.getUserByEmail(email);
+        type
+      } = req.body; // Validate the data from the request
+
+      if (!validator.isEmail(email)) {
+        validation = false;
+      }
+
+      if (!(typeof password === 'string' || password instanceof String)) {
+        validation = false;
+      }
+
+      if (!(typeof firstName === 'string' || firstName instanceof String)) {
+        validation = false;
+      }
+
+      if (!(typeof lastName === 'string' || lastName instanceof String)) {
+        validation = false;
+      } // throw error on validation failure
+
+
+      if (!validation) return res.status(400).json(validation); // Find if the user already exists
+
+      const found = await UserModel.getUserByEmail(email); // throw error if user already exists
+
       if (found !== null) return res.status(500).json({
         success: false,
         error: 'There is already an account associated with this email.'
-      });
-      const user = await _UserModel.default.createUser(firstName, lastName, type, email, password);
+      }); // create the user
+
+      const user = await UserModel.createUser(firstName, lastName, type, email, password); // return the user and success message
+
       return res.status(200).json({
         success: true,
         user
@@ -94,9 +110,11 @@ var _default = {
       });
     }
   },
+  // Delete the user with the given id and returns the success message on success,
+  // otherwise returns an error
   onDeleteUserById: async (req, res) => {
     try {
-      const user = await _UserModel.default.deleteByUserById(req.params.id);
+      const user = await UserModel.deleteByUserById(req.params.id);
       return res.status(200).json({
         success: true,
         message: `Deleted a count of ${user.deletedCount} user.`
@@ -108,22 +126,27 @@ var _default = {
       });
     }
   },
+  // Verify the user with the email and password
   onVerifyUser: async (req, res) => {
     try {
-      // const validation = makeValidation(types => ({
-      //   payload: req.body,
-      //   checks: {
-      //     email: { type: types.string },
-      //     password: { type: types.string },
-      //   }
-      // }));
+      let validation = true;
       const {
         email,
         password
-      } = req.body;
-      const isEmail = email.includes('@'); // if (!validation.success || !isEmail) return res.status(400).json(validation);
+      } = req.body; // Validate the data from the request
 
-      const user = await _UserModel.default.verifyPassword(email, password);
+      if (!validator.isEmail(email)) {
+        validation = false;
+      }
+
+      if (!(typeof password === 'string' || password instanceof String)) {
+        validation = false;
+      } // throw error on validation failure
+
+
+      if (!validation) return res.status(400).json(validation); // Verify the user email and password
+
+      const user = await UserModel.verifyPassword(email, password);
       if (user) return res.status(200).json({
         success: true,
         id: user._id

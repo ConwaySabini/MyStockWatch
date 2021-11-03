@@ -14,6 +14,8 @@ const StockContextProvider = props => {
   const [favorites, setFavorites] = useState(initialFavoriteState);
   const [lists, setLists] = useState(initialListsState);
 
+  //TODO make API calls to the backend on useEffect update
+
   // update local storage on modification
   useEffect(() => {
     localStorage.setItem('stocks', JSON.stringify(stocks));

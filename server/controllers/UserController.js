@@ -1,5 +1,7 @@
 // libraries
 const validator = require('validator');
+// models
+import { UserModel } from '../models/User';
 
 // Export User Controller
 export default {

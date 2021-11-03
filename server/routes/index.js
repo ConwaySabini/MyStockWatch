@@ -1,6 +1,6 @@
 import express from 'express';
 // controllers
-import user from '../controllers/User.js';
+import user from '../controllers/UserController.js';
 // middlewares
 //import { encode } from '../auth/jwt.js';
 //const jwt = require('jsonwebtoken');
