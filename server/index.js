@@ -1,3 +1,4 @@
+// imports
 const dotenv = require('dotenv');
 import http from "http";
 import express from "express";
@@ -5,7 +6,6 @@ import logger from "morgan";
 import cors from "cors";
 // mongo connection
 import "./config/mongo.js";
-// socket configuration
 // routes
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/user.js";

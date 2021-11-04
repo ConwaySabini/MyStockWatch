@@ -1,3 +1,4 @@
+// imports
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 

@@ -1,3 +1,4 @@
+// imports
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 import bcrypt from 'bcrypt';
@@ -55,7 +56,7 @@ userSchema.statics.getUsers = async function () {
 }
 
 // Delete a user with the given id and return the result
-userSchema.statics.deleteByUserId = async function (id) {
+userSchema.statics.deleteUserById = async function (id) {
   try {
     return await this.deleteOne({ _id: id });
   } catch (error) {

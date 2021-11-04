@@ -1,3 +1,4 @@
+// imports
 import mongoose from 'mongoose';
 require('dotenv').config();
 
@@ -9,15 +10,15 @@ mongoose.connect(CONNECTION_URL, {
 });
 
 mongoose.connection.on('connected', () => {
-  console.log('Mongo has connected succesfully')
+  console.log('Mongo is connected')
 });
 mongoose.connection.on('reconnected', () => {
-  console.log('Mongo has reconnected')
+  console.log('Mongo is reconnected')
 });
 mongoose.connection.on('error', error => {
-  console.log('Mongo connection has an error', error)
+  console.log('Error on mongo connection', error)
   mongoose.disconnect()
 });
 mongoose.connection.on('disconnected', () => {
-  console.log('Mongo connection is disconnected')
+  console.log('Mongo is disconnected')
 });

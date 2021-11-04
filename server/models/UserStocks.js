@@ -1,3 +1,4 @@
+// imports
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 
@@ -42,8 +43,20 @@ const userStockSchema = new mongoose.Schema(
 // Creates user stock data
 userStockSchema.statics.createUserStocks = async function (userId, stocks) {
   try {
-    // create the stocks
+    // create the stocks if they do not exist
     return await this.create({ userId, stocks });
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Updates user stock data
+userStockSchema.statics.updateUserStocks = async function (userId, stocks) {
+  try {
+    // find the stocks for the specified user
+    const foundStocks = await this.findOne({ userId: userId });
+    // update the stocks
+    this.update({ _id: foundStocks._id }, { $set: { stocks: stocks } });
   } catch (error) {
     throw error;
   }
@@ -89,6 +102,14 @@ userStockSchema.statics.deleteByStocksById = async function (id) {
   }
 }
 
+// Delete the stocks by their userId and return result
+userStockSchema.statics.deleteStocksByUserId = async function (userId) {
+  try {
+    return await this.deleteOne({ userId: userId });
+  } catch (error) {
+    throw error;
+  }
+}
 
 // Get stocks by their ids and return the found stocks
 userStockSchema.statics.getStocks = async function (ids) {
