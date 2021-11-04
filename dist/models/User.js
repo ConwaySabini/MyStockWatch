@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imports
 // Schema for the user model
-const userSchema = new Schema({
+const userSchema = new _mongoose.default.Schema({
   _id: {
     type: String,
     default: () => (0, _nanoid.nanoid)()
@@ -66,8 +66,7 @@ userSchema.statics.getUserById = async function (id) {
 
 userSchema.statics.getUsers = async function () {
   try {
-    const users = await this.find();
-    return users;
+    return await this.find();
   } catch (error) {
     throw error;
   }

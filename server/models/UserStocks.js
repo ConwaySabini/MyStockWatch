@@ -10,29 +10,35 @@ const userStockSchema = new mongoose.Schema(
       default: () => nanoid(),
     },
     userId: String,
-    stocks: [{
-      id: String,
-      symbol: String,
-      percentChange: Number,
-      timeline: String,
-      status: String,
-      data: {
-        symbol: String,
-        interval: String,
-        currency: String,
-        exchange_timezone: String,
-        exchange: String,
-        stockType: String,
-        values: [{
-          datetime: String,
-          open: String,
-          high: String,
-          low: String,
-          close: String,
-          volume: String,
-        }],
-      },
-    }],
+    // stocks: [{
+    //   type: Object
+    // }]
+    // stocks: [{
+    //   symbol: String,
+    //   data: {
+    //     meta: {
+    //       symbol: String,
+    //       interval: String,
+    //       currency: String,
+    //       exchange_timezone: String,
+    //       exchange: String,
+    //       type: { type: String },
+    //     },
+    //     values: [{
+    //       datetime: String,
+    //       open: String,
+    //       high: String,
+    //       low: String,
+    //       close: String,
+    //       volume: String,
+    //     }],
+    //     status: String,
+    //   },
+    //   percentChange: Number,
+    //   timeline: String,
+    //   id: String,
+    // }],
+    stocks: [mongoose.Schema.Types.Mixed]
   },
   {
     timestamps: true,
@@ -78,7 +84,6 @@ userStockSchema.statics.getStocksById = async function (id) {
 userStockSchema.statics.getStocksByUserId = async function (userId) {
   try {
     const stocks = await this.findOne({ userId: userId });
-    if (!stocks) throw ({ error: 'No stocks with this userId found' });
     return stocks;
   } catch (error) {
     throw error;

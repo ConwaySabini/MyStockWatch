@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _User = require("../models/User.js");
+var _User = _interopRequireDefault(require("../models/User.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // libraries
 const validator = require('validator'); // models
@@ -16,7 +18,7 @@ var _default = {
   // Finds a user by their id and returns the user on success
   onGetUserById: async (req, res) => {
     try {
-      const user = await _User.User.getUserById(req.params.id);
+      const user = await _User.default.getUserById(req.params.id);
       return res.status(200).json({
         success: true,
         user
@@ -33,7 +35,7 @@ var _default = {
   onGetUserByEmail: async (req, res) => {
     try {
       // get the user and return the user if available
-      const user = await _User.User.getUserByEmail(req.params.email);
+      const user = await _User.default.getUserByEmail(req.params.email);
       return res.status(200).json({
         success: true,
         user
@@ -48,8 +50,9 @@ var _default = {
   // Returns a list of all users
   onGetAllUsers: async (req, res) => {
     try {
-      // finds all users and returns them if there are any users
-      const users = await _User.User.getUsers();
+      console.log(_User.default); // finds all users and returns them if there are any users
+
+      const users = await _User.default.getUsers();
       return res.status(200).json({
         success: true,
         users
@@ -94,14 +97,14 @@ var _default = {
 
       if (!validation) return res.status(400).json(validation); // Find if the user already exists
 
-      const found = await _User.User.getUserByEmail(email); // throw error if user already exists
+      const found = await _User.default.getUserByEmail(email); // throw error if user already exists
 
       if (found !== null) return res.status(500).json({
         success: false,
         error: 'There is already an account associated with this email.'
       }); // create the user
 
-      const user = await _User.User.createUser(firstName, lastName, type, email, password); // return the user and success message
+      const user = await _User.default.createUser(firstName, lastName, type, email, password); // return the user and success message
 
       return res.status(200).json({
         success: true,
@@ -118,7 +121,7 @@ var _default = {
   // otherwise returns an error
   onDeleteUserById: async (req, res) => {
     try {
-      const user = await _User.User.deleteUserById(req.params.id);
+      const user = await _User.default.deleteUserById(req.params.id);
       return res.status(200).json({
         success: true,
         message: `Deleted a count of ${user.deletedCount} user.`
@@ -150,7 +153,7 @@ var _default = {
 
       if (!validation) return res.status(400).json(validation); // Verify the user email and password
 
-      const user = await _User.User.verifyPassword(email, password);
+      const user = await _User.default.verifyPassword(email, password);
       if (user) return res.status(200).json({
         success: true,
         id: user._id

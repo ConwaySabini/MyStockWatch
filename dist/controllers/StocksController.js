@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _UserStocks = require("../models/UserStocks");
+var _UserStocks = _interopRequireDefault(require("../models/UserStocks"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // libraries
 const validator = require('validator'); // models
@@ -16,7 +18,7 @@ var _default = {
   // Finds stocks by their id and returns the stocks on success
   onGetStocksById: async (req, res) => {
     try {
-      const stocks = await _UserStocks.UserStocks.getUserById(req.params.id);
+      const stocks = await _UserStocks.default.getUserById(req.params.id);
       return res.status(200).json({
         success: true,
         stocks
@@ -33,7 +35,7 @@ var _default = {
   onGetStocksByUserId: async (req, res) => {
     try {
       // get the stocks and return the stocks if available
-      const stocks = await _UserStocks.UserStocks.getStocksByUserId(req.params.userId);
+      const stocks = await _UserStocks.default.getStocksByUserId(req.params.userId);
       return res.status(200).json({
         success: true,
         stocks
@@ -49,7 +51,7 @@ var _default = {
   onGetAllStocks: async (req, res) => {
     try {
       // finds all stocks and returns them if there are any stocks
-      const users = await _UserStocks.UserStocks.getUsers();
+      const users = await _UserStocks.default.getUsers();
       return res.status(200).json({
         success: true,
         users
@@ -78,14 +80,14 @@ var _default = {
 
       if (!validation) return res.status(400).json(validation); // Find if the stocks already exists
 
-      const foundStocks = await _UserStocks.UserStocks.getStocksByUserId(userId); // throw error if stocks already exists
+      const foundStocks = await _UserStocks.default.getStocksByUserId(userId); // throw error if stocks already exists
 
       if (foundStocks !== null) return res.status(500).json({
         success: false,
         error: 'There is already stocks for this user.'
       }); // create the stocks
 
-      const createdStocks = await _UserStocks.UserStocks.createUserStocks(userId, stocks); // return the stocks and success message
+      const createdStocks = await _UserStocks.default.createUserStocks(userId, stocks); // return the stocks and success message
 
       return res.status(200).json({
         success: true,
@@ -102,7 +104,7 @@ var _default = {
   // otherwise returns an error
   onUpdateStocksByUserId: async (req, res) => {
     try {
-      await _UserStocks.UserStocks.updateUserStocks(req.params.userId);
+      await _UserStocks.default.updateUserStocks(req.params.userId);
       return res.status(200).json({
         success: true,
         message: `Updated stocks from user ${req.params.userId}.`
@@ -118,7 +120,7 @@ var _default = {
   // otherwise returns an error
   onDeleteStocksById: async (req, res) => {
     try {
-      const deletedStocks = await _UserStocks.UserStocks.deleteStocksById(req.params.id);
+      const deletedStocks = await _UserStocks.default.deleteStocksById(req.params.id);
       return res.status(200).json({
         success: true,
         message: `Deleted ${deletedStocks.deletedCount} stocks.`
@@ -134,7 +136,7 @@ var _default = {
   // otherwise returns an error
   onDeleteStocksByUserId: async (req, res) => {
     try {
-      const deletedStocks = await _UserStocks.UserStocks.deleteStocksById(req.params.userId);
+      const deletedStocks = await _UserStocks.default.deleteStocksById(req.params.userId);
       return res.status(200).json({
         success: true,
         message: `Deleted ${deletedStocks.deletedCount} stocks.`

@@ -1,7 +1,7 @@
 // libraries
 const validator = require('validator');
 // models
-import { UserStocks } from '../models/UserStocks';
+import UserStocks from '../models/UserStocks';
 
 // Export User Controller
 export default {

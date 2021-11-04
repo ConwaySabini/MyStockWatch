@@ -10,7 +10,7 @@ router
   .post('/', stocks.onCreateStocks)
   .get('/:id', stocks.onGetStocksById)
   .get('/userId/:userId', stocks.onGetStocksByUserId)
-  .post('/update/:userId', stocks.onUpdateStocksByUserId)
+  .put('/update/:userId', stocks.onUpdateStocksByUserId)
   .delete('/:id', stocks.onDeleteStocksById)
   .delete('/userId/:userId', stocks.onDeleteStocksByUserId)
 
