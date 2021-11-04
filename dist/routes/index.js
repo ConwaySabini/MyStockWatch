@@ -7,7 +7,7 @@ exports.default = void 0;
 
 var _express = _interopRequireDefault(require("express"));
 
-var _User = _interopRequireDefault(require("../controllers/User.js"));
+var _UserController = _interopRequireDefault(require("../controllers/UserController.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

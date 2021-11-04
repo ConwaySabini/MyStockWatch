@@ -13,7 +13,9 @@ var _bcrypt = _interopRequireDefault(require("bcrypt"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const userSchema = new _mongoose.default.Schema({
+// imports
+// Schema for the user model
+const userSchema = new Schema({
   _id: {
     type: String,
     default: () => (0, _nanoid.nanoid)()
@@ -26,32 +28,25 @@ const userSchema = new _mongoose.default.Schema({
 }, {
   timestamps: true,
   collection: "users"
-});
-/**
- * @param {String} firstName
- * @param {String} lastName
- * @returns {Object} new user object created
- */
+}); // Creates a new user with the given email, password, firstName, lastName, and type
+// Returns the newly created user
 
 userSchema.statics.createUser = async function (firstName, lastName, type, email, pass) {
   try {
-    const password = await _bcrypt.default.hash(pass, 10);
-    const user = await this.create({
+    // Hash the password with 10 rounds of salting
+    const password = await _bcrypt.default.hash(pass, 10); // create the user
+
+    return await this.create({
       firstName,
       lastName,
       type,
       email,
       password
     });
-    return user;
   } catch (error) {
     throw error;
   }
-};
-/**
- * @param {String} id, user id
- * @return {Object} User profile object
- */
+}; // Get the user by their id and return the found user if they exist
 
 
 userSchema.statics.getUserById = async function (id) {
@@ -66,10 +61,7 @@ userSchema.statics.getUserById = async function (id) {
   } catch (error) {
     throw error;
   }
-};
-/**
- * @return {Array} List of all users
- */
+}; // Get all users in the database and return them
 
 
 userSchema.statics.getUsers = async function () {
@@ -79,27 +71,18 @@ userSchema.statics.getUsers = async function () {
   } catch (error) {
     throw error;
   }
-};
-/**
- * @param {Array} ids, string of user ids
- * @return {Array of Objects} users list
- */
+}; // Delete a user with the given id and return the result
 
 
-userSchema.statics.deleteByUserById = async function (id) {
+userSchema.statics.deleteUserById = async function (id) {
   try {
-    const result = await this.deleteOne({
+    return await this.deleteOne({
       _id: id
     });
-    return result;
   } catch (error) {
     throw error;
   }
-};
-/**
- * @param {Array} ids, string of user ids
- * @return {Array of Objects} users list
- */
+}; // Get users by their ids and return the found users
 
 
 userSchema.statics.getUserByIds = async function (ids) {
@@ -109,40 +92,43 @@ userSchema.statics.getUserByIds = async function (ids) {
         $in: ids
       }
     });
+    if (!users) throw {
+      error: 'No users with these ids were found'
+    };
     return users;
   } catch (error) {
     throw error;
   }
-};
-/**
- * @param {String} userEmail, string of user email
- * @return {Object} user with email
- */
+}; // Get a user with the given email and return the found user if they exist
 
 
 userSchema.statics.getUserByEmail = async function (userEmail) {
   try {
     const user = await this.findOne({
       "email": userEmail
-    });
+    }); // return null if the user doesn't exist
+
     if (!user) return null;
     return user;
   } catch (error) {
     throw error;
   }
-};
+}; // Verify the email and password of the user
+
 
 userSchema.statics.verifyPassword = async function (email, password) {
   try {
-    //Get hashed password from the database and compare
+    // Get hashed password from the database and compare
     const user = await this.findOne({
       "email": email
-    });
+    }); // Throw error if user doesn't exist
+
     if (!user) throw {
       error: 'No user with this email'
-    };
+    }; // Compare the password with the hashed password
 
-    const isPassword = _bcrypt.default.compareSync(password, user.password);
+    const isPassword = _bcrypt.default.compareSync(password, user.password); // Throw error if password is incorrect
+
 
     if (!isPassword) throw {
       error: 'Password is incorrect'
@@ -156,4 +142,4 @@ userSchema.statics.verifyPassword = async function (email, password) {
 var _default = _mongoose.default.model("User", userSchema);
 
 exports.default = _default;
-//# sourceMappingURL=UserModel.js.map
+//# sourceMappingURL=User.js.map

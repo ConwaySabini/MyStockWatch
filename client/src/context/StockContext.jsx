@@ -48,19 +48,17 @@ const StockContextProvider = props => {
 
   // Find Favorite
   const findFavorite = symbol => {
-    const favoriteStock = favorites.find(favorite => favorite.symbol === symbol);
-    return favoriteStock;
+    return favorites.find(favorite => favorite.symbol === symbol);
   }
 
   // Add List
-  const addList = (name, stocks) => {
-    setLists([...lists, { name, stocks, id: nanoid() }]);
+  const addList = (name, newStocks) => {
+    setLists([...lists, { name, newStocks, id: nanoid() }]);
   }
 
   // Find List
   const findList = name => {
-    const foundList = lists.find(list => list.name === name);
-    return foundList;
+    return lists.find(list => list.name === name);
   }
 
   // Find and remove List
@@ -103,8 +101,8 @@ const StockContextProvider = props => {
   // Remove stock by id
   const removeStock = id => {
     setStocks(stocks.filter(stock => stock.id !== id));
-    let stock = findStock(id);
-    let favorite = findFavorite(stock.symbol);
+    let foundStock = findStock(id);
+    let favorite = findFavorite(foundStock.symbol);
     if (favorite !== undefined) {
       removeFavorite(favorite.id);
     }
@@ -138,7 +136,7 @@ const StockContextProvider = props => {
     if (stockToGet !== undefined) {
       return stockToGet;
     }
-    return stockToGet;
+    return undefined;
   }
 
   // Edit stock

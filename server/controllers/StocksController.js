@@ -69,6 +69,20 @@ export default {
     }
   },
 
+  // Update the stocks with the given userId and returns the success message on success,
+  // otherwise returns an error
+  onUpdateStocksByUserId: async (req, res) => {
+    try {
+      await UserStocks.updateUserStocks(req.params.userId);
+      return res.status(200).json({
+        success: true,
+        message: `Updated stocks from user ${req.params.userId}.`
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error });
+    }
+  },
+
   // Delete the stocks with the given id and returns the success message on success,
   // otherwise returns an error
   onDeleteStocksById: async (req, res) => {

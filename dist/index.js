@@ -14,8 +14,11 @@ var _index = _interopRequireDefault(require("./routes/index.js"));
 
 var _user = _interopRequireDefault(require("./routes/user.js"));
 
+var _stocks = _interopRequireDefault(require("./routes/stocks.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// imports
 const dotenv = require('dotenv');
 
 // Redis configuration
@@ -42,10 +45,12 @@ app.use(_express.default.urlencoded({
   extended: false
 }));
 app.use((0, _cors.default)({
-  origin: 'https://localhost:3001'
-}));
-app.use("/", _index.default);
+  origin: "*"
+})); //{ origin: 'https://127.0.0.1:3000' }
+//app.use("/", indexRouter);
+
 app.use("/users", _user.default);
+app.use("/stocks", _stocks.default);
 /** catch 404 and forward to error handler */
 
 app.use('*', (req, res) => {

@@ -5,15 +5,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _User = require("../models/User.js");
+
 // libraries
-const validator = require('validator'); // Export User Controller
+const validator = require('validator'); // models
 
 
+// Export User Controller
 var _default = {
   // Finds a user by their id and returns the user on success
   onGetUserById: async (req, res) => {
     try {
-      const user = await UserModel.getUserById(req.params.id);
+      const user = await _User.User.getUserById(req.params.id);
       return res.status(200).json({
         success: true,
         user
@@ -30,7 +33,7 @@ var _default = {
   onGetUserByEmail: async (req, res) => {
     try {
       // get the user and return the user if available
-      const user = await UserModel.getUserByEmail(req.params.email);
+      const user = await _User.User.getUserByEmail(req.params.email);
       return res.status(200).json({
         success: true,
         user
@@ -46,12 +49,13 @@ var _default = {
   onGetAllUsers: async (req, res) => {
     try {
       // finds all users and returns them if there are any users
-      const users = await UserModel.getUsers();
+      const users = await _User.User.getUsers();
       return res.status(200).json({
         success: true,
         users
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         success: false,
         error: error
@@ -64,11 +68,11 @@ var _default = {
     try {
       let validation = true;
       const {
-        email,
-        password,
         firstName,
         lastName,
-        type
+        type,
+        email,
+        password
       } = req.body; // Validate the data from the request
 
       if (!validator.isEmail(email)) {
@@ -90,14 +94,14 @@ var _default = {
 
       if (!validation) return res.status(400).json(validation); // Find if the user already exists
 
-      const found = await UserModel.getUserByEmail(email); // throw error if user already exists
+      const found = await _User.User.getUserByEmail(email); // throw error if user already exists
 
       if (found !== null) return res.status(500).json({
         success: false,
         error: 'There is already an account associated with this email.'
       }); // create the user
 
-      const user = await UserModel.createUser(firstName, lastName, type, email, password); // return the user and success message
+      const user = await _User.User.createUser(firstName, lastName, type, email, password); // return the user and success message
 
       return res.status(200).json({
         success: true,
@@ -114,7 +118,7 @@ var _default = {
   // otherwise returns an error
   onDeleteUserById: async (req, res) => {
     try {
-      const user = await UserModel.deleteByUserById(req.params.id);
+      const user = await _User.User.deleteUserById(req.params.id);
       return res.status(200).json({
         success: true,
         message: `Deleted a count of ${user.deletedCount} user.`
@@ -146,7 +150,7 @@ var _default = {
 
       if (!validation) return res.status(400).json(validation); // Verify the user email and password
 
-      const user = await UserModel.verifyPassword(email, password);
+      const user = await _User.User.verifyPassword(email, password);
       if (user) return res.status(200).json({
         success: true,
         id: user._id
@@ -163,4 +167,4 @@ var _default = {
   }
 };
 exports.default = _default;
-//# sourceMappingURL=User.js.map
+//# sourceMappingURL=UserController.js.map

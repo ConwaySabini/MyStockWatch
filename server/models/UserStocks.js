@@ -55,6 +55,7 @@ userStockSchema.statics.updateUserStocks = async function (userId, stocks) {
   try {
     // find the stocks for the specified user
     const foundStocks = await this.findOne({ userId: userId });
+    if (!foundStocks) throw ({ error: 'No stocks with this userId found' });
     // update the stocks
     this.update({ _id: foundStocks._id }, { $set: { stocks: stocks } });
   } catch (error) {
