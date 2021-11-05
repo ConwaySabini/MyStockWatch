@@ -1,7 +1,7 @@
 // libraries
 const validator = require('validator');
 // models
-import User from '../models/User.js';
+import User, { USER_TYPES } from '../models/User.js';
 
 // Export User Controller
 export default {
@@ -30,12 +30,10 @@ export default {
   // Returns a list of all users
   onGetAllUsers: async (req, res) => {
     try {
-      console.log(User);
       // finds all users and returns them if there are any users
       const users = await User.getUsers();
       return res.status(200).json({ success: true, users });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({ success: false, error: error });
     }
   },
@@ -57,6 +55,9 @@ export default {
         validation = false;
       }
       if (!(typeof lastName === 'string' || lastName instanceof String)) {
+        validation = false;
+      }
+      if (!(type === USER_TYPES.ADMIN || type === USER_TYPES.CONSUMER)) {
         validation = false;
       }
       // throw error on validation failure

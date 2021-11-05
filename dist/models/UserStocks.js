@@ -22,33 +22,32 @@ const userStockSchema = new _mongoose.default.Schema({
   // stocks: [{
   //   type: Object
   // }]
-  stocks: [{
-    symbol: String,
-    data: {
-      meta: {
-        symbol: String,
-        interval: String,
-        currency: String,
-        exchange_timezone: String,
-        exchange: String,
-        type: {
-          type: String
-        }
-      },
-      values: [{
-        datetime: String,
-        open: String,
-        high: String,
-        low: String,
-        close: String,
-        volume: String
-      }],
-      status: String
-    },
-    percentChange: Number,
-    timeline: String,
-    id: String
-  }]
+  // stocks: [{
+  //   symbol: String,
+  //   data: {
+  //     meta: {
+  //       symbol: String,
+  //       interval: String,
+  //       currency: String,
+  //       exchange_timezone: String,
+  //       exchange: String,
+  //       type: { type: String },
+  //     },
+  //     values: [{
+  //       datetime: String,
+  //       open: String,
+  //       high: String,
+  //       low: String,
+  //       close: String,
+  //       volume: String,
+  //     }],
+  //     status: String,
+  //   },
+  //   percentChange: Number,
+  //   timeline: String,
+  //   id: String,
+  // }],
+  stocks: [_mongoose.default.Schema.Types.Mixed]
 }, {
   timestamps: true,
   collection: "users"

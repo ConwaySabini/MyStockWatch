@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 import bcrypt from 'bcrypt';
 
+export const USER_TYPES = {
+  CONSUMER: "consumer",
+  ADMIN: "admin",
+};
+
 // Schema for the user model
 const userSchema = new mongoose.Schema(
   {

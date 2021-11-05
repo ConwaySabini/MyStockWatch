@@ -10,39 +10,11 @@ const userStockSchema = new mongoose.Schema(
       default: () => nanoid(),
     },
     userId: String,
-    // stocks: [{
-    //   type: Object
-    // }]
-    // stocks: [{
-    //   symbol: String,
-    //   data: {
-    //     meta: {
-    //       symbol: String,
-    //       interval: String,
-    //       currency: String,
-    //       exchange_timezone: String,
-    //       exchange: String,
-    //       type: { type: String },
-    //     },
-    //     values: [{
-    //       datetime: String,
-    //       open: String,
-    //       high: String,
-    //       low: String,
-    //       close: String,
-    //       volume: String,
-    //     }],
-    //     status: String,
-    //   },
-    //   percentChange: Number,
-    //   timeline: String,
-    //   id: String,
-    // }],
     stocks: [mongoose.Schema.Types.Mixed]
   },
   {
     timestamps: true,
-    collection: "users",
+    collection: "stocks",
   }
 );
 
@@ -83,8 +55,7 @@ userStockSchema.statics.getStocksById = async function (id) {
 // Get the stocks by their userId and return the found stocks if they exist
 userStockSchema.statics.getStocksByUserId = async function (userId) {
   try {
-    const stocks = await this.findOne({ userId: userId });
-    return stocks;
+    return await this.findOne({ userId: userId });
   } catch (error) {
     throw error;
   }
@@ -100,7 +71,7 @@ userStockSchema.statics.getAllStocks = async function () {
 }
 
 // Delete stocks with the given id and return the result
-userStockSchema.statics.deleteByStocksById = async function (id) {
+userStockSchema.statics.deleteStocksById = async function (id) {
   try {
     return await this.deleteOne({ _id: id });
   } catch (error) {

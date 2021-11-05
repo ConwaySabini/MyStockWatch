@@ -8,7 +8,7 @@ export default {
   // Finds stocks by their id and returns the stocks on success
   onGetStocksById: async (req, res) => {
     try {
-      const stocks = await UserStocks.getUserById(req.params.id);
+      const stocks = await UserStocks.getStocksById(req.params.id);
       return res.status(200).json({ success: true, stocks });
     } catch (error) {
       return res.status(500).json({ success: false, error: error });
@@ -31,8 +31,8 @@ export default {
   onGetAllStocks: async (req, res) => {
     try {
       // finds all stocks and returns them if there are any stocks
-      const users = await UserStocks.getUsers();
-      return res.status(200).json({ success: true, users });
+      const stocks = await UserStocks.getAllStocks();
+      return res.status(200).json({ success: true, stocks });
     } catch (error) {
       return res.status(500).json({ success: false, error: error });
     }
@@ -101,7 +101,7 @@ export default {
   // otherwise returns an error
   onDeleteStocksByUserId: async (req, res) => {
     try {
-      const deletedStocks = await UserStocks.deleteStocksById(req.params.userId);
+      const deletedStocks = await UserStocks.deleteStocksByUserId(req.params.userId);
       return res.status(200).json({
         success: true,
         message: `Deleted ${deletedStocks.deletedCount} stocks.`
