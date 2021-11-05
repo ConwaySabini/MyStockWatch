@@ -16,6 +16,8 @@ var _user = _interopRequireDefault(require("./routes/user.js"));
 
 var _stocks = _interopRequireDefault(require("./routes/stocks.js"));
 
+var _favorites = _interopRequireDefault(require("./routes/favorites.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
@@ -51,6 +53,7 @@ app.use((0, _cors.default)({
 
 app.use("/users", _user.default);
 app.use("/stocks", _stocks.default);
+app.use("/favorites", _favorites.default);
 /** catch 404 and forward to error handler */
 
 app.use('*', (req, res) => {

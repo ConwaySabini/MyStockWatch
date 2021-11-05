@@ -42,11 +42,10 @@ stockDataSchema.statics.createUserStocks = async function (userId, stocks) {
 // Updates user stock data
 stockDataSchema.statics.updateUserStocks = async function (userId, stocks) {
   try {
-    // find the stocks for the specified user
-    const foundStocks = await this.findOne({ userId: userId });
-    if (!foundStocks) throw ({ error: 'No stocks with this userId found' });
-    // update the stocks
-    this.findByIdAndUpdate(foundStocks._id, { stocks: stocks });
+    // delete the existing stocks
+    await this.deleteOne({ userId: userId });
+    // create the updated stocks
+    await this.create({ userId, stocks });
   } catch (error) {
     throw error;
   }

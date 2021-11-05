@@ -10,6 +10,7 @@ import "./config/mongo.js";
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/user.js";
 import stockRouter from "./routes/stocks.js";
+import favoritesRouter from "./routes/favorites.js";
 
 // Redis configuration
 // const redis = require("redis"),
@@ -41,6 +42,7 @@ app.use(cors({ origin: "*" })); //{ origin: 'https://127.0.0.1:3000' }
 //app.use("/", indexRouter);
 app.use("/users", userRouter);
 app.use("/stocks", stockRouter);
+app.use("/favorites", favoritesRouter);
 
 /** catch 404 and forward to error handler */
 app.use('*', (req, res) => {

@@ -76,7 +76,8 @@ export default {
       await UserStocks.updateUserStocks(req.body.userId, req.body.stocks);
       return res.status(200).json({
         success: true,
-        message: `Updated stocks from user ${req.body.userId}.`
+        message: `Updated stocks from user ${req.body.userId}.`,
+        stocks: req.body.stocks
       });
     } catch (error) {
       return res.status(500).json({ success: false, error: error });

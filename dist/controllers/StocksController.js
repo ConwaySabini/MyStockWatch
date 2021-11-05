@@ -104,10 +104,11 @@ var _default = {
   // otherwise returns an error
   onUpdateStocksByUserId: async (req, res) => {
     try {
-      await _UserStocks.default.updateUserStocks(req.params.userId);
+      await _UserStocks.default.updateUserStocks(req.body.userId, req.body.stocks);
       return res.status(200).json({
         success: true,
-        message: `Updated stocks from user ${req.params.userId}.`
+        message: `Updated stocks from user ${req.body.userId}.`,
+        stocks: req.body.stocks
       });
     } catch (error) {
       return res.status(500).json({

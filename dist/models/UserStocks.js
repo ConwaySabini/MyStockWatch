@@ -14,13 +14,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // imports
 // Schema for the stock Objects
 const stockSchema = new _mongoose.default.Schema({
-  stock: {
-    symbol: String,
-    data: [_mongoose.default.Schema.Types.Mixed],
-    percentChange: Number,
-    timeline: String,
-    id: String
-  }
+  symbol: String,
+  data: [_mongoose.default.Schema.Types.Mixed],
+  percentChange: Number,
+  timeline: String,
+  id: String
 }); // Schema for the user stocks model
 
 const stockDataSchema = new _mongoose.default.Schema({
@@ -61,10 +59,12 @@ stockDataSchema.statics.updateUserStocks = async function (userId, stocks) {
     this.update({
       _id: foundStocks._id
     }, {
-      $set: {
-        stocks: stocks
-      }
+      stocks: stocks
     });
+    const updated = await this.findOne({
+      userId: userId
+    });
+    console.log(updated); //this.markModified();
   } catch (error) {
     throw error;
   }
