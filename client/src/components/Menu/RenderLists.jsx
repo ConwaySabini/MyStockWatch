@@ -1,4 +1,4 @@
-import Favorite from "../Favorite/Favorite";
+import ListStock from "./ListStock";
 
 function RenderLists({ list, hideList, removeList }) {
 
@@ -16,7 +16,7 @@ function RenderLists({ list, hideList, removeList }) {
               <div className="list">
                 <ul class="menu-list">
                   {list.stocks.map(stock => {
-                    return <Favorite favorite={stock} key={stock.id} />;
+                    return <ListStock favorite={stock} name={list.name} key={stock.id} />;
                   })}
                 </ul>
               </div>

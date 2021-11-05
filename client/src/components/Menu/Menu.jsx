@@ -25,6 +25,8 @@ function Menu() {
   // state to hide the entire menu
   const [hideMenu, setHideMenu] = useState(false);
 
+
+
   useEffect(() => {
     let renderLists = listsToRender;
     for (const list of lists) {

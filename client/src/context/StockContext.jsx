@@ -7,7 +7,7 @@ const StockContextProvider = props => {
   // Set the state in local storage
   const initialStockState = JSON.parse(localStorage.getItem('stocks')) || [];
   const initialFavoriteState = JSON.parse(localStorage.getItem('favorites')) || [];
-  const initialListsState = JSON.parse(localStorage.getItem('lists')) || [];
+  const initialListsState = JSON.parse(localStorage.getItem('lists')) || []; //
 
   // states for stock, favorites, and news list
   const [stocks, setStocks] = useState(initialStockState);
@@ -52,8 +52,8 @@ const StockContextProvider = props => {
   }
 
   // Add List
-  const addList = (name, newStocks) => {
-    setLists([...lists, { name, newStocks, id: nanoid() }]);
+  const addList = (name, stocks) => {
+    setLists([...lists, { name, stocks, id: nanoid() }]);
   }
 
   // Find List
@@ -73,6 +73,8 @@ const StockContextProvider = props => {
     const foundList = lists.find(list => list.name === name);
     let newStocks = [...foundList.stocks, foundStock];
     foundList.stocks = newStocks;
+    const newLists = lists.map(list => (list.name === name ? foundList : list));
+    setLists(newLists);
   }
 
   // remove a stock from a list
@@ -81,11 +83,8 @@ const StockContextProvider = props => {
     const foundStock = stocks.find(stock => stock.symbol === symbol);
     const foundList = lists.find(list => list.name === name);
     foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== foundStock.symbol);
-  }
-
-  // Get the lists
-  const getLists = () => {
-    return lists;
+    const newLists = lists.map(list => (list.name === name ? foundList : list));
+    setLists(newLists);
   }
 
   // Clear favorites
@@ -181,7 +180,6 @@ const StockContextProvider = props => {
         removeList,
         addList,
         addStockToList,
-        getLists,
         clearLists,
         findList,
         lists,
