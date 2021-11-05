@@ -33,20 +33,19 @@ const favoritesSchema = new mongoose.Schema(
 favoritesSchema.statics.createUserFavorites = async function (userId, favorites) {
   try {
     // create the favorites
-    return await this.create({ userId, favaorites });
+    return await this.create({ userId, favorites });
   } catch (error) {
     throw error;
   }
 }
 
 // Updates user favorite data
-favoritesSchema.statics.updateUserStocks = async function (userId, favorites) {
+favoritesSchema.statics.updateUserFavorites = async function (userId, favorites) {
   try {
-    // find the favorites for the specified user
-    const foundFavorites = await this.findOne({ userId: userId });
-    if (!foundFavorites) throw ({ error: 'No stocks with this userId found' });
-    // update the favorites
-    this.findByIdAndUpdate(foundFavorites._id, { favorites: favorites });
+    // delete the existing favorites
+    await this.deleteOne({ userId: userId });
+    // create the updated favorites
+    await this.create({ userId, favorites });
   } catch (error) {
     throw error;
   }
@@ -66,9 +65,7 @@ favoritesSchema.statics.getFavoritesById = async function (id) {
 // Get the favorites by their userId and return the found favorites if they exist
 favoritesSchema.statics.getFavoritesByUserId = async function (userId) {
   try {
-    const favorites = await this.findOne({ userId: userId });
-    if (!favorites) throw ({ error: 'No favorites with this userId found' });
-    return favorites;
+    return this.findOne({ userId: userId });
   } catch (error) {
     throw error;
   }
@@ -84,7 +81,7 @@ favoritesSchema.statics.getAllFavorites = async function () {
 }
 
 // Delete favorites with the given id and return the result
-favoritesSchema.statics.deletFavoritesById = async function (id) {
+favoritesSchema.statics.deleteFavoritesById = async function (id) {
   try {
     return await this.deleteOne({ _id: id });
   } catch (error) {
@@ -93,7 +90,7 @@ favoritesSchema.statics.deletFavoritesById = async function (id) {
 }
 
 // Delete the favorites by their userId and return result
-favoritesSchema.statics.deleteStocksByUserId = async function (userId) {
+favoritesSchema.statics.deleteFavoritesByUserId = async function (userId) {
   try {
     return await this.deleteOne({ userId: userId });
   } catch (error) {
@@ -103,7 +100,7 @@ favoritesSchema.statics.deleteStocksByUserId = async function (userId) {
 
 
 // Get favorites by their ids and return the found favorites
-favoritesSchema.statics.getAllFavorites = async function (ids) {
+favoritesSchema.statics.getFavorites = async function (ids) {
   try {
     const favorites = await this.find({ _id: { $in: ids } });
     if (!favorites) throw ({ error: 'No favorites with these ids were found' });

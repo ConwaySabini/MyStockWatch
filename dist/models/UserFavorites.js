@@ -46,7 +46,7 @@ favoritesSchema.statics.createUserFavorites = async function (userId, favorites)
 }; // Updates user favorite data
 
 
-favoritesSchema.statics.updateUserStocks = async function (userId, favorites) {
+favoritesSchema.statics.updateUserFavorites = async function (userId, favorites) {
   try {
     // find the favorites for the specified user
     const foundFavorites = await this.findOne({
@@ -126,7 +126,7 @@ favoritesSchema.statics.deleteStocksByUserId = async function (userId) {
 }; // Get favorites by their ids and return the found favorites
 
 
-favoritesSchema.statics.getAllFavorites = async function (ids) {
+favoritesSchema.statics.getFavorites = async function (ids) {
   try {
     const favorites = await this.find({
       _id: {
