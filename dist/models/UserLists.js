@@ -12,51 +12,56 @@ var _nanoid = require("nanoid");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
-// Schema for the user lists model
-const userListsSchema = new _mongoose.default.Schema({
+// Schema for the stock Objects
+const stockSchema = new _mongoose.default.Schema({
+  symbol: String,
+  data: [_mongoose.default.Schema.Types.Mixed],
+  percentChange: Number,
+  timeline: String,
+  id: String
+}); // Schema for the list Objects
+
+const list = new _mongoose.default.Schema({
+  id: String,
+  name: String,
+  stocks: [stockSchema]
+}); // Schema for the user lists model
+
+const listsSchema = new _mongoose.default.Schema({
   _id: {
     type: String,
     default: () => (0, _nanoid.nanoid)()
   },
   userId: String,
-  lists: [{
-    id: String,
-    name: String,
-    stocks: [{
-      id: String,
-      symbol: String,
-      percentChange: Number,
-      timeline: String,
-      status: String,
-      data: {
-        symbol: String,
-        interval: String,
-        currency: String,
-        exchange_timezone: String,
-        exchange: String,
-        stockType: String,
-        values: [{
-          datetime: String,
-          open: String,
-          high: String,
-          low: String,
-          close: String,
-          volume: String
-        }]
-      }
-    }]
-  }]
+  lists: [list]
 }, {
   timestamps: true,
-  collection: "users"
-}); // Creates user lists data
+  collection: "lists"
+}); // Creates user lists
 
-userListsSchema.statics.createUserLists = async function (userId, stocks) {
+listsSchema.statics.createUserLists = async function (userId, lists) {
   try {
     // create the lists
     return await this.create({
       userId,
-      stocks
+      lists
+    });
+  } catch (error) {
+    throw error;
+  }
+}; // Updates user favorite data
+
+
+listsSchema.statics.updateUserLists = async function (userId, lists) {
+  try {
+    // delete the existing lists
+    await this.deleteOne({
+      userId: userId
+    }); // create the updated lists
+
+    await this.create({
+      userId,
+      lists
     });
   } catch (error) {
     throw error;
@@ -64,7 +69,7 @@ userListsSchema.statics.createUserLists = async function (userId, stocks) {
 }; // Get the lists by their id and return the found lists if they exist
 
 
-userListsSchema.statics.getListsById = async function (id) {
+listsSchema.statics.getListsById = async function (id) {
   try {
     const lists = await this.findOne({
       _id: id
@@ -79,22 +84,18 @@ userListsSchema.statics.getListsById = async function (id) {
 }; // Get the lists by their userId and return the found lists if they exist
 
 
-userListsSchema.statics.getListsByUserId = async function (userId) {
+listsSchema.statics.getListsByUserId = async function (userId) {
   try {
-    const lists = await this.findOne({
+    return this.findOne({
       userId: userId
     });
-    if (!lists) throw {
-      error: 'No lists with this userId found'
-    };
-    return lists;
   } catch (error) {
     throw error;
   }
 }; // Get all user lists in the database and return them
 
 
-userListsSchema.statics.getLists = async function () {
+listsSchema.statics.getAllLists = async function () {
   try {
     return await this.find();
   } catch (error) {
@@ -103,7 +104,7 @@ userListsSchema.statics.getLists = async function () {
 }; // Delete lists with the given id and return the result
 
 
-userListsSchema.statics.deleteListsById = async function (id) {
+listsSchema.statics.deleteListsById = async function (id) {
   try {
     return await this.deleteOne({
       _id: id
@@ -111,10 +112,21 @@ userListsSchema.statics.deleteListsById = async function (id) {
   } catch (error) {
     throw error;
   }
+}; // Delete the lists by their userId and return result
+
+
+listsSchema.statics.deleteListsByUserId = async function (userId) {
+  try {
+    return await this.deleteOne({
+      userId: userId
+    });
+  } catch (error) {
+    throw error;
+  }
 }; // Get lists by their ids and return the found lists
 
 
-userListsSchema.statics.getAllLists = async function (ids) {
+listsSchema.statics.getLists = async function (ids) {
   try {
     const lists = await this.find({
       _id: {
@@ -130,7 +142,7 @@ userListsSchema.statics.getAllLists = async function (ids) {
   }
 };
 
-var _default = _mongoose.default.model("UserLists", userListsSchema);
+var _default = _mongoose.default.model("Userlists", listsSchema);
 
 exports.default = _default;
 //# sourceMappingURL=UserLists.js.map

@@ -18,7 +18,7 @@ var _default = {
   // Finds favorites by their id and returns the favorites on success
   onGetFavoritesById: async (req, res) => {
     try {
-      const favorites = await _UserFavorites.default.getfavoritesById(req.params.id);
+      const favorites = await _UserFavorites.default.getFavoritesById(req.params.id);
       return res.status(200).json({
         success: true,
         favorites

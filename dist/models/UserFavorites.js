@@ -38,7 +38,7 @@ favoritesSchema.statics.createUserFavorites = async function (userId, favorites)
     // create the favorites
     return await this.create({
       userId,
-      favaorites
+      favorites
     });
   } catch (error) {
     throw error;
@@ -48,16 +48,14 @@ favoritesSchema.statics.createUserFavorites = async function (userId, favorites)
 
 favoritesSchema.statics.updateUserFavorites = async function (userId, favorites) {
   try {
-    // find the favorites for the specified user
-    const foundFavorites = await this.findOne({
+    // delete the existing favorites
+    await this.deleteOne({
       userId: userId
-    });
-    if (!foundFavorites) throw {
-      error: 'No stocks with this userId found'
-    }; // update the favorites
+    }); // create the updated favorites
 
-    this.findByIdAndUpdate(foundFavorites._id, {
-      favorites: favorites
+    await this.create({
+      userId,
+      favorites
     });
   } catch (error) {
     throw error;
@@ -82,13 +80,9 @@ favoritesSchema.statics.getFavoritesById = async function (id) {
 
 favoritesSchema.statics.getFavoritesByUserId = async function (userId) {
   try {
-    const favorites = await this.findOne({
+    return this.findOne({
       userId: userId
     });
-    if (!favorites) throw {
-      error: 'No favorites with this userId found'
-    };
-    return favorites;
   } catch (error) {
     throw error;
   }
@@ -104,7 +98,7 @@ favoritesSchema.statics.getAllFavorites = async function () {
 }; // Delete favorites with the given id and return the result
 
 
-favoritesSchema.statics.deletFavoritesById = async function (id) {
+favoritesSchema.statics.deleteFavoritesById = async function (id) {
   try {
     return await this.deleteOne({
       _id: id
@@ -115,7 +109,7 @@ favoritesSchema.statics.deletFavoritesById = async function (id) {
 }; // Delete the favorites by their userId and return result
 
 
-favoritesSchema.statics.deleteStocksByUserId = async function (userId) {
+favoritesSchema.statics.deleteFavoritesByUserId = async function (userId) {
   try {
     return await this.deleteOne({
       userId: userId
