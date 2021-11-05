@@ -5,9 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _User = _interopRequireDefault(require("../models/User.js"));
+var _User = _interopRequireWildcard(require("../models/User.js"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 // libraries
 const validator = require('validator'); // models
@@ -50,15 +52,13 @@ var _default = {
   // Returns a list of all users
   onGetAllUsers: async (req, res) => {
     try {
-      console.log(_User.default); // finds all users and returns them if there are any users
-
+      // finds all users and returns them if there are any users
       const users = await _User.default.getUsers();
       return res.status(200).json({
         success: true,
         users
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         success: false,
         error: error
@@ -91,6 +91,10 @@ var _default = {
       }
 
       if (!(typeof lastName === 'string' || lastName instanceof String)) {
+        validation = false;
+      }
+
+      if (!(type === _User.USER_TYPES.ADMIN || type === _User.USER_TYPES.CONSUMER)) {
         validation = false;
       } // throw error on validation failure
 

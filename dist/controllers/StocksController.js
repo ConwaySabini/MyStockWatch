@@ -18,7 +18,7 @@ var _default = {
   // Finds stocks by their id and returns the stocks on success
   onGetStocksById: async (req, res) => {
     try {
-      const stocks = await _UserStocks.default.getUserById(req.params.id);
+      const stocks = await _UserStocks.default.getStocksById(req.params.id);
       return res.status(200).json({
         success: true,
         stocks
@@ -51,10 +51,10 @@ var _default = {
   onGetAllStocks: async (req, res) => {
     try {
       // finds all stocks and returns them if there are any stocks
-      const users = await _UserStocks.default.getUsers();
+      const stocks = await _UserStocks.default.getAllStocks();
       return res.status(200).json({
         success: true,
-        users
+        stocks
       });
     } catch (error) {
       return res.status(500).json({
@@ -136,7 +136,7 @@ var _default = {
   // otherwise returns an error
   onDeleteStocksByUserId: async (req, res) => {
     try {
-      const deletedStocks = await _UserStocks.default.deleteStocksById(req.params.userId);
+      const deletedStocks = await _UserStocks.default.deleteStocksByUserId(req.params.userId);
       return res.status(200).json({
         success: true,
         message: `Deleted ${deletedStocks.deletedCount} stocks.`

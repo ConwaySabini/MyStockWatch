@@ -12,48 +12,30 @@ var _nanoid = require("nanoid");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
-// Schema for the user stocks model
-const userStockSchema = new _mongoose.default.Schema({
+// Schema for the stock Objects
+const stockSchema = new _mongoose.default.Schema({
+  stock: {
+    symbol: String,
+    data: [_mongoose.default.Schema.Types.Mixed],
+    percentChange: Number,
+    timeline: String,
+    id: String
+  }
+}); // Schema for the user stocks model
+
+const stockDataSchema = new _mongoose.default.Schema({
   _id: {
     type: String,
     default: () => (0, _nanoid.nanoid)()
   },
   userId: String,
-  // stocks: [{
-  //   type: Object
-  // }]
-  // stocks: [{
-  //   symbol: String,
-  //   data: {
-  //     meta: {
-  //       symbol: String,
-  //       interval: String,
-  //       currency: String,
-  //       exchange_timezone: String,
-  //       exchange: String,
-  //       type: { type: String },
-  //     },
-  //     values: [{
-  //       datetime: String,
-  //       open: String,
-  //       high: String,
-  //       low: String,
-  //       close: String,
-  //       volume: String,
-  //     }],
-  //     status: String,
-  //   },
-  //   percentChange: Number,
-  //   timeline: String,
-  //   id: String,
-  // }],
-  stocks: [_mongoose.default.Schema.Types.Mixed]
+  stocks: [stockSchema]
 }, {
   timestamps: true,
-  collection: "users"
+  collection: "stocks"
 }); // Creates user stock data
 
-userStockSchema.statics.createUserStocks = async function (userId, stocks) {
+stockDataSchema.statics.createUserStocks = async function (userId, stocks) {
   try {
     // create the stocks if they do not exist
     return await this.create({
@@ -66,7 +48,7 @@ userStockSchema.statics.createUserStocks = async function (userId, stocks) {
 }; // Updates user stock data
 
 
-userStockSchema.statics.updateUserStocks = async function (userId, stocks) {
+stockDataSchema.statics.updateUserStocks = async function (userId, stocks) {
   try {
     // find the stocks for the specified user
     const foundStocks = await this.findOne({
@@ -89,7 +71,7 @@ userStockSchema.statics.updateUserStocks = async function (userId, stocks) {
 }; // Get the stocks by their id and return the found stocks if they exist
 
 
-userStockSchema.statics.getStocksById = async function (id) {
+stockDataSchema.statics.getStocksById = async function (id) {
   try {
     const stocks = await this.findOne({
       _id: id
@@ -104,19 +86,18 @@ userStockSchema.statics.getStocksById = async function (id) {
 }; // Get the stocks by their userId and return the found stocks if they exist
 
 
-userStockSchema.statics.getStocksByUserId = async function (userId) {
+stockDataSchema.statics.getStocksByUserId = async function (userId) {
   try {
-    const stocks = await this.findOne({
+    return await this.findOne({
       userId: userId
     });
-    return stocks;
   } catch (error) {
     throw error;
   }
 }; // Get all user stocks in the database and return them
 
 
-userStockSchema.statics.getAllStocks = async function () {
+stockDataSchema.statics.getAllStocks = async function () {
   try {
     return await this.find();
   } catch (error) {
@@ -125,7 +106,7 @@ userStockSchema.statics.getAllStocks = async function () {
 }; // Delete stocks with the given id and return the result
 
 
-userStockSchema.statics.deleteByStocksById = async function (id) {
+stockDataSchema.statics.deleteStocksById = async function (id) {
   try {
     return await this.deleteOne({
       _id: id
@@ -136,7 +117,7 @@ userStockSchema.statics.deleteByStocksById = async function (id) {
 }; // Delete the stocks by their userId and return result
 
 
-userStockSchema.statics.deleteStocksByUserId = async function (userId) {
+stockDataSchema.statics.deleteStocksByUserId = async function (userId) {
   try {
     return await this.deleteOne({
       userId: userId
@@ -147,7 +128,7 @@ userStockSchema.statics.deleteStocksByUserId = async function (userId) {
 }; // Get stocks by their ids and return the found stocks
 
 
-userStockSchema.statics.getStocks = async function (ids) {
+stockDataSchema.statics.getStocks = async function (ids) {
   try {
     const stocks = await this.find({
       _id: {
@@ -163,7 +144,7 @@ userStockSchema.statics.getStocks = async function (ids) {
   }
 };
 
-var _default = _mongoose.default.model("UserStocks", userStockSchema);
+var _default = _mongoose.default.model("UserStocks", stockDataSchema);
 
 exports.default = _default;
 //# sourceMappingURL=UserStocks.js.map

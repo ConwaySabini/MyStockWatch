@@ -2,15 +2,26 @@
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 
+// Schema for the stock Objects
+const stockSchema = new mongoose.Schema(
+  {
+    symbol: String,
+    data: [mongoose.Schema.Types.Mixed],
+    percentChange: Number,
+    timeline: String,
+    id: String,
+  },
+);
+
 // Schema for the user stocks model
-const userStockSchema = new mongoose.Schema(
+const stockDataSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
       default: () => nanoid(),
     },
     userId: String,
-    stocks: [mongoose.Schema.Types.Mixed]
+    stocks: [stockSchema],
   },
   {
     timestamps: true,
@@ -19,7 +30,7 @@ const userStockSchema = new mongoose.Schema(
 );
 
 // Creates user stock data
-userStockSchema.statics.createUserStocks = async function (userId, stocks) {
+stockDataSchema.statics.createUserStocks = async function (userId, stocks) {
   try {
     // create the stocks if they do not exist
     return await this.create({ userId, stocks });
@@ -29,20 +40,20 @@ userStockSchema.statics.createUserStocks = async function (userId, stocks) {
 }
 
 // Updates user stock data
-userStockSchema.statics.updateUserStocks = async function (userId, stocks) {
+stockDataSchema.statics.updateUserStocks = async function (userId, stocks) {
   try {
     // find the stocks for the specified user
     const foundStocks = await this.findOne({ userId: userId });
     if (!foundStocks) throw ({ error: 'No stocks with this userId found' });
     // update the stocks
-    this.update({ _id: foundStocks._id }, { $set: { stocks: stocks } });
+    this.findByIdAndUpdate(foundStocks._id, { stocks: stocks });
   } catch (error) {
     throw error;
   }
 }
 
 // Get the stocks by their id and return the found stocks if they exist
-userStockSchema.statics.getStocksById = async function (id) {
+stockDataSchema.statics.getStocksById = async function (id) {
   try {
     const stocks = await this.findOne({ _id: id });
     if (!stocks) throw ({ error: 'No stocks with this id found' });
@@ -53,7 +64,7 @@ userStockSchema.statics.getStocksById = async function (id) {
 }
 
 // Get the stocks by their userId and return the found stocks if they exist
-userStockSchema.statics.getStocksByUserId = async function (userId) {
+stockDataSchema.statics.getStocksByUserId = async function (userId) {
   try {
     return await this.findOne({ userId: userId });
   } catch (error) {
@@ -62,7 +73,7 @@ userStockSchema.statics.getStocksByUserId = async function (userId) {
 }
 
 // Get all user stocks in the database and return them
-userStockSchema.statics.getAllStocks = async function () {
+stockDataSchema.statics.getAllStocks = async function () {
   try {
     return await this.find();
   } catch (error) {
@@ -71,7 +82,7 @@ userStockSchema.statics.getAllStocks = async function () {
 }
 
 // Delete stocks with the given id and return the result
-userStockSchema.statics.deleteStocksById = async function (id) {
+stockDataSchema.statics.deleteStocksById = async function (id) {
   try {
     return await this.deleteOne({ _id: id });
   } catch (error) {
@@ -80,7 +91,7 @@ userStockSchema.statics.deleteStocksById = async function (id) {
 }
 
 // Delete the stocks by their userId and return result
-userStockSchema.statics.deleteStocksByUserId = async function (userId) {
+stockDataSchema.statics.deleteStocksByUserId = async function (userId) {
   try {
     return await this.deleteOne({ userId: userId });
   } catch (error) {
@@ -89,7 +100,7 @@ userStockSchema.statics.deleteStocksByUserId = async function (userId) {
 }
 
 // Get stocks by their ids and return the found stocks
-userStockSchema.statics.getStocks = async function (ids) {
+stockDataSchema.statics.getStocks = async function (ids) {
   try {
     const stocks = await this.find({ _id: { $in: ids } });
     if (!stocks) throw ({ error: 'No stocks with these ids were found' });
@@ -99,4 +110,4 @@ userStockSchema.statics.getStocks = async function (ids) {
   }
 }
 
-export default mongoose.model("UserStocks", userStockSchema);
+export default mongoose.model("UserStocks", stockDataSchema);

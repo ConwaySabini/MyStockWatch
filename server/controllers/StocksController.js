@@ -73,10 +73,10 @@ export default {
   // otherwise returns an error
   onUpdateStocksByUserId: async (req, res) => {
     try {
-      await UserStocks.updateUserStocks(req.params.userId);
+      await UserStocks.updateUserStocks(req.body.userId, req.body.stocks);
       return res.status(200).json({
         success: true,
-        message: `Updated stocks from user ${req.params.userId}.`
+        message: `Updated stocks from user ${req.body.userId}.`
       });
     } catch (error) {
       return res.status(500).json({ success: false, error: error });

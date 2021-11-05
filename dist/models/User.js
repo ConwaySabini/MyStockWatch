@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.USER_TYPES = void 0;
 
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
@@ -14,7 +14,12 @@ var _bcrypt = _interopRequireDefault(require("bcrypt"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
-// Schema for the user model
+const USER_TYPES = {
+  CONSUMER: "consumer",
+  ADMIN: "admin"
+}; // Schema for the user model
+
+exports.USER_TYPES = USER_TYPES;
 const userSchema = new _mongoose.default.Schema({
   _id: {
     type: String,

@@ -7,10 +7,10 @@ const router = express.Router();
 // Routes for the stocks controller to handle
 router
   .get('/', stocks.onGetAllStocks)
-  .post('/', stocks.onCreateStocks)
+  .put('/', stocks.onCreateStocks)
   .get('/:id', stocks.onGetStocksById)
   .get('/userId/:userId', stocks.onGetStocksByUserId)
-  .put('/update/:userId', stocks.onUpdateStocksByUserId)
+  .put('/update/', stocks.onUpdateStocksByUserId)
   .delete('/:id', stocks.onDeleteStocksById)
   .delete('/userId/:userId', stocks.onDeleteStocksByUserId)
 
