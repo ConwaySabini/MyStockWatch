@@ -1,16 +1,19 @@
 import './Nav.css';
-
+import { useAuth0 } from '@auth0/auth0-react';
+import Profile from '../Profile/Profile';
 //import { useTheme } from "../../context/ThemeContext";
 
 //TODO add navbar links to hamburger menu
 
 // Component to render the navigation bar
 function Nav() {
+  const { logout } = useAuth0();
+
   return (
     <div className="navigation">
       <nav class="navbar" role="navigation" aria-label="main navigation" id="navigation-bar">
         <div class="navbar-brand">
-          <a class="navbar-item" href="/#title">
+          <a class="navbar-item" href="/dashboard/#title">
             <i class="fas fa-chart-line fa-2x"></i>
             <a class="nav-title fa-2x" href="/dashboard/#title">
               MyStockWatch
@@ -45,10 +48,14 @@ function Nav() {
                 <a class="button is-link" href="/Register">
                   <strong>Sign up</strong>
                 </a>
-                <a class="button is-light" href="/Login">
+                <a class="button is-light ml-2" href="/Login">
                   Log in
                 </a>
+                <button class="button is-primary ml-2" onClick={() => logout()}>
+                  <strong>Log Out</strong>
+                </button>
               </div>
+              <Profile></Profile>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 require('dotenv').config();
 
+// import environment variable for MongoDB connection
 const CONNECTION_URL = process.env.MONGODB_CONNECTION;
 
 mongoose.connect(CONNECTION_URL, {
