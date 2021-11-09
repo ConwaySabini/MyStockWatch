@@ -2,39 +2,28 @@ import './Stock.css';
 import { useState, useEffect } from "react";
 import { StockContext } from "../../context/StockContext";
 import { Line } from "react-chartjs-2";
+import useDimensions from "react-cool-dimensions";
 import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
 import StockButtons from './StockButtons';
 
 // Component to display the individual stock
 function Stock({ stock, handleTimeChange, handleStockChange }) {
-
   // State to track which chart to display (simple or technical)
   const [simpleChart, setSimpleChart] = useState(true);
   // loading state to have components wait for data to load
   const [loading, setLoading] = useState(false);
-  // responsive width
-  const [width, setWidth] = useState(0);
-  // responsive height
-  const [height, setHeight] = useState(0);
-
-  // get the width and height of the chart
-  const getSize = () => {
-    const div = document.querySelector('#StockChart');
-    const newWidth = div.clientWidth;
-    setWidth(newWidth);
-    const newHeight = div.clientHeight;
-    setHeight(newHeight);
-  };
-
-  // update the size on render
-  useEffect(() => {
-    getSize();
-  }, []);
-
-  // update the size on resize
-  useEffect(() => {
-    window.addEventListener("resize", getSize);
-  }, []);
+  // Observe the size of the Stock Card for responsive design
+  const { observe, unobserve, width, height, entry } = useDimensions({
+    // breakpoints to change the size of the graph
+    breakpoints: { XS: 0, SM: 320, MD: 480, LG: 640 },
+    // Will only update the state on breakpoint changed, default is false
+    updateOnBreakpointChange: true,
+    onResize: ({ observe, unobserve, width, height, entry }) => {
+      // Triggered whenever the size of the target is changed...
+      unobserve(); // To stop observing the current target element
+      observe(); // To re-start observing the current target element
+    },
+  });
 
   // dates of the stock for the graph
   const labels = [];
@@ -181,7 +170,7 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     // Return the graph
     if (simpleChart) {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
+        <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
           <Line data={ChartData} options={options} />
           <StockButtons
@@ -194,7 +183,7 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
       );
     } else {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
+        <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
           <TechnicalGraph stock={stock} width={width} height={height} />
           <StockButtons
@@ -210,7 +199,7 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     // Return the graph
     if (simpleChart) {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
+        <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
           <Line data={redData} options={options} />
           <StockButtons
@@ -223,7 +212,7 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
       );
     } else {
       return (
-        <div className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
+        <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
           <h3 id="stock-heading">{stock.symbol}: {timeline}</h3>
           <TechnicalGraph stock={stock} width={width} height={height} />
           <StockButtons

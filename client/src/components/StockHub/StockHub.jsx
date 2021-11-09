@@ -12,8 +12,6 @@ const StockHub = () => {
   // context api to modify data across components
   const { stocks, addStock, clearStocks, editStock, findFavorite,
     editFavorite, findSymbol, setNewStocks } = useContext(StockContext);
-  // userId
-  const [userId, setUserId] = useState('');
   // symbol of the stock to be searched
   const [symbol, setSymbol] = useState('');
   // array of symbols to filter from the stock list
@@ -41,22 +39,16 @@ const StockHub = () => {
   // server url to update stocks
   const UPDATE_SERVER = `http://localhost:3000/stocks/update/`;
 
-  console.log("stocks", stocks);
+  //console.log("stocks", stocks);
 
-  //TODO store requests made in cache and check if they are still valid
-  //TODO how to check if requests need to be made
-
-  //TODO how to determine if data from databse needs to be fetched again
+  //TODO add an update data button to stock???
 
   //TODO create user in database and use their id???
-
-  //TODO fix storage of stock data (the values and meta are in the index of zero when they should not be a list at all)
+  //TODO how to determine when to create user
 
   // Fetch the stock data from the server and render the stocks
   // If there is no stock data for this user, create new data
   useEffect(() => {
-    console.log(user);
-
     if (user !== undefined) {
       //server url
       const SERVER = `http://localhost:3000/stocks/userId/${user.sub}`;
@@ -74,17 +66,35 @@ const StockHub = () => {
             setLoading(false);
             console.log("No stock data for this user");
             createNewStockData();
+            setLoading(false);
           } else {
             // delete irrelevent data
             delete response.data.stocks._id;
             // set the stocks from the database
             let newStocks = [];
             for (const stock of stocks) {
-              newStocks.push(stock);
+              let containsStock = false;
+              for (const pushedStock of newStocks) {
+                if (stock.symbol === pushedStock.symbol) {
+                  containsStock = true;
+                }
+              }
+              if (!containsStock) {
+                newStocks.push(stock);
+              }
             }
-            console.log("newStocks", newStocks);
-            // setNewStocks([...newStocks, response.data.stocks.stocks]);
-            setNewStocks(response.data.stocks.stocks);
+            for (const stock of response.data.stocks.stocks) {
+              let containsStock = false;
+              for (const newStock of newStocks) {
+                if (stock.symbol === newStock.symbol) {
+                  containsStock = true;
+                }
+              }
+              if (!containsStock) {
+                newStocks.push(stock);
+              }
+            }
+            setNewStocks(newStocks);
             // cleanup function
             setLoading(false);
           }
@@ -114,23 +124,24 @@ const StockHub = () => {
   }, [user]);
 
   useEffect(() => {
-    // update the stock data for the user
-    const updateStockData = async () => {
-      setLoading(true);
-      try {
-        // update the stock data 
-        const response = await axios.put(UPDATE_SERVER, { userId: user.sub, stocks: stocks });
-        console.log("updateResponse", response);
-        setLoading(false);
-        // handle error
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+    if (user !== undefined) {
+      // update the stock data for the user
+      const updateStockData = async () => {
+        setLoading(true);
+        try {
+          // update the stock data 
+          const response = await axios.put(UPDATE_SERVER, { userId: user.sub, stocks: stocks });
+          console.log("updateResponse", response);
+          setLoading(false);
+          // handle error
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
       }
-      setLoading(false);
-    }
 
-    updateStockData();
+      updateStockData();
+    }
   }, [updateStocks]);
 
 
@@ -307,6 +318,7 @@ const StockHub = () => {
     e.preventDefault();
     clearStocks();
     setModal(false);
+    setUpdateStocks(!updateStocks);
   }
 
   // Clear all current filters that are applied

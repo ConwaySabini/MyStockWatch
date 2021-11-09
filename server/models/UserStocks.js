@@ -6,7 +6,11 @@ import { nanoid } from "nanoid";
 const stockSchema = new mongoose.Schema(
   {
     symbol: String,
-    data: [mongoose.Schema.Types.Mixed],
+    data: {
+      meta: mongoose.Schema.Types.Mixed,
+      values: [mongoose.Schema.Types.Mixed],
+      status: String,
+    },
     percentChange: Number,
     timeline: String,
     id: String,
@@ -42,10 +46,8 @@ stockDataSchema.statics.createUserStocks = async function (userId, stocks) {
 // Updates user stock data
 stockDataSchema.statics.updateUserStocks = async function (userId, stocks) {
   try {
-    // delete the existing stocks
-    await this.deleteOne({ userId: userId });
-    // create the updated stocks
-    await this.create({ userId, stocks });
+    // updated the stocks
+    const updatedStocks = await this.findOneAndUpdate(userId, { stocks: stocks });
   } catch (error) {
     throw error;
   }

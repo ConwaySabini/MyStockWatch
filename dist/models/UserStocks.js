@@ -15,7 +15,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Schema for the stock Objects
 const stockSchema = new _mongoose.default.Schema({
   symbol: String,
-  data: [_mongoose.default.Schema.Types.Mixed],
+  data: {
+    meta: {
+      symbol: String,
+      interval: String,
+      currency: String,
+      exchange_timezone: String,
+      exchange: String,
+      type: String
+    },
+    values: [_mongoose.default.Schema.Types.Mixed],
+    status: String
+  },
   percentChange: Number,
   timeline: String,
   id: String

@@ -7,24 +7,6 @@ const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  console.log(user);
-
-  // const SERVER = `http://localhost:3000/users/email/${email}`;
-
-  // async function verify() {
-  //   try {
-  //     const response = await axios.post(SERVER, { email: email, password: password });
-  //     if (!response) console.log("Error verifying user");
-  //     let userID = response.data.id;
-  //     sessionStorage.setItem("id", userID.toString());
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // const handleUserCreation() {
-
-  // }
 
   return (
     isAuthenticated && (
@@ -38,15 +20,5 @@ const Profile = () => {
     )
   );
 }
-
-{/* <Link onClick={event => {
-if (!email || !password) event.preventDefault();
-else {
-  verify();
-  const userID = sessionStorage.getItem("id");
-  const SESSION = `http://localhost:3000/login/${userID}`;
-  jwt(SESSION);
-}
-        }} to = {`/join/`}> */}
 
 export default Profile;

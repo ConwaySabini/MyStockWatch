@@ -111,6 +111,7 @@ const StockContextProvider = props => {
   const clearStocks = () => {
     setStocks([]);
     setFavorites([]);
+    setLists([]);
   }
 
   // Clear stocks only
