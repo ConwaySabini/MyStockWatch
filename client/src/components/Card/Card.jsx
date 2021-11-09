@@ -90,10 +90,6 @@ function Card({ article, type }) {
     window.open(newLink, "_blank");
   }
 
-  const launchModal = () => {
-    //TODO set modal to is-active and display background
-  }
-
   if (type === "trending") {
     return (
       <div class="card" id="news-card">

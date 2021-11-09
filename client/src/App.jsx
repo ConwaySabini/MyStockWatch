@@ -23,10 +23,8 @@ function App() {
         <Auth0Provider
           domain={domain}
           clientId={clientId}
-          // redirectUri={window.location.origi
+          // redirectUri={window.location.origin}
           redirectUri={"http://localhost:3001/dashboard"}>
-          {/* useRefreshToken={true}
-          cacheLocation={'localStorage'}> */}
           {/* <Redirect exact from="/" to="/login" /> */}
           <Route path="/" exact component={Home} />
           <Route path="/dashboard" exact component={Dashboard} />

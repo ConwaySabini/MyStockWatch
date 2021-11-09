@@ -2,11 +2,16 @@ import { useState, useEffect, useContext } from "react";
 import { StockContext } from "../../context/StockContext";
 
 //Component to render the buttons and handle changes to data
-function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
+function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user }) {
   // stock context api shared data across components
-  const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
+  const { stocks, removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
   // State to track which list to add the stock to
   const [list, setList] = useState("");
+  // URLS to make API calls from the Context API
+  const FAVORITE_SERVER = `http://localhost:3000/stocks/userId/${user.sub}`;
+  const ADD_TO_LIST = `http://localhost:3000/stocks/userId/${user.sub}`;
+  const REMOVE_FROM_LIST = `http://localhost:3000/stocks/userId/${user.sub}`;
+  const DELETE_STOCK = `http://localhost:3000/stocks/userId/${user.sub}`;
 
   // When the user adds a favorite to their list update the list
   const handleFavorite = () => {
@@ -37,14 +42,31 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
     setLoading(false);
   }
 
+  // function to remove the stock altogether
+  const handleRemove = () => {
+    setLoading(true);
+    removeStock(stock.id);
+    setLoading(false);
+  }
+
   return (
     <div className="stock-buttons">
-      <button className="favorite" class="button is-warning ml-2 mt-4 mb-2" onClick={() => handleFavorite()}>Favorite</button>
+      <button
+        className="favorite"
+        class="button is-warning ml-2 mt-4 mb-2"
+        onClick={() => handleFavorite()}>
+        Favorite
+      </button>
       <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(false)}>Technical Graph</button>
       <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => handleChart(true)}>Simple Graph</button>
       <div class="dropdown is-hoverable ml-2 mt-4" >
         <div class="dropdown-trigger">
-          <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading} id="stock-dropdown">
+          <button
+            class="button"
+            aria-haspopup="true"
+            aria-controls="dropdown-menu3"
+            disabled={loading}
+            id="stock-dropdown">
             <span id="dropdown-font">Lists</span>
             <span class="icon is-small">
               <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -60,7 +82,13 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
                     {lists.map(list => {
                       return (
                         <li>
-                          <button class="button is-link mt-2" id="dropdown-buton" onClick={() => handleListChange(list.name)} disabled={loading}>{list.name}</button>
+                          <button
+                            class="button is-link mt-2"
+                            id="dropdown-buton"
+                            onClick={() => handleListChange(list.name)}
+                            disabled={loading}>
+                            {list.name}
+                          </button>
                         </li>
                       )
                     })}
@@ -79,7 +107,10 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading }) {
       </div>
       <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => addToList()}>Add To List</button>
       <button class="button is-primary ml-2 mt-4 mb-2" onClick={() => removeFromList()}>Remove From List</button>
-      <button className="delete-stock" class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2" onClick={() => removeStock(stock.id)}>
+      <button
+        className="delete-stock"
+        class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2"
+        onClick={() => handleRemove(stock.id)}>
         <i className="fas fa-trash-alt"></i>
       </button>
       <br />

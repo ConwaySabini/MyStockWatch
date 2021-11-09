@@ -3,7 +3,7 @@ import { StockContext } from "../../context/StockContext";
 import Stock from "./../Stock/Stock";
 
 // Component to display a list of stocks
-const StockList = ({ handleTimeChange, filterSymbols, handleStockChange }) => {
+const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user }) => {
   const { stocks } = useContext(StockContext);
 
   // If there are no stocks to filter display all stocks
@@ -13,7 +13,13 @@ const StockList = ({ handleTimeChange, filterSymbols, handleStockChange }) => {
         {stocks.length ? (
           <div className="list">
             {stocks.map(stock => {
-              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} handleStockChange={handleStockChange} />;
+              return <Stock
+                stock={stock}
+                key={stock.id}
+                handleTimeChange={handleTimeChange}
+                handleStockChange={handleStockChange}
+                user={user}
+              />;
             })}
           </div>
         ) : (
@@ -41,7 +47,13 @@ const StockList = ({ handleTimeChange, filterSymbols, handleStockChange }) => {
         {filterStocks.length ? (
           <div className="list">
             {filterStocks.map(stock => {
-              return <Stock stock={stock} key={stock.id} handleTimeChange={handleTimeChange} handleStockChange={handleStockChange} />;
+              return <Stock
+                stock={stock}
+                key={stock.id}
+                handleTimeChange={handleTimeChange}
+                handleStockChange={handleStockChange}
+                user={user}
+              />;
             })}
           </div>
         ) : (

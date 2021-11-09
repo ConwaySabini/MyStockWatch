@@ -54,21 +54,16 @@ function Menu() {
   gainers.sort((a, b) => b.percentChange - a.percentChange);
   losers.sort((a, b) => a.percentChange - b.percentChange);
 
-
-  // Add a new list with the name
-  const addStockList = (name) => {
-    addList(name, []);
-  }
-
   // Change symbol state to match with the input 
   const handleChange = (e) => {
     e.preventDefault();
     setListName(e.target.value);
   }
 
-  // Add the stock data for the current symbol in input bar
+  // Add the new list from the input
   const handleSubmit = () => {
-    addStockList(listName);
+    //TODO handle API calls
+    addList(listName, []);
     setListName("");
   }
 
@@ -107,6 +102,7 @@ function Menu() {
   // clear the list of stocks on the screen
   const clearFavoritesConfirmed = e => {
     e.preventDefault();
+    //TODO handle API calls
     clearFavorites();
     setFavoritesModal(false);
   }
@@ -114,6 +110,7 @@ function Menu() {
   // clear the list of stocks on the screen
   const clearListsConfirmed = e => {
     e.preventDefault();
+    //TODO handle API calls
     clearLists();
     setListModal(false);
   }
@@ -167,7 +164,10 @@ function Menu() {
               <a onClick={() => hideMenuFunc()} href="#toggleMenu">
                 <i class="fas fa-angle-down fa-2x" aria-hidden="true"></i>
               </a>
-              <a href="#createList" onKeyDown={() => handleSubmit()} onClick={() => handleSubmit()}>
+              <a
+                href="#createList"
+                onKeyDown={() => handleSubmit()}
+                onClick={() => handleSubmit()}>
                 <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" ></i>
               </a>
               <input
@@ -276,13 +276,22 @@ function Menu() {
                 </p>
               )
             }
-            <button class="button is-danger pr-4 pl-4 mb-2 mt-4" onClick={() => confirmFavoriteClear()}>Clear Favorites</button>
+            <button
+              class="button is-danger pr-4 pl-4 mb-2 mt-4"
+              onClick={() => confirmFavoriteClear()}>
+              Clear Favorites
+            </button>
             {
               lists.length ? (
                 <div className="list">
                   {lists.map(list => {
                     if (listsToRender[list.name] === true) {
-                      return <RenderLists list={list} hideList={hideList} listsToRender={listsToRender} removeList={removeList} />;
+                      return <RenderLists
+                        list={list}
+                        hideList={hideList}
+                        listsToRender={listsToRender}
+                        removeList={removeList}
+                      />;
                     } else {
                       return (
                         <p class="menu-label mt-5">
@@ -290,12 +299,20 @@ function Menu() {
                           <a onClick={() => showList(list.name)} href="#list">
                             <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
                           </a>
-                          <button class="button is-danger is-small ml-6" onClick={() => removeList(list.name)}>Delete</button>
+                          <button
+                            class="button is-danger is-small ml-6"
+                            onClick={() => removeList(list.name)}>
+                            Delete
+                          </button>
                         </p>
                       );
                     }
                   })}
-                  <button class="button is-danger mt-2 mb-4" onClick={() => confirmListsModal()}>Clear Lists</button>
+                  <button
+                    class="button is-danger mt-2 mb-4"
+                    onClick={() => confirmListsModal()}>
+                    Clear Lists
+                  </button>
                 </div>
               ) : (
                 <div className="no-favorites">No Custom Lists</div>
@@ -312,10 +329,17 @@ function Menu() {
             {/* <!-- Any other Bulma elements you want --> */}
             <div class="section" id="modal-section">
               <h3 id="modal-heading">Are you sure you want to clear all Favorites?</h3>
-              <button class="button is-danger mt-4" onClick={clearFavoritesConfirmed}>Clear All Favorites</button>
-              <button class="button is-primary mt-4 ml-4" onClick={clearFavoriteModal}>Cancel</button>
+              <button
+                class="button is-danger mt-4"
+                onClick={clearFavoritesConfirmed}>
+                Clear All Favorites
+              </button>
+              <button
+                class="button is-primary mt-4 ml-4"
+                onClick={clearFavoriteModal}>
+                Cancel
+              </button>
             </div>
-
           </div>
           <button class="modal-close is-large" aria-label="close"></button>
         </div>
@@ -328,8 +352,16 @@ function Menu() {
             {/* <!-- Any other Bulma elements you want --> */}
             <div class="section" id="modal-section">
               <h3 id="modal-heading">Are you sure you want to clear all lists?</h3>
-              <button class="button is-danger mt-4" onClick={clearListsConfirmed}>Clear All Lists</button>
-              <button class="button is-primary mt-4 ml-4" onClick={clearListsModal}>Cancel</button>
+              <button
+                class="button is-danger mt-4"
+                onClick={clearListsConfirmed}>
+                Clear All Lists
+              </button>
+              <button
+                class="button is-primary mt-4 ml-4"
+                onClick={clearListsModal}>
+                Cancel
+              </button>
             </div>
 
           </div>

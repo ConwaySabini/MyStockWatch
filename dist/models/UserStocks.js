@@ -16,14 +16,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const stockSchema = new _mongoose.default.Schema({
   symbol: String,
   data: {
-    meta: {
-      symbol: String,
-      interval: String,
-      currency: String,
-      exchange_timezone: String,
-      exchange: String,
-      type: String
-    },
+    meta: _mongoose.default.Schema.Types.Mixed,
     values: [_mongoose.default.Schema.Types.Mixed],
     status: String
   },
@@ -59,14 +52,9 @@ stockDataSchema.statics.createUserStocks = async function (userId, stocks) {
 
 stockDataSchema.statics.updateUserStocks = async function (userId, stocks) {
   try {
-    // delete the existing stocks
-    await this.deleteOne({
-      userId: userId
-    }); // create the updated stocks
-
-    await this.create({
-      userId,
-      stocks
+    // updated the stocks
+    const updatedStocks = await this.findOneAndUpdate(userId, {
+      stocks: stocks
     });
   } catch (error) {
     throw error;
@@ -121,6 +109,18 @@ stockDataSchema.statics.deleteStocksById = async function (id) {
 
 
 stockDataSchema.statics.deleteStocksByUserId = async function (userId) {
+  try {
+    return await this.deleteOne({
+      userId: userId
+    });
+  } catch (error) {
+    throw error;
+  }
+}; //TODO delete stock by symbol
+// Delete the specific stock by their userId and symbol and return result
+
+
+stockDataSchema.statics.deleteStockByUserIdSymbol = async function (userId, symbol) {
   try {
     return await this.deleteOne({
       userId: userId

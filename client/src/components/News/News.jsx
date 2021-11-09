@@ -156,8 +156,16 @@ function News() {
                   </section>
                 </div>
                 <div class="column is-6 mt-6">
-                  <button class="button is-link" onClick={handleSubmit} disabled={loading}>Add News</button>
-                  <button class="button is-danger ml-5" onClick={clear} disabled={loading}>
+                  <button
+                    class="button is-link"
+                    onClick={handleSubmit}
+                    disabled={loading}>
+                    Add News
+                  </button>
+                  <button
+                    class="button is-danger ml-5"
+                    onClick={clear}
+                    disabled={loading}>
                     Clear Filter
                   </button>
                   <form onSubmit={handleSubmit}>

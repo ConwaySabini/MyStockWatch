@@ -7,7 +7,7 @@ import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
 import StockButtons from './StockButtons';
 
 // Component to display the individual stock
-function Stock({ stock, handleTimeChange, handleStockChange }) {
+function Stock({ stock, handleTimeChange, handleStockChange, user }) {
   // State to track which chart to display (simple or technical)
   const [simpleChart, setSimpleChart] = useState(true);
   // loading state to have components wait for data to load
@@ -178,7 +178,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
             handleChart={handleChart}
             loading={loading}
             setLoading={setLoading}
-            stock={stock} />
+            stock={stock}
+            user={user}
+          />
         </div >
       );
     } else {
@@ -191,7 +193,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
             handleChart={handleChart}
             loading={loading}
             setLoading={setLoading}
-            stock={stock} />
+            stock={stock}
+            user={user}
+          />
         </div >
       );
     }
@@ -207,7 +211,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
             handleChart={handleChart}
             loading={loading}
             setLoading={setLoading}
-            stock={stock} />
+            stock={stock}
+            user={user}
+          />
         </div >
       );
     } else {
@@ -220,7 +226,9 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
             handleChart={handleChart}
             loading={loading}
             setLoading={setLoading}
-            stock={stock} />
+            stock={stock}
+            user={user}
+          />
         </div >
       );
     }

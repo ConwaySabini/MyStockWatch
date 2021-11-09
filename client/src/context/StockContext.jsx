@@ -7,14 +7,12 @@ const StockContextProvider = props => {
   // Set the state in local storage
   const initialStockState = JSON.parse(localStorage.getItem('stocks')) || [];
   const initialFavoriteState = JSON.parse(localStorage.getItem('favorites')) || [];
-  const initialListsState = JSON.parse(localStorage.getItem('lists')) || []; //
+  const initialListsState = JSON.parse(localStorage.getItem('lists')) || [];
 
   // states for stock, favorites, and news list
   const [stocks, setStocks] = useState(initialStockState);
   const [favorites, setFavorites] = useState(initialFavoriteState);
   const [lists, setLists] = useState(initialListsState);
-
-  //TODO make API calls to the backend on useEffect update
 
   // update local storage on modification
   useEffect(() => {
@@ -33,6 +31,7 @@ const StockContextProvider = props => {
 
   // Add favorites
   const addFavorite = (symbol, data, percentChange, timeline) => {
+    // TODO handle API calls
     setFavorites([...favorites, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
@@ -68,6 +67,7 @@ const StockContextProvider = props => {
 
   // Add a stock to a list
   const addStockToList = (name, symbol) => {
+    //TODO API calls
     // edit stock if it exists
     const foundStock = stocks.find(stock => stock.symbol === symbol);
     const foundList = lists.find(list => list.name === name);
@@ -79,12 +79,23 @@ const StockContextProvider = props => {
 
   // remove a stock from a list
   const removeStockFromList = (name, symbol) => {
+    // TODO handle API calls
     // edit stock if it exists
     const foundStock = stocks.find(stock => stock.symbol === symbol);
     const foundList = lists.find(list => list.name === name);
     foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== foundStock.symbol);
     const newLists = lists.map(list => (list.name === name ? foundList : list));
     setLists(newLists);
+  }
+
+  // check if a list contains a stock
+  const deleteStockFromLists = (symbol) => {
+    const foundList = lists.find(list => list.stocks.find(stock => stock.symbol === symbol));
+    if (foundList) {
+      foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== symbol);
+      const newLists = lists.map(list => (list.name === foundList.name ? foundList : list));
+      setLists(newLists);
+    }
   }
 
   // Clear favorites
@@ -105,6 +116,8 @@ const StockContextProvider = props => {
     if (favorite !== undefined) {
       removeFavorite(favorite.id);
     }
+    deleteStockFromLists(foundStock.symbol);
+    //TODO handle API calls for removing stock from stocks, and favorites and lists
   }
 
   // Clear stocks and favorites 

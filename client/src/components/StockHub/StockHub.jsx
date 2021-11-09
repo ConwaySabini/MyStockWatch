@@ -1,14 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { useAuth0 } from "@auth0/auth0-react";
 import { StockContext } from "../../context/StockContext";
 import StockList from '../StockList/StockList';
 import './StockHub.css';
 const axios = require('axios').default;
 
 // Component to display all stocks and the forms to add/edit stocks
-const StockHub = () => {
-  // user authentication from auth0
-  const { user, isAuthenticated } = useAuth0();
+const StockHub = ({ user }) => {
   // context api to modify data across components
   const { stocks, addStock, clearStocks, editStock, findFavorite,
     editFavorite, findSymbol, setNewStocks } = useContext(StockContext);
@@ -443,8 +440,20 @@ const StockHub = () => {
                 <div class="dropdown-menu" id="sort-dropdown" role="menu">
                   <div class="dropdown-content" id="sort-dropdown">
                     <div class="dropdown-item">
-                      <button class="button is-link" id="dropdown-buton" onClick={setDescendingFalse} disabled={loading}>Ascending</button>
-                      <button class="button is-link mt-4" id="dropdown-buton" onClick={setDescendingTrue} disabled={loading}>Descending</button>
+                      <button
+                        class="button is-link"
+                        id="dropdown-buton"
+                        onClick={setDescendingFalse}
+                        disabled={loading}>
+                        Ascending
+                      </button>
+                      <button
+                        class="button is-link mt-4"
+                        id="dropdown-buton"
+                        onClick={setDescendingTrue}
+                        disabled={loading}>
+                        Descending
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -453,7 +462,12 @@ const StockHub = () => {
           </div>
         </div>
         {/* render the list of stocks and pass down important functions to change aspects of the stocks */}
-        <StockList handleTimeChange={handleTimeChange} filterSymbols={filterSymbols} handleStockChange={handleStockChange} />
+        <StockList
+          handleTimeChange={handleTimeChange}
+          filterSymbols={filterSymbols}
+          handleStockChange={handleStockChange}
+          user={user}
+        />
       </div >
     );
   } else {

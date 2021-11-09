@@ -12,7 +12,9 @@ function Footer() {
           <div class="container">
             <div class="content has-text-centered">
               <div class="soc">
-                <a href="/#github"><i class="fa fa-github-alt fa-lg" role="none"></i></a>
+                <a href="/#github">
+                  <i class="fa fa-github-alt fa-lg" role="none"></i>
+                </a>
               </div>
               <div className="FooterMessage">
                 <p>
