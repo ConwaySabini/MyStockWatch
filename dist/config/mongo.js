@@ -5,7 +5,8 @@ var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
-require('dotenv').config();
+require('dotenv').config(); // import environment variable for MongoDB connection
+
 
 const CONNECTION_URL = process.env.MONGODB_CONNECTION;
 

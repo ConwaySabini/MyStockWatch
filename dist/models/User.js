@@ -25,6 +25,7 @@ const userSchema = new _mongoose.default.Schema({
     type: String,
     default: () => (0, _nanoid.nanoid)()
   },
+  userId: String,
   firstName: String,
   lastName: String,
   type: String,
@@ -61,6 +62,21 @@ userSchema.statics.getUserById = async function (id) {
     });
     if (!user) throw {
       error: 'No user with this id found'
+    };
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}; // Get the user by their userId and return the found user if they exist
+
+
+userSchema.statics.getUserByUserId = async function (userId) {
+  try {
+    const user = await this.findOne({
+      userId: userId
+    });
+    if (!user) throw {
+      error: 'No user with this userId found'
     };
     return user;
   } catch (error) {

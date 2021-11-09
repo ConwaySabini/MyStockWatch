@@ -10,3 +10,7 @@
 #navigation-bar {
   /* background: linear-gradient(52deg, rgba(72, 95, 199, 0.3) 30%, rgba(0, 209, 278, 0.3) 70%); */
 }
+
+#profile-picture {
+  border-radius: 25px;
+}

@@ -15,6 +15,16 @@ export default {
     }
   },
 
+  // Finds a user by their userId and returns the user on success
+  onGetUserByUserId: async (req, res) => {
+    try {
+      const user = await User.getUserByUserId(req.params.userId);
+      return res.status(200).json({ success: true, user });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error });
+    }
+  },
+
   // Finds a user with their email and returns the user if they exist, 
   // otherwise returns an error
   onGetUserByEmail: async (req, res) => {

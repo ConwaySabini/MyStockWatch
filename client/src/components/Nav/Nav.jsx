@@ -7,7 +7,7 @@ import Profile from '../Profile/Profile';
 
 // Component to render the navigation bar
 function Nav() {
-  const { logout } = useAuth0();
+  const { logout, loginWithRedirect } = useAuth0();
 
   return (
     <div className="navigation">
@@ -45,17 +45,17 @@ function Nav() {
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                <a class="button is-link" href="/Register">
+                {/* <button class="button is-link" onClick={() => loginWithRedirect()}>
                   <strong>Sign up</strong>
-                </a>
-                <a class="button is-light ml-2" href="/Login">
+                </button>
+                <button class="button is-light ml-2" onClick={() => loginWithRedirect()}>
                   Log in
-                </a>
-                <button class="button is-primary ml-2" onClick={() => logout()}>
+                </button> */}
+                <button class="button is-primary mt-2 ml-2 mb-2" onClick={() => logout()}>
                   <strong>Log Out</strong>
                 </button>
               </div>
-              <Profile></Profile>
+              {/* <Profile></Profile> */}
             </div>
           </div>
         </div>

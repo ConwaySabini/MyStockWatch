@@ -16,8 +16,6 @@ const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
 function App() {
-  console.log(domain);
-  console.log(clientId);
   //Router for the application
   return (
     <div className="app">
@@ -25,9 +23,12 @@ function App() {
         <Auth0Provider
           domain={domain}
           clientId={clientId}
-          redirectUri={window.location.origin}>
+          // redirectUri={window.location.origi
+          redirectUri={"http://localhost:3001/dashboard"}>
+          {/* useRefreshToken={true}
+          cacheLocation={'localStorage'}> */}
           {/* <Redirect exact from="/" to="/login" /> */}
-          <Route path="/" exact component={Login} />
+          <Route path="/" exact component={Home} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/home" exact component={Home} />
           <Route path="/login" exact component={Login} />
@@ -36,7 +37,7 @@ function App() {
         </Auth0Provider>
       </Router>
 
-    </div>
+    </div >
   );
 }
 

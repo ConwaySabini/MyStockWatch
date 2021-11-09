@@ -1,15 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import { StockContext } from "../../context/StockContext";
 import StockList from '../StockList/StockList';
-import TA from '../TA/TA';
 import './StockHub.css';
 const axios = require('axios').default;
 
 // Component to display all stocks and the forms to add/edit stocks
 const StockHub = () => {
+  // user authentication from auth0
+  const { user, isAuthenticated } = useAuth0();
   // context api to modify data across components
   const { stocks, addStock, clearStocks, editStock, findFavorite,
     editFavorite, findSymbol, setNewStocks } = useContext(StockContext);
+  // userId
+  const [userId, setUserId] = useState('');
   // symbol of the stock to be searched
   const [symbol, setSymbol] = useState('');
   // array of symbols to filter from the stock list
@@ -32,6 +36,104 @@ const StockHub = () => {
   const [modal, setModal] = useState(false);
   // flag for displaying the instructions
   const [showHero, setShowHero] = useState(true);
+  // flag for updating the stocks on the database
+  const [updateStocks, setUpdateStocks] = useState(false);
+  // server url to update stocks
+  const UPDATE_SERVER = `http://localhost:3000/stocks/update/`;
+
+  console.log("stocks", stocks);
+
+  //TODO store requests made in cache and check if they are still valid
+  //TODO how to check if requests need to be made
+
+  //TODO how to determine if data from databse needs to be fetched again
+
+  //TODO create user in database and use their id???
+
+  //TODO fix storage of stock data (the values and meta are in the index of zero when they should not be a list at all)
+
+  // Fetch the stock data from the server and render the stocks
+  // If there is no stock data for this user, create new data
+  useEffect(() => {
+    console.log(user);
+
+    if (user !== undefined) {
+      //server url
+      const SERVER = `http://localhost:3000/stocks/userId/${user.sub}`;
+      // server url to create stocks
+      const CREATE_STOCKS = `http://localhost:3000/stocks/`;
+
+      const fetchDataFromServer = async () => {
+        setLoading(true);
+        try {
+          // fetch the stock data 
+          const response = await axios.get(SERVER);
+          console.log("response", response);
+          // handle error
+          if (response.data.stocks === null) {
+            setLoading(false);
+            console.log("No stock data for this user");
+            createNewStockData();
+          } else {
+            // delete irrelevent data
+            delete response.data.stocks._id;
+            // set the stocks from the database
+            let newStocks = [];
+            for (const stock of stocks) {
+              newStocks.push(stock);
+            }
+            console.log("newStocks", newStocks);
+            // setNewStocks([...newStocks, response.data.stocks.stocks]);
+            setNewStocks(response.data.stocks.stocks);
+            // cleanup function
+            setLoading(false);
+          }
+          // handle error
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
+      }
+
+      // create new stock data for the user
+      const createNewStockData = async () => {
+        setLoading(true);
+        try {
+          // create the stock data 
+          const response = await axios.put(CREATE_STOCKS, { userId: user.sub, stocks: stocks });
+          console.log("creationResponse", response);
+          // handle error
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
+      }
+
+      fetchDataFromServer();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // update the stock data for the user
+    const updateStockData = async () => {
+      setLoading(true);
+      try {
+        // update the stock data 
+        const response = await axios.put(UPDATE_SERVER, { userId: user.sub, stocks: stocks });
+        console.log("updateResponse", response);
+        setLoading(false);
+        // handle error
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+      setLoading(false);
+    }
+
+    updateStockData();
+  }, [updateStocks]);
+
+
 
   // Axios options for getting stock data from 12 Data API
   const options = {
@@ -68,6 +170,7 @@ const StockHub = () => {
               timeline, currentFavorite.id);
           }
           // cleanup function
+          setUpdateStocks(!updateStocks);
           setSymbol('');
           setLoading(false);
         }
@@ -78,7 +181,6 @@ const StockHub = () => {
         setLoading(false);
       }
     }
-
 
     changeStockData();
   }, [stockChange]);
@@ -91,9 +193,9 @@ const StockHub = () => {
       const response = await axios.request(options);
       // handle error
       if (response.data.status === "error") {
+        setSymbol('');
         console.log(response.data.message);
         setLoading(false);
-        setSymbol('');
       } else {
         // get the stock and calculate the percent change over the time period
         const foundStock = findSymbol(symbol);
@@ -103,6 +205,7 @@ const StockHub = () => {
           addStock(symbol, response.data, percentChange, timeline);
         }
         // cleanup
+        setUpdateStocks(!updateStocks);
         setSymbol('');
         setLoading(false);
       }
@@ -239,11 +342,11 @@ const StockHub = () => {
   if (!modal) {
     return (
       <div class="StockForm">
-        <a onClick={() => toggleHero()}>
-          <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
-        </a>
         {showHero ? (
           <div>
+            <a onClick={() => toggleHero()} href="#instructions">
+              <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+            </a>
             {/* Title and information about the dashboard */}
             <section class="hero is-link" id="hero-dash">
               <div class="hero-body">
@@ -264,7 +367,12 @@ const StockHub = () => {
               </div>
             </section>
 
-          </div>) : null
+          </div>) :
+          (
+            <a onClick={() => toggleHero()} href="#instructions">
+              <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+            </a>
+          )
         }
         <div class="block" />
         {/* Forms and buttons to interact with the dashboard */}
@@ -352,8 +460,6 @@ const StockHub = () => {
       </div>
     );
   }
-
-
 }
 
 export default StockHub

@@ -67,8 +67,7 @@ function Menu() {
   }
 
   // Add the stock data for the current symbol in input bar
-  const handleSubmit = e => {
-    e.preventDefault();
+  const handleSubmit = () => {
     addStockList(listName);
     setListName("");
   }
@@ -153,7 +152,7 @@ function Menu() {
     return (
       <div>
         <aside class="menu">
-          <a onClick={() => showMenu()}>
+          <a onClick={() => showMenu()} href="#toggleMenu">
             <i class="fas fa-angle-up fa-2x" aria-hidden="true"></i>
           </a>
         </aside>
@@ -165,11 +164,11 @@ function Menu() {
         <div>
           <aside class="menu">
             <form onSubmit={handleSubmit} className="AddListsForm">
-              <a onClick={() => hideMenuFunc()}>
+              <a onClick={() => hideMenuFunc()} href="#toggleMenu">
                 <i class="fas fa-angle-down fa-2x" aria-hidden="true"></i>
               </a>
-              <a>
-                <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" onClick={handleSubmit}></i>
+              <a href="#createList" onKeyDown={() => handleSubmit()} onClick={() => handleSubmit()}>
+                <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" ></i>
               </a>
               <input
                 id="menu-input"
@@ -185,7 +184,7 @@ function Menu() {
               renderGainers ? (
                 <p class="menu-label">
                   <strong id="menu-label">Gainers</strong>
-                  <a onClick={() => hideList("gainers")}>
+                  <a onClick={() => hideList("gainers")} href="#gainers">
                     <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
                   </a>
                   <p id="gainers">
@@ -207,7 +206,7 @@ function Menu() {
               ) : (
                 <p class="menu-label">
                   <strong id="menu-label">Gainers</strong>
-                  <a onClick={() => showList("gainers")}>
+                  <a onClick={() => showList("gainers")} href="#gainers">
                     <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
                   </a>
                 </p>
@@ -217,7 +216,7 @@ function Menu() {
               renderLosers ? (
                 <p class="menu-label">
                   <strong id="menu-label">Losers</strong>
-                  <a onClick={() => hideList("losers")}>
+                  <a onClick={() => hideList("losers")} href="#losers">
                     <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
                   </a>
                   <p id="losers">
@@ -239,7 +238,7 @@ function Menu() {
               ) : (
                 <p class="menu-label">
                   <strong id="menu-label">Losers</strong>
-                  <a onClick={() => showList("losers")}>
+                  <a onClick={() => showList("losers")} href="#losers">
                     <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
                   </a>
                 </p>
@@ -249,7 +248,7 @@ function Menu() {
               renderFavorites ? (
                 <p class="menu-label">
                   <strong id="menu-label">Favorites</strong>
-                  <a onClick={() => hideList("favorites")}>
+                  <a onClick={() => hideList("favorites")} href="#favorites">
                     <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
                   </a>
                   <p id="favorites">
@@ -271,7 +270,7 @@ function Menu() {
               ) : (
                 <p class="menu-label">
                   <strong id="menu-label">Favorites</strong>
-                  <a onClick={() => showList("favorites")}>
+                  <a onClick={() => showList("favorites")} href="#favorites">
                     <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
                   </a>
                 </p>
@@ -288,7 +287,7 @@ function Menu() {
                       return (
                         <p class="menu-label mt-5">
                           <strong id="menu-label">{list.name}</strong>
-                          <a onClick={() => showList(list.name)}>
+                          <a onClick={() => showList(list.name)} href="#list">
                             <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
                           </a>
                           <button class="button is-danger is-small ml-6" onClick={() => removeList(list.name)}>Delete</button>

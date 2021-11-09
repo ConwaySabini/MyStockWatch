@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _Userlists = _interopRequireDefault(require("../models/Userlists.js"));
+var _UserLists = _interopRequireDefault(require("../models/UserLists.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18,7 +18,7 @@ var _default = {
   // Finds lists by their id and returns the lists on success
   onGetListsById: async (req, res) => {
     try {
-      const lists = await _Userlists.default.getListsById(req.params.id);
+      const lists = await _UserLists.default.getListsById(req.params.id);
       return res.status(200).json({
         success: true,
         lists
@@ -35,7 +35,7 @@ var _default = {
   onGetListsByUserId: async (req, res) => {
     try {
       // get the lists and return the lists if available
-      const lists = await _Userlists.default.getListsByUserId(req.params.userId);
+      const lists = await _UserLists.default.getListsByUserId(req.params.userId);
       return res.status(200).json({
         success: true,
         lists
@@ -51,7 +51,7 @@ var _default = {
   onGetAllLists: async (req, res) => {
     try {
       // finds all lists and returns them if there are any lists
-      const lists = await _Userlists.default.getAllLists();
+      const lists = await _UserLists.default.getAllLists();
       return res.status(200).json({
         success: true,
         lists
@@ -80,14 +80,14 @@ var _default = {
 
       if (!validation) return res.status(400).json(validation); // Find if the lists already exists
 
-      const foundLists = await _Userlists.default.getListsByUserId(userId); // throw error if lists already exists
+      const foundLists = await _UserLists.default.getListsByUserId(userId); // throw error if lists already exists
 
       if (foundLists !== null) return res.status(500).json({
         success: false,
         error: 'There is already lists for this user.'
       }); // create the lists
 
-      const createdLists = await _Userlists.default.createUserLists(userId, lists); // return the lists and success message
+      const createdLists = await _UserLists.default.createUserLists(userId, lists); // return the lists and success message
 
       return res.status(200).json({
         success: true,
@@ -104,7 +104,7 @@ var _default = {
   // otherwise returns an error
   onUpdateListsByUserId: async (req, res) => {
     try {
-      await _Userlists.default.updateUserLists(req.body.userId, req.body.lists);
+      await _UserLists.default.updateUserLists(req.body.userId, req.body.lists);
       return res.status(200).json({
         success: true,
         message: `Updated lists from user ${req.body.userId}.`
@@ -120,7 +120,7 @@ var _default = {
   // otherwise returns an error
   onDeleteListsById: async (req, res) => {
     try {
-      const deletedLists = await _Userlists.default.deleteListsById(req.params.id);
+      const deletedLists = await _UserLists.default.deleteListsById(req.params.id);
       return res.status(200).json({
         success: true,
         message: `Deleted ${deletedLists.deletedCount} lists.`
@@ -136,7 +136,7 @@ var _default = {
   // otherwise returns an error
   onDeleteListsByUserId: async (req, res) => {
     try {
-      const deletedLists = await _Userlists.default.deleteListsByUserId(req.params.userId);
+      const deletedLists = await _UserLists.default.deleteListsByUserId(req.params.userId);
       return res.status(200).json({
         success: true,
         message: `Deleted ${deletedLists.deletedCount} lists.`

@@ -36,8 +36,6 @@ function Stock({ stock, handleTimeChange, handleStockChange }) {
     window.addEventListener("resize", getSize);
   }, []);
 
-
-
   // dates of the stock for the graph
   const labels = [];
   // prices of the stock for the graph

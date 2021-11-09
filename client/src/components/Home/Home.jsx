@@ -1,7 +1,14 @@
 import './Home.css';
+import { useAuth0 } from "@auth0/auth0-react";
+import { Redirect } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
 
 // Component to display the home page of the application
 function Home() {
+  // Auth0 authentication handler
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
+
   return (
     <div className="Home">
       <body>
@@ -49,7 +56,7 @@ function Home() {
                 <div class="column is-6 is-offset-6">
                   <h1 class="title is-1 " id="homeTitle">For Beginners and Advanced Users Alike</h1>
                   <hr class="content-divider" />
-                  <h2 class="subtitle" id="homeSubtitle">Get financial data displayed from many different timeframes of your choosing.</h2>
+                  <h2 class="subtitle" id="homeSubtitle">Get financial data displayed from many different timeframes of your choosing. Also display the charts using simple or technical charts.</h2>
                   <a href="register" class="button is-white is-inverted">Next&ensp; </a>
                 </div>
               </div>
@@ -66,19 +73,20 @@ function Home() {
                 <a href="register">
                   <button class="button is-black mt-2">Register</button>
                 </a>
-                <a href="login">
-                  <button class="button is-black mt-2 ml-4">Login</button>
-                </a>
-                <a href="dashboard">
-                  <button class="button is-black mt-2 ml-4">Dashboard</button>
-                </a>
+                <button
+                  class="button is-black mt-2 ml-4"
+                  onClick={() => loginWithRedirect()}>
+                  Login
+                </button>
+                {isAuthenticated ? (
+                  <a href="dashboard">
+                    <button class="button is-black mt-2 ml-4">Dashboard</button>
+                  </a>) : null}
               </div>
             </div>
           </div>
-
         </section>
       </body>
-
     </div >
   );
 }
