@@ -33,14 +33,16 @@ const StockHub = ({ user }) => {
   const [showHero, setShowHero] = useState(true);
   // flag for updating the stocks on the database
   const [updateStocks, setUpdateStocks] = useState(false);
+  // server url to update favorites
+  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
+  // server url to update lists
+  const UPDATE_LISTS = `http://localhost:3000/stocks/lists/update`;
   // server url to update stocks
-  const UPDATE_SERVER = `http://localhost:3000/stocks/update/`;
+  const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
 
   //console.log("stocks", stocks);
 
   //TODO add an update data button to stock???
-
-  //TODO create user in database and create a new ID with nanoID.
 
   // Fetch the stock data from the server and render the stocks
   // If there is no stock data for this user, create new data
@@ -130,7 +132,7 @@ const StockHub = ({ user }) => {
         setLoading(true);
         try {
           // update the stock data 
-          const response = await axios.put(UPDATE_SERVER, { userId: user.sub, stocks: stocks });
+          const response = await axios.put(UPDATE_STOCKS, { userId: user.sub, stocks: stocks });
           console.log("updateResponse", response);
           setLoading(false);
           // handle error
@@ -174,12 +176,13 @@ const StockHub = ({ user }) => {
           const percentChange = calculatePercentChange(response.data);
           // edit the stock being modified
           editStock(symbol, response.data, percentChange,
-            timeline, currentStock.id);
+            timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user.sub);
           if (currentFavorite !== undefined) {
             // edit the favorite in the sidebar to match the stock being modified
             editFavorite(symbol, response.data, percentChange,
-              timeline, currentFavorite.id);
+              timeline, currentFavorite.id, UPDATE_FAVORITES, user.sub);
           }
+          //TODO update lists and remove the UPDATE_LISTS from the editStock function
           // cleanup function
           setUpdateStocks(!updateStocks);
           setSymbol('');
@@ -316,7 +319,7 @@ const StockHub = ({ user }) => {
   // clear the list of stocks on the screen
   const clear = e => {
     e.preventDefault();
-    clearStocks();
+    clearStocks(UPDATE_STOCKS, UPDATE_LISTS, UPDATE_FAVORITES, user.sub);
     setModal(false);
     setUpdateStocks(!updateStocks);
   }

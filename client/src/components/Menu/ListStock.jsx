@@ -2,15 +2,14 @@ import React, { useContext } from 'react'
 import { StockContext } from "../../context/StockContext";
 
 // Component to display the individual favorite stock in the menu
-function ListStock({ favorite, name }) {
+function ListStock({ favorite, name, url, userId }) {
   const { removeStockFromList } = useContext(StockContext);
   let price = favorite.data.values[0].close;
   price = parseFloat(price).toFixed(2);
 
   // Remove stock from list
   const removeStock = (name, symbol) => {
-    //TODO handle API calls
-    removeStockFromList(name, symbol);
+    removeStockFromList(name, symbol, url, userId);
   }
 
   // Display stocks that have gained in value

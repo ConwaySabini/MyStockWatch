@@ -1,5 +1,6 @@
 import './Dashboard.css';
 import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from 'React';
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import StockContextProvider from '../../context/StockContext';
@@ -10,6 +11,12 @@ import Menu from '../Menu/Menu';
 function Dashboard() {
   // user authentication from auth0
   const { user, isAuthenticated } = useAuth0();
+  // user Id for the user
+  const [userId, setUserId] = useState('');
+
+  //TODO fetch user with emai and create new user if not found with nanoId for the userId
+  //TODO Pass the userId to child components as props
+
   if (user !== undefined) {
     return (
       <StockContextProvider>
@@ -43,7 +50,6 @@ function Dashboard() {
           </div>
         </div >
       </StockContextProvider>
-
     );
   } else {
     return null;

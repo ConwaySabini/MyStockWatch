@@ -9,9 +9,9 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
   const [list, setList] = useState("");
   // URLS to make API calls from the Context API
   // server url to update favorites
-  const UPDATE_FAVORITES = `http://localhost:3000/stocks/userId/${user.sub}`;
+  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/stocks/userId/${user.sub}`;
+  const UPDATE_LISTS = `http://localhost:3000/stocks/lists/update`;
   // server url to update stocks
   const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
 
@@ -34,14 +34,14 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
   // function to add a stock to a list
   const addToList = () => {
     setLoading(true);
-    addStockToList(list, stock.symbol);
+    addStockToList(list, stock.symbol, UPDATE_LISTS, user.sub);
     setLoading(false);
   }
 
   // function to remove a stock from a list
   const removeFromList = () => {
     setLoading(true);
-    removeStockFromList(list, stock.symbol, UPDATE_LISTS);
+    removeStockFromList(list, stock.symbol, UPDATE_LISTS, user.sub);
     setLoading(false);
   }
 

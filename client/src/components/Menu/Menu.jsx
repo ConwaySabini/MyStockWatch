@@ -24,8 +24,12 @@ function Menu({ user }) {
   const [ListsModal, setListModal] = useState(false);
   // state to hide the entire menu
   const [hideMenu, setHideMenu] = useState(false);
+  // server url to update favorites
+  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
+  // server url to update lists
+  const UPDATE_LISTS = `http://localhost:3000/stocks/lists/update`;
 
-
+  //TODO check for lists and favorites from the database like in stockhub
 
   useEffect(() => {
     let renderLists = listsToRender;
@@ -62,8 +66,7 @@ function Menu({ user }) {
 
   // Add the new list from the input
   const handleSubmit = () => {
-    //TODO handle API calls
-    addList(listName, []);
+    addList(listName, [], UPDATE_LISTS, user.sub);
     setListName("");
   }
 
@@ -102,16 +105,14 @@ function Menu({ user }) {
   // clear the list of stocks on the screen
   const clearFavoritesConfirmed = e => {
     e.preventDefault();
-    //TODO handle API calls
-    clearFavorites();
+    clearFavorites(UPDATE_FAVORITES, user.sub);
     setFavoritesModal(false);
   }
 
   // clear the list of stocks on the screen
   const clearListsConfirmed = e => {
     e.preventDefault();
-    //TODO handle API calls
-    clearLists();
+    clearLists(UPDATE_LISTS, user.sub);
     setListModal(false);
   }
 
@@ -291,6 +292,8 @@ function Menu({ user }) {
                         hideList={hideList}
                         listsToRender={listsToRender}
                         removeList={removeList}
+                        url={UPDATE_LISTS}
+                        userId={user.sub}
                       />;
                     } else {
                       return (
@@ -372,10 +375,6 @@ function Menu({ user }) {
       return null
     }
   }
-
-
-
-
 }
 
 export default Menu;

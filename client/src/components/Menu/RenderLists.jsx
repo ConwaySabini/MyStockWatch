@@ -1,6 +1,6 @@
 import ListStock from "./ListStock";
 
-function RenderLists({ list, hideList, removeList }) {
+function RenderLists({ list, hideList, removeList, url, userId }) {
 
   return (
     <>
@@ -16,7 +16,7 @@ function RenderLists({ list, hideList, removeList }) {
               <div className="list">
                 <ul class="menu-list">
                   {list.stocks.map(stock => {
-                    return <ListStock favorite={stock} name={list.name} key={stock.id} />;
+                    return <ListStock favorite={stock} name={list.name} key={stock.id} url={url} userId={userId} />;
                   })}
                 </ul>
               </div>

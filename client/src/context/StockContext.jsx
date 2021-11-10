@@ -39,7 +39,6 @@ const StockContextProvider = props => {
 
   // Remove favorites
   const removeFavorite = (id, userId, url) => {
-    //TODO handle API calls
     let newFavorites = favorites.filter(favorite => favorite.id !== id);
     setFavorites(newFavorites);
     // delete the stock from the favorites database
@@ -47,8 +46,11 @@ const StockContextProvider = props => {
   }
 
   // Clear favorites
-  const clearFavorites = () => {
-    //TODO handle API calls
+  const clearFavorites = (url, userId) => {
+    let newFavorites = [];
+    // update database with new favorites
+    updateFavoriteData(url, userId, newFavorites);
+    // update context
     setFavorites([]);
   }
 
@@ -58,9 +60,12 @@ const StockContextProvider = props => {
   }
 
   // Add List
-  const addList = (name, stocks) => {
-    //TODO handle API calls
-    setLists([...lists, { name, stocks, id: nanoid() }]);
+  const addList = (name, stocks, url, userId) => {
+    let newLists = [...lists, { name, stocks, id: nanoid() }];
+    // update database with new lists
+    updateListData(url, userId, newLists);
+    // update context
+    setLists(newLists);
   }
 
   // Find List
@@ -69,58 +74,86 @@ const StockContextProvider = props => {
   }
 
   // Find and remove List
-  const removeList = name => {
-    //TODO handle API calls
-    setLists(lists.filter(list => list.name !== name));
+  const removeList = (name, url, userId) => {
+    let newLists = lists.filter(list => list.name !== name);
+    // update context
+    setLists(newLists);
+    // update database with new lists
+    updateListData(url, userId, newLists);
   }
 
   // Add a stock to a list
-  const addStockToList = (name, symbol) => {
-    //TODO API calls
+  const addStockToList = (name, symbol, url, userId) => {
     // edit stock if it exists
     const foundStock = stocks.find(stock => stock.symbol === symbol);
+    // find the list with the stock
     const foundList = lists.find(list => list.name === name);
+    // set the new stocks with added stock
     let newStocks = [...foundList.stocks, foundStock];
     foundList.stocks = newStocks;
+    // update the lists
     const newLists = lists.map(list => (list.name === name ? foundList : list));
+    // update the database and context
+    updateListData(url, userId, newLists);
     setLists(newLists);
   }
 
   // remove a stock from a list
-  const removeStockFromList = (name, symbol, url) => {
-    // TODO handle API calls
+  const removeStockFromList = (name, symbol, url, userId) => {
     // edit stock if it exists
     const foundStock = stocks.find(stock => stock.symbol === symbol);
     const foundList = lists.find(list => list.name === name);
+    // change the lists stocks to remove the stock
     foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== foundStock.symbol);
+    // Add the list to the lists
     const newLists = lists.map(list => (list.name === name ? foundList : list));
+    // update the list in the database
+    updateListData(url, userId, newLists);
+    // update context API lists
     setLists(newLists);
-
-    updateListData(url,)
   }
 
-  //TODO make sure it works for multiple lists and other list functions
+  //TODO test this for multiple lists
   // check if a list contains a stock
   const deleteStockFromLists = (symbol, userId, url) => {
+    let newLists = [];
     // find the lists if they exist
-    const foundList = lists.find(list => list.stocks.find(stock => stock.symbol === symbol));
-    if (foundList) {
-      foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== symbol);
-      const newLists = lists.map(list => (list.name === foundList.name ? foundList : list));
-      setLists(newLists);
-      // delete the stock from the lists database
-      updateListData(url, userId, newLists);
+    for (let list of lists) {
+      newLists.push(list);
     }
+    for (let list of newLists) {
+      for (let stock of list.stocks) {
+        if (stock.symbol === symbol) {
+          // remove the stock from the list
+          list.stocks = list.stocks.filter(stock => stock.symbol !== symbol);
+        }
+      }
+    }
+    setLists(newLists);
+    // delete the stock from the lists database
+    updateListData(url, userId, newLists);
+    // const foundList = lists.find(list => list.stocks.find(stock => stock.symbol === symbol));
+    // if (foundList) {
+    //   // remove the stock from the list
+    //   foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== symbol);
+    //   // update the list in the lists
+    //   const newLists = lists.map(list => (list.name === foundList.name ? foundList : list));
+    //   setLists(newLists);
+    //   // delete the stock from the lists database
+    //   updateListData(url, userId, newLists);
+    // }
   }
 
   // Clear favorites
-  const clearLists = () => {
-    //TODO handle API calls
+  const clearLists = (url, userId) => {
+    let newLists = [];
+    updateListData(url, userId, newLists);
     setLists([]);
   }
 
   // Add stocks
   const addStock = (symbol, data, percentChange, timeline) => {
+    // update context
     setStocks([...stocks, { symbol, data, percentChange, timeline, id: nanoid() }]);
   }
 
@@ -139,6 +172,69 @@ const StockContextProvider = props => {
     deleteStockFromLists(foundStock.symbol, userId, listsURL);
     // delete the stock from the database
     updateStockData(url, userId, newStocks);
+  }
+
+  // Clear stocks and favorites 
+  const clearStocks = (stocksURL, favoritesURL, listsURL, userID) => {
+    // update context
+    setStocks([]);
+    setFavorites([]);
+    setLists([]);
+    // update database
+    updateStockData(stocksURL, userID, []);
+    updateFavoriteData(favoritesURL, userID, []);
+    updateListData(listsURL, userID, []);
+  }
+
+  // Find stock and return it
+  const findStock = id => {
+    return stocks.find(stock => stock.id === id);
+  }
+
+  // Find stock timeline and return it
+  const getStockTime = id => {
+    const stockToGet = stocks.find(stock => stock.id === id);
+    return stockToGet.timeline;
+  }
+
+  // Find stock with matching symbol
+  const findSymbol = symbol => {
+    const stockToGet = stocks.find(stock => stock.symbol === symbol);
+    if (stockToGet !== undefined) {
+      return stockToGet;
+    }
+    return undefined;
+  }
+
+  // Edit stock
+  const editStock = (symbol, data, percentChange, timeline, id, stocksURL, listsURL, userId) => {
+    // edit stock if it exists
+    const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
+    setStocks(newStocks);
+    let newLists = [];
+    // find the lists if they exist
+    for (let list of lists) {
+      newLists.push(list);
+    }
+    for (let list of newLists) {
+      list.stocks = list.stocks.map(stock => (stock.symbol === symbol ? { symbol, data, percentChange, timeline, id } : stock));
+    }
+    updateStockData(stocksURL, userId, newStocks);
+    updateListData(listsURL, userId, newLists);
+  }
+
+  // Set all stocks, method does not need to use database API
+  const setNewStocks = (newStocks) => {
+    setStocks(newStocks);
+  }
+
+  // Edit favorite
+  const editFavorite = (symbol, data, percentChange, timeline, id, url, userId) => {
+    // edit favorite if it exists
+    const newFavorites = favorites.map(favorite => (favorite.id === id ? { symbol, data, percentChange, timeline, id } : favorite));
+    // update databse data
+    updateFavoriteData(url, userId, newFavorites);
+    setFavorites(newFavorites);
   }
 
   // update the stock data for the user
@@ -175,55 +271,6 @@ const StockContextProvider = props => {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  // Clear stocks and favorites 
-  const clearStocks = () => {
-    //TODO handle API calls
-    setStocks([]);
-    setFavorites([]);
-    setLists([]);
-  }
-
-  // Find stock and return it
-  const findStock = id => {
-    return stocks.find(stock => stock.id === id);
-  }
-
-  // Find stock timeline and return it
-  const getStockTime = id => {
-    const stockToGet = stocks.find(stock => stock.id === id);
-    return stockToGet.timeline;
-  }
-
-  // Find stock with matching symbol
-  const findSymbol = symbol => {
-    const stockToGet = stocks.find(stock => stock.symbol === symbol);
-    if (stockToGet !== undefined) {
-      return stockToGet;
-    }
-    return undefined;
-  }
-
-  // Edit stock
-  const editStock = (symbol, data, percentChange, timeline, id) => {
-    // edit stock if it exists
-    const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
-    setStocks(newStocks);
-    //TODO handle API calls
-  }
-
-  // Set all stocks, method does not need to use database API
-  const setNewStocks = (newStocks) => {
-    setStocks(newStocks);
-  }
-
-  // Edit favorite
-  const editFavorite = (symbol, data, percentChange, timeline, id) => {
-    // edit favorite if it exists
-    //TODO handle API calls
-    const newFavorites = favorites.map(favorite => (favorite.id === id ? { symbol, data, percentChange, timeline, id } : favorite));
-    setFavorites(newFavorites);
   }
 
   // export all functions, data, and components wrapped in context

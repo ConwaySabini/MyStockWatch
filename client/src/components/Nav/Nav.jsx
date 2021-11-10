@@ -27,9 +27,9 @@ function Nav() {
             aria-expanded="false"
             data-target="navbarBasicExample"
           >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
+            <span aria-hidden="true">Home</span>
+            <span aria-hidden="true">Dashboard</span>
+            <span aria-hidden="true">News</span>
           </a>
         </div>
 
@@ -51,12 +51,6 @@ function Nav() {
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                {/* <button class="button is-link" onClick={() => loginWithRedirect()}>
-                  <strong>Sign up</strong>
-                </button>
-                <button class="button is-light ml-2" onClick={() => loginWithRedirect()}>
-                  Log in
-                </button> */}
                 <button class="button is-primary mt-2 ml-2 mb-2" onClick={() => logout()}>
                   <strong>Log Out</strong>
                 </button>
