@@ -9,7 +9,7 @@ function RenderLists({ list, hideList, removeList, url, userId }) {
         <a onClick={() => hideList(list.name)}>
           <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
         </a>
-        <button class="button is-danger is-small ml-6" onClick={() => removeList(list.name)}>Delete</button>
+        <button class="button is-danger is-small ml-6" onClick={() => removeList(list.name, url, userId)}>Delete</button>
         <p id="favorites">
           {
             list.stocks.length ? (
@@ -28,6 +28,7 @@ function RenderLists({ list, hideList, removeList, url, userId }) {
       </p>
     </>
   );
+  // return null;
 }
 
 export default RenderLists;

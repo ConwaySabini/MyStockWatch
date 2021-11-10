@@ -11,7 +11,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
   // server url to update favorites
   const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/stocks/lists/update`;
+  const UPDATE_LISTS = `http://localhost:3000/lists/update`;
   // server url to update stocks
   const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
 

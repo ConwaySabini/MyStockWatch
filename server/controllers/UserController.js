@@ -53,8 +53,11 @@ export default {
   onCreateUser: async (req, res) => {
     try {
       let validation = true;
-      const { firstName, lastName, type, email, password, } = req.body;
+      const { userId, firstName, lastName, type, email, password, } = req.body;
       // Validate the data from the request
+      if (!(typeof userId === 'string' || userId instanceof String)) {
+        validation = false;
+      }
       if (!(validator.isEmail(email))) {
         validation = false;
       }
@@ -81,6 +84,7 @@ export default {
       });
       // create the user
       const user = await User.createUser(
+        userId,
         firstName,
         lastName,
         type,

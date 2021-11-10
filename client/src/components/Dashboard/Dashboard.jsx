@@ -29,7 +29,7 @@ function Dashboard() {
       try {
         // fetch the stock data 
         const response = await axios.get(GET_USER);
-        console.log("response", response);
+        console.log("UserResponse", response);
         // handle error
         if (response.data.user === null) {
           console.log("No user has been created");
@@ -41,7 +41,7 @@ function Dashboard() {
           const email = user.email;
           const password = "placeholder";
           const userResponse = await axios.put(CREATE_USER,
-            { firstName: firstName, lastName: lastName, type: type, email: email, password: password });
+            { userId: userId, firstName: firstName, lastName: lastName, type: type, email: email, password: password });
           if (userResponse.data.user === null) {
             console.log("error creating new user");
           } else {

@@ -3,10 +3,13 @@ import React, { useContext } from 'react'
 import { StockContext } from "../../context/StockContext";
 
 // Component to display the individual favorite stock in the menu
-function Favorite({ favorite }) {
+function Favorite({ favorite, user }) {
   const { removeFavorite } = useContext(StockContext);
   let price = favorite.data.values[0].close;
   price = parseFloat(price).toFixed(2);
+
+  // server url to update favorites
+  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
 
   // Display stocks that have gained in value
   if (favorite.percentChange > 0) {
@@ -19,7 +22,7 @@ function Favorite({ favorite }) {
                 {favorite.symbol}: {favorite.percentChange}%
                 <button
                   class="button is-small is-danger ml-5 mt-2"
-                  onClick={() => removeFavorite(favorite.id)}>
+                  onClick={() => removeFavorite(favorite.id, user, UPDATE_FAVORITES)}>
                   Delete
                 </button>
                 <br />
@@ -41,7 +44,7 @@ function Favorite({ favorite }) {
                 {favorite.symbol}: {favorite.percentChange}%
                 <button
                   class="button is-small is-danger ml-5 mt-2"
-                  onClick={() => removeFavorite(favorite.id)}>
+                  onClick={() => removeFavorite(favorite.id, user, UPDATE_FAVORITES)}>
                   Delete
                 </button>
                 <br />

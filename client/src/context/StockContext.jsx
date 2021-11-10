@@ -33,7 +33,7 @@ const StockContextProvider = props => {
   // Add favorites
   const addFavorite = (symbol, data, percentChange, timeline, url, userId) => {
     const newFavorites = [...favorites, { symbol, data, percentChange, timeline, id: nanoid() }];
-    setFavorites();
+    setFavorites(newFavorites);
     updateFavoriteData(url, userId, newFavorites);
   }
 
@@ -41,6 +41,7 @@ const StockContextProvider = props => {
   const removeFavorite = (id, userId, url) => {
     let newFavorites = favorites.filter(favorite => favorite.id !== id);
     setFavorites(newFavorites);
+
     // delete the stock from the favorites database
     updateFavoriteData(url, userId, newFavorites);
   }
@@ -229,6 +230,17 @@ const StockContextProvider = props => {
     setStocks(newStocks);
   }
 
+  // Set all lists, method does not need to use database API
+  const setNewLists = (newLists) => {
+    setLists(newLists);
+  }
+
+  // Set all favorites, method does not need to use database API
+  const setNewFavorites = (newFavorites) => {
+    setFavorites(newFavorites);
+    console.log("newFavorites", newFavorites);
+  }
+
   // Edit favorite
   const editFavorite = (symbol, data, percentChange, timeline, id, url, userId) => {
     // edit favorite if it exists
@@ -288,6 +300,7 @@ const StockContextProvider = props => {
         removeFavorite,
         clearFavorites,
         findFavorite,
+        setNewFavorites,
         findSymbol,
         editStock,
         editFavorite,
@@ -298,6 +311,7 @@ const StockContextProvider = props => {
         addStockToList,
         clearLists,
         findList,
+        setNewLists,
         lists,
         removeStockFromList,
       }}

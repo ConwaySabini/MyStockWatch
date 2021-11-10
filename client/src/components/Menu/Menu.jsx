@@ -3,11 +3,12 @@ import React, { useState, useContext, useEffect } from "react";
 import { StockContext } from "../../context/StockContext";
 import Favorite from '../Favorite/Favorite';
 import RenderLists from './RenderLists';
+const axios = require('axios').default;
 
 // Component to display all favorite stocks
 function Menu({ user }) {
   // use context api
-  const { favorites, clearFavorites, addList, removeList, lists, clearLists } = useContext(StockContext);
+  const { favorites, clearFavorites, addList, removeList, lists, clearLists, setNewLists, setNewFavorites } = useContext(StockContext);
   // list name to add
   const [listName, setListName] = useState("");
   // list of lists to conditionally render in dropdown
@@ -27,7 +28,11 @@ function Menu({ user }) {
   // server url to update favorites
   const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/stocks/lists/update`;
+  const UPDATE_LISTS = `http://localhost:3000/lists/update`;
+  // server url to get lists
+  const GET_LISTS = `http://localhost:3000/lists/`;
+  // server url to get favorites
+  const GET_FAVORITES = `http://localhost:3000/favorites/`;
 
   //TODO check for lists and favorites from the database like in stockhub
 
@@ -39,22 +44,121 @@ function Menu({ user }) {
       }
     }
     setListsToRender(renderLists);
-  }, [lists]);
+
+    const checkForLists = async () => {
+      try {
+        // fetch the stock data 
+        const response = await axios.get(GET_LISTS);
+        // handle error
+        if (response.data.lists.length === 0) {
+          console.log("No lists have been created");
+          // create the new lists
+          const listResponse = await axios.put(GET_LISTS,
+            { userId: user, lists: lists });
+          if (listResponse.data.lists === null) {
+            console.log("error creating new lists");
+          } else {
+            console.log("created new lists");
+          }
+        } else {
+          // user already exists so set the id
+          const newLists = [];
+          for (const list of lists) {
+            newLists.push(list);
+          }
+          for (const list of response.data.lists.lists) {
+            let found = false;
+            for (const newList of newLists) {
+              if (list.id === newList.id) {
+                found = true;
+              }
+            }
+            if (!found) {
+              newLists.push(list);
+            }
+          }
+          setNewLists(newLists);
+          // update the stock data 
+          const res = await axios.put(UPDATE_LISTS, { userId: user, lists: newLists });
+        }
+        // handle error
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    checkForLists();
+  }, []);
 
   useEffect(() => {
+    const checkForFavorites = async () => {
+      try {
+        // fetch the stock data 
+        const response = await axios.get(GET_FAVORITES);
+        console.log("FavoriteResponse", response);
+        // handle error
+        if (response.data.favorites === null) {
+          console.log("No favorites have been created");
+          // create the new lists
+          const FavoriteResponse = await axios.put(GET_FAVORITES,
+            { userId: user, favorites: favorites });
+          if (FavoriteResponse.data.favorites === null) {
+            console.log("error creating new favorites");
+          } else {
+            console.log("created new favorites");
+          }
+        } else {
+          // user already exists so set the id
+          console.log("retrieved favorites", response.data.favorites);
+          const newFavorites = [];
+          for (const favorite of favorites) {
+            newFavorites.push(favorite);
+          }
+          for (const favorite of response.data.favorites) {
+            let found = false;
+            for (const newFavorite of newFavorites) {
+              if (favorite.symbol === newFavorite.symbol) {
+                found = true;
+              }
+            }
+            if (!found) {
+              newFavorites.push(favorite);
+            }
+          }
+          if (newFavorites !== undefined) {
+            setNewFavorites(newFavorites);
+          }
 
-  }, [favorites]);
+          // update the stock data 
+          const res = await axios.put(UPDATE_FAVORITES, { userId: user, favorites: newFavorites });
+          console.log("updatedFavorites", res);
+          console.log("newFavorites", newFavorites);
+          console.log("favorites", favorites);
+        }
+        // handle error
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    checkForFavorites();
+  }, []);
+
+  console.log("favoritesAfterUpdate", favorites);
 
   let index = 0;
   let gainers = [];
   let losers = [];
 
-  // get favorite stocks
-  for (let favorite of favorites) {
-    gainers[index] = favorite;
-    losers[index] = favorite;
-    index++;
+  if (favorites !== undefined) {
+    // get favorite stocks
+    for (let favorite of favorites) {
+      gainers[index] = favorite;
+      losers[index] = favorite;
+      index++;
+    }
   }
+
   // filter the stocks by price change
   gainers = gainers.filter(gainer => gainer.percentChange >= 0);
   losers = losers.filter(loser => loser.percentChange < 0);
@@ -198,7 +302,7 @@ function Menu({ user }) {
                         <div className="list">
                           <ul class="menu-list">
                             {gainers.map(favorite => {
-                              return <Favorite favorite={favorite} key={favorite.id} />;
+                              return <Favorite favorite={favorite} key={favorite.id} user={user} />;
                             })}
                           </ul>
                         </div>
@@ -230,7 +334,7 @@ function Menu({ user }) {
                         <div className="list">
                           <ul class="menu-list">
                             {losers.map(favorite => {
-                              return <Favorite favorite={favorite} key={favorite.id} />;
+                              return <Favorite favorite={favorite} key={favorite.id} user={user} />;
                             })}
                           </ul>
                         </div>
@@ -262,7 +366,7 @@ function Menu({ user }) {
                         <div className="list">
                           <ul class="menu-list">
                             {favorites.map(favorite => {
-                              return <Favorite favorite={favorite} key={favorite.id} />;
+                              return <Favorite favorite={favorite} key={favorite.id} user={user} />;
                             })}
                           </ul>
                         </div>
