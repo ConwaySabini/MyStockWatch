@@ -41,6 +41,10 @@ function Menu({ user }) {
     setListsToRender(renderLists);
   }, [lists]);
 
+  useEffect(() => {
+
+  }, [favorites]);
+
   let index = 0;
   let gainers = [];
   let losers = [];
@@ -66,7 +70,7 @@ function Menu({ user }) {
 
   // Add the new list from the input
   const handleSubmit = () => {
-    addList(listName, [], UPDATE_LISTS, user.sub);
+    addList(listName, [], UPDATE_LISTS, user);
     setListName("");
   }
 
@@ -105,14 +109,14 @@ function Menu({ user }) {
   // clear the list of stocks on the screen
   const clearFavoritesConfirmed = e => {
     e.preventDefault();
-    clearFavorites(UPDATE_FAVORITES, user.sub);
+    clearFavorites(UPDATE_FAVORITES, user);
     setFavoritesModal(false);
   }
 
   // clear the list of stocks on the screen
   const clearListsConfirmed = e => {
     e.preventDefault();
-    clearLists(UPDATE_LISTS, user.sub);
+    clearLists(UPDATE_LISTS, user);
     setListModal(false);
   }
 
@@ -293,7 +297,7 @@ function Menu({ user }) {
                         listsToRender={listsToRender}
                         removeList={removeList}
                         url={UPDATE_LISTS}
-                        userId={user.sub}
+                        userId={user}
                       />;
                     } else {
                       return (

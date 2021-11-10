@@ -116,18 +116,6 @@ stockDataSchema.statics.deleteStocksByUserId = async function (userId) {
   } catch (error) {
     throw error;
   }
-}; //TODO delete stock by symbol
-// Delete the specific stock by their userId and symbol and return result
-
-
-stockDataSchema.statics.deleteStockByUserIdSymbol = async function (userId, symbol) {
-  try {
-    return await this.deleteOne({
-      userId: userId
-    });
-  } catch (error) {
-    throw error;
-  }
 }; // Get stocks by their ids and return the found stocks
 
 

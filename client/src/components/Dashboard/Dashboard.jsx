@@ -1,23 +1,69 @@
 import './Dashboard.css';
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from 'React';
+import { useEffect, useState } from 'react';
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import StockContextProvider from '../../context/StockContext';
 import StockHub from '../StockHub/StockHub';
 import Menu from '../Menu/Menu';
+const axios = require('axios').default;
 
 // Component for the dashboard of the application providing the main functionality
 function Dashboard() {
   // user authentication from auth0
-  const { user, isAuthenticated } = useAuth0();
+  const { user } = useAuth0();
   // user Id for the user
   const [userId, setUserId] = useState('');
-
-  //TODO fetch user with emai and create new user if not found with nanoId for the userId
-  //TODO Pass the userId to child components as props
+  // server url to update user
+  const CREATE_USER = `http://localhost:3000/users/`;
+  // server url to get user
+  let GET_USER = `http://localhost:3000/users/email/`;
 
   if (user !== undefined) {
+    GET_USER = `http://localhost:3000/users/email/${user.email}`;
+  }
+
+  // Check if user exists and creat a new user if they do not exist
+  useEffect(() => {
+    const checkForUser = async () => {
+      try {
+        // fetch the stock data 
+        const response = await axios.get(GET_USER);
+        console.log("response", response);
+        // handle error
+        if (response.data.user === null) {
+          console.log("No user has been created");
+          // create the new user
+          const name = user.name.split(' ');
+          const firstName = name[0];
+          const lastName = name[1];
+          const type = 'consumer';
+          const email = user.email;
+          const password = "placeholder";
+          const userResponse = await axios.put(CREATE_USER,
+            { firstName: firstName, lastName: lastName, type: type, email: email, password: password });
+          if (userResponse.data.user === null) {
+            console.log("error creating new user");
+          } else {
+            console.log("created new user");
+            setUserId(userResponse.data.user._id);
+          }
+        } else {
+          // user already exists so set the id
+          console.log("retrieved user", response.data.user._id);
+          setUserId(response.data.user._id);
+        }
+        // handle error
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (user !== undefined) {
+      checkForUser();
+    }
+  }, [user]);
+
+  if (user !== undefined && userId !== '') {
     return (
       <StockContextProvider>
         <div className="Dashboard">
@@ -35,14 +81,14 @@ function Dashboard() {
               <section class="section">
                 <div class="container">
                   <div class="block"></div>
-                  <StockHub user={user} />
+                  <StockHub user={userId} />
                   <div class="block"></div>
                 </div>
               </section>
             </div>
             {/* Sidebar for favorites */}
             <div class="column is-2" id="SideMenu">
-              <Menu user={user} />
+              <Menu user={userId} />
             </div>
           </div>
           <div className="homeFooter">

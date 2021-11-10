@@ -47,78 +47,76 @@ const StockHub = ({ user }) => {
   // Fetch the stock data from the server and render the stocks
   // If there is no stock data for this user, create new data
   useEffect(() => {
-    if (user !== undefined) {
-      //server url
-      const SERVER = `http://localhost:3000/stocks/userId/${user.sub}`;
-      // server url to create stocks
-      const CREATE_STOCKS = `http://localhost:3000/stocks/`;
+    //server url
+    const SERVER = `http://localhost:3000/stocks/userId/${user}`;
+    // server url to create stocks
+    const CREATE_STOCKS = `http://localhost:3000/stocks/`;
 
-      const fetchDataFromServer = async () => {
-        setLoading(true);
-        try {
-          // fetch the stock data 
-          const response = await axios.get(SERVER);
-          console.log("response", response);
-          // handle error
-          if (response.data.stocks === null) {
-            setLoading(false);
-            console.log("No stock data for this user");
-            createNewStockData();
-            setLoading(false);
-          } else {
-            // delete irrelevent data
-            delete response.data.stocks._id;
-            // set the stocks from the database
-            let newStocks = [];
-            // push stocks to the list from the Context API
-            for (const stock of stocks) {
-              let containsStock = false;
-              for (const pushedStock of newStocks) {
-                // Check if the stock is already in the list
-                if (stock.symbol === pushedStock.symbol) {
-                  containsStock = true;
-                }
-              }
-              if (!containsStock) {
-                newStocks.push(stock);
+    const fetchDataFromServer = async () => {
+      setLoading(true);
+      try {
+        // fetch the stock data 
+        const response = await axios.get(SERVER);
+        console.log("response", response);
+        // handle error
+        if (response.data.stocks === null) {
+          setLoading(false);
+          console.log("No stock data for this user");
+          createNewStockData();
+          setLoading(false);
+        } else {
+          // delete irrelevent data
+          delete response.data.stocks._id;
+          // set the stocks from the database
+          let newStocks = [];
+          // push stocks to the list from the Context API
+          for (const stock of stocks) {
+            let containsStock = false;
+            for (const pushedStock of newStocks) {
+              // Check if the stock is already in the list
+              if (stock.symbol === pushedStock.symbol) {
+                containsStock = true;
               }
             }
-            // push stocks to the list from the database
-            for (const stock of response.data.stocks.stocks) {
-              let containsStock = false;
-              for (const newStock of newStocks) {
-                // Check if the stock is already in the list
-                if (stock.symbol === newStock.symbol) {
-                  containsStock = true;
-                }
-              }
-              if (!containsStock) {
-                newStocks.push(stock);
-              }
+            if (!containsStock) {
+              newStocks.push(stock);
             }
-            setNewStocks(newStocks);
-            // cleanup function
-            setLoading(false);
           }
-          // handle error
-        } catch (error) {
-          console.error(error);
+          // push stocks to the list from the database
+          for (const stock of response.data.stocks.stocks) {
+            let containsStock = false;
+            for (const newStock of newStocks) {
+              // Check if the stock is already in the list
+              if (stock.symbol === newStock.symbol) {
+                containsStock = true;
+              }
+            }
+            if (!containsStock) {
+              newStocks.push(stock);
+            }
+          }
+          setNewStocks(newStocks);
+          // cleanup function
           setLoading(false);
         }
+        // handle error
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
       }
+    }
 
-      // create new stock data for the user
-      const createNewStockData = async () => {
-        setLoading(true);
-        try {
-          // create the stock data 
-          const response = await axios.put(CREATE_STOCKS, { userId: user.sub, stocks: stocks });
-          console.log("creationResponse", response);
-          // handle error
-        } catch (error) {
-          console.error(error);
-          setLoading(false);
-        }
+    // create new stock data for the user
+    const createNewStockData = async () => {
+      setLoading(true);
+      try {
+        // create the stock data 
+        const response = await axios.put(CREATE_STOCKS, { userId: user, stocks: stocks });
+        console.log("creationResponse", response);
+        // handle error
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
       }
 
       fetchDataFromServer();
@@ -132,7 +130,7 @@ const StockHub = ({ user }) => {
         setLoading(true);
         try {
           // update the stock data 
-          const response = await axios.put(UPDATE_STOCKS, { userId: user.sub, stocks: stocks });
+          const response = await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
           console.log("updateResponse", response);
           setLoading(false);
           // handle error
@@ -176,13 +174,12 @@ const StockHub = ({ user }) => {
           const percentChange = calculatePercentChange(response.data);
           // edit the stock being modified
           editStock(symbol, response.data, percentChange,
-            timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user.sub);
+            timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
           if (currentFavorite !== undefined) {
             // edit the favorite in the sidebar to match the stock being modified
             editFavorite(symbol, response.data, percentChange,
-              timeline, currentFavorite.id, UPDATE_FAVORITES, user.sub);
+              timeline, currentFavorite.id, UPDATE_FAVORITES, user);
           }
-          //TODO update lists and remove the UPDATE_LISTS from the editStock function
           // cleanup function
           setUpdateStocks(!updateStocks);
           setSymbol('');
@@ -319,7 +316,7 @@ const StockHub = ({ user }) => {
   // clear the list of stocks on the screen
   const clear = e => {
     e.preventDefault();
-    clearStocks(UPDATE_STOCKS, UPDATE_LISTS, UPDATE_FAVORITES, user.sub);
+    clearStocks(UPDATE_STOCKS, UPDATE_LISTS, UPDATE_FAVORITES, user);
     setModal(false);
     setUpdateStocks(!updateStocks);
   }

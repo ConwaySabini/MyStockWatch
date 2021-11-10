@@ -27,12 +27,11 @@ function Nav() {
             aria-expanded="false"
             data-target="navbarBasicExample"
           >
-            <span aria-hidden="true">Home</span>
-            <span aria-hidden="true">Dashboard</span>
-            <span aria-hidden="true">News</span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
           </a>
         </div>
-
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
             <a class="navbar-item" href="/home">

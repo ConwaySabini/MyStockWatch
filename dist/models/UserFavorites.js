@@ -15,7 +15,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Schema for the favorite Objects
 const favoriteSchema = new _mongoose.default.Schema({
   symbol: String,
-  data: [_mongoose.default.Schema.Types.Mixed],
+  data: {
+    meta: _mongoose.default.Schema.Types.Mixed,
+    values: [_mongoose.default.Schema.Types.Mixed],
+    status: String
+  },
   percentChange: Number,
   timeline: String,
   id: String
@@ -48,14 +52,9 @@ favoritesSchema.statics.createUserFavorites = async function (userId, favorites)
 
 favoritesSchema.statics.updateUserFavorites = async function (userId, favorites) {
   try {
-    // delete the existing favorites
-    await this.deleteOne({
-      userId: userId
-    }); // create the updated favorites
-
-    await this.create({
-      userId,
-      favorites
+    // updated the favorites
+    const updatedFavorites = await this.findOneAndUpdate(userId, {
+      favorites: favorites
     });
   } catch (error) {
     throw error;

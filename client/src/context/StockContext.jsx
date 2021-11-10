@@ -219,6 +219,7 @@ const StockContextProvider = props => {
     for (let list of newLists) {
       list.stocks = list.stocks.map(stock => (stock.symbol === symbol ? { symbol, data, percentChange, timeline, id } : stock));
     }
+    setLists(newLists);
     updateStockData(stocksURL, userId, newStocks);
     updateListData(listsURL, userId, newLists);
   }

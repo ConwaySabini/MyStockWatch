@@ -15,7 +15,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Schema for the stock Objects
 const stockSchema = new _mongoose.default.Schema({
   symbol: String,
-  data: [_mongoose.default.Schema.Types.Mixed],
+  data: {
+    meta: _mongoose.default.Schema.Types.Mixed,
+    values: [_mongoose.default.Schema.Types.Mixed],
+    status: String
+  },
   percentChange: Number,
   timeline: String,
   id: String
@@ -54,14 +58,9 @@ listsSchema.statics.createUserLists = async function (userId, lists) {
 
 listsSchema.statics.updateUserLists = async function (userId, lists) {
   try {
-    // delete the existing lists
-    await this.deleteOne({
-      userId: userId
-    }); // create the updated lists
-
-    await this.create({
-      userId,
-      lists
+    // updated the lists
+    const updatedLists = await this.findOneAndUpdate(userId, {
+      lists: lists
     });
   } catch (error) {
     throw error;
