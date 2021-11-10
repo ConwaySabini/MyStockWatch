@@ -2,13 +2,15 @@
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 
-
-
 // Schema for the stock Objects
 const stockSchema = new mongoose.Schema(
   {
     symbol: String,
-    data: [mongoose.Schema.Types.Mixed],
+    data: {
+      meta: mongoose.Schema.Types.Mixed,
+      values: [mongoose.Schema.Types.Mixed],
+      status: String,
+    },
     percentChange: Number,
     timeline: String,
     id: String,
@@ -53,10 +55,8 @@ listsSchema.statics.createUserLists = async function (userId, lists) {
 // Updates user favorite data
 listsSchema.statics.updateUserLists = async function (userId, lists) {
   try {
-    // delete the existing lists
-    await this.deleteOne({ userId: userId });
-    // create the updated lists
-    await this.create({ userId, lists });
+    // updated the lists
+    const updatedLists = await this.findOneAndUpdate(userId, { lists: lists });
   } catch (error) {
     throw error;
   }

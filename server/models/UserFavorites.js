@@ -6,7 +6,11 @@ import { nanoid } from "nanoid";
 const favoriteSchema = new mongoose.Schema(
   {
     symbol: String,
-    data: [mongoose.Schema.Types.Mixed],
+    data: {
+      meta: mongoose.Schema.Types.Mixed,
+      values: [mongoose.Schema.Types.Mixed],
+      status: String,
+    },
     percentChange: Number,
     timeline: String,
     id: String,
@@ -42,10 +46,8 @@ favoritesSchema.statics.createUserFavorites = async function (userId, favorites)
 // Updates user favorite data
 favoritesSchema.statics.updateUserFavorites = async function (userId, favorites) {
   try {
-    // delete the existing favorites
-    await this.deleteOne({ userId: userId });
-    // create the updated favorites
-    await this.create({ userId, favorites });
+    // updated the favorites
+    const updatedFavorites = await this.findOneAndUpdate(userId, { favorites: favorites });
   } catch (error) {
     throw error;
   }

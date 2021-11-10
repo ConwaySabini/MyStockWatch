@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { nanoid } from 'nanoid';
+const axios = require('axios').default;
 
 export const StockContext = createContext();
 
@@ -30,18 +31,24 @@ const StockContextProvider = props => {
   }, [lists]);
 
   // Add favorites
-  const addFavorite = (symbol, data, percentChange, timeline) => {
-    // TODO handle API calls
-    setFavorites([...favorites, { symbol, data, percentChange, timeline, id: nanoid() }]);
+  const addFavorite = (symbol, data, percentChange, timeline, url, userId) => {
+    const newFavorites = [...favorites, { symbol, data, percentChange, timeline, id: nanoid() }];
+    setFavorites();
+    updateFavoriteData(url, userId, newFavorites);
   }
 
   // Remove favorites
-  const removeFavorite = id => {
-    setFavorites(favorites.filter(favorite => favorite.id !== id));
+  const removeFavorite = (id, userId, url) => {
+    //TODO handle API calls
+    let newFavorites = favorites.filter(favorite => favorite.id !== id);
+    setFavorites(newFavorites);
+    // delete the stock from the favorites database
+    updateFavoriteData(url, userId, newFavorites);
   }
 
   // Clear favorites
   const clearFavorites = () => {
+    //TODO handle API calls
     setFavorites([]);
   }
 
@@ -52,6 +59,7 @@ const StockContextProvider = props => {
 
   // Add List
   const addList = (name, stocks) => {
+    //TODO handle API calls
     setLists([...lists, { name, stocks, id: nanoid() }]);
   }
 
@@ -62,6 +70,7 @@ const StockContextProvider = props => {
 
   // Find and remove List
   const removeList = name => {
+    //TODO handle API calls
     setLists(lists.filter(list => list.name !== name));
   }
 
@@ -78,7 +87,7 @@ const StockContextProvider = props => {
   }
 
   // remove a stock from a list
-  const removeStockFromList = (name, symbol) => {
+  const removeStockFromList = (name, symbol, url) => {
     // TODO handle API calls
     // edit stock if it exists
     const foundStock = stocks.find(stock => stock.symbol === symbol);
@@ -86,20 +95,27 @@ const StockContextProvider = props => {
     foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== foundStock.symbol);
     const newLists = lists.map(list => (list.name === name ? foundList : list));
     setLists(newLists);
+
+    updateListData(url,)
   }
 
+  //TODO make sure it works for multiple lists and other list functions
   // check if a list contains a stock
-  const deleteStockFromLists = (symbol) => {
+  const deleteStockFromLists = (symbol, userId, url) => {
+    // find the lists if they exist
     const foundList = lists.find(list => list.stocks.find(stock => stock.symbol === symbol));
     if (foundList) {
       foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== symbol);
       const newLists = lists.map(list => (list.name === foundList.name ? foundList : list));
       setLists(newLists);
+      // delete the stock from the lists database
+      updateListData(url, userId, newLists);
     }
   }
 
   // Clear favorites
   const clearLists = () => {
+    //TODO handle API calls
     setLists([]);
   }
 
@@ -109,27 +125,64 @@ const StockContextProvider = props => {
   }
 
   // Remove stock by id
-  const removeStock = id => {
-    setStocks(stocks.filter(stock => stock.id !== id));
+  const removeStock = (id, url, favoriteURL, listsURL, userId) => {
+    let newStocks = stocks.filter(stock => stock.id !== id);
+    setStocks(newStocks);
+    // find the favorite if it exists
     let foundStock = findStock(id);
     let favorite = findFavorite(foundStock.symbol);
     if (favorite !== undefined) {
-      removeFavorite(favorite.id);
+      // remove favorite stock
+      removeFavorite(favorite.id, userId, favoriteURL);
     }
-    deleteStockFromLists(foundStock.symbol);
-    //TODO handle API calls for removing stock from stocks, and favorites and lists
+    // remove stock from the list
+    deleteStockFromLists(foundStock.symbol, userId, listsURL);
+    // delete the stock from the database
+    updateStockData(url, userId, newStocks);
+  }
+
+  // update the stock data for the user
+  const updateStockData = async (url, userId, newStocks) => {
+    try {
+      // update the stock data 
+      const response = await axios.put(url, { userId: userId, stocks: newStocks });
+      console.log("updatedStocks", response);
+      // handle error
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // update the stock data for the user
+  const updateFavoriteData = async (url, userId, newFavorites) => {
+    try {
+      // update the stock data 
+      const response = await axios.put(url, { userId: userId, favorites: newFavorites });
+      console.log("updatedFavorites", response);
+      // handle error
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // update the stock data for the user
+  const updateListData = async (url, userId, newLists) => {
+    try {
+      // update the stock data 
+      const response = await axios.put(url, { userId: userId, lists: newLists });
+      console.log("updatedLists", response);
+      // handle error
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   // Clear stocks and favorites 
   const clearStocks = () => {
+    //TODO handle API calls
     setStocks([]);
     setFavorites([]);
     setLists([]);
-  }
-
-  // Clear stocks only
-  const clearStocksOnly = () => {
-    setStocks([]);
   }
 
   // Find stock and return it
@@ -157,9 +210,10 @@ const StockContextProvider = props => {
     // edit stock if it exists
     const newStocks = stocks.map(stock => (stock.id === id ? { symbol, data, percentChange, timeline, id } : stock));
     setStocks(newStocks);
+    //TODO handle API calls
   }
 
-  // Set all stocks
+  // Set all stocks, method does not need to use database API
   const setNewStocks = (newStocks) => {
     setStocks(newStocks);
   }
@@ -167,6 +221,7 @@ const StockContextProvider = props => {
   // Edit favorite
   const editFavorite = (symbol, data, percentChange, timeline, id) => {
     // edit favorite if it exists
+    //TODO handle API calls
     const newFavorites = favorites.map(favorite => (favorite.id === id ? { symbol, data, percentChange, timeline, id } : favorite));
     setFavorites(newFavorites);
   }
@@ -179,7 +234,6 @@ const StockContextProvider = props => {
         addStock,
         removeStock,
         clearStocks,
-        clearStocksOnly,
         findStock,
         favorites,
         addFavorite,

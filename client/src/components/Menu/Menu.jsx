@@ -5,7 +5,7 @@ import Favorite from '../Favorite/Favorite';
 import RenderLists from './RenderLists';
 
 // Component to display all favorite stocks
-function Menu() {
+function Menu({ user }) {
   // use context api
   const { favorites, clearFavorites, addList, removeList, lists, clearLists } = useContext(StockContext);
   // list name to add

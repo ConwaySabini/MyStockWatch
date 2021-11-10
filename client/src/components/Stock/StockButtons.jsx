@@ -8,17 +8,20 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
   // State to track which list to add the stock to
   const [list, setList] = useState("");
   // URLS to make API calls from the Context API
-  const FAVORITE_SERVER = `http://localhost:3000/stocks/userId/${user.sub}`;
-  const ADD_TO_LIST = `http://localhost:3000/stocks/userId/${user.sub}`;
-  const REMOVE_FROM_LIST = `http://localhost:3000/stocks/userId/${user.sub}`;
-  const DELETE_STOCK = `http://localhost:3000/stocks/userId/${user.sub}`;
+  // server url to update favorites
+  const UPDATE_FAVORITES = `http://localhost:3000/stocks/userId/${user.sub}`;
+  // server url to update lists
+  const UPDATE_LISTS = `http://localhost:3000/stocks/userId/${user.sub}`;
+  // server url to update stocks
+  const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
 
   // When the user adds a favorite to their list update the list
   const handleFavorite = () => {
     setLoading(true);
     const favorite = findFavorite(stock.symbol);
+    // Add the favorite to the list if it is defined
     if (favorite === undefined) {
-      addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline);
+      addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline, UPDATE_FAVORITES, user.sub);
     }
     setLoading(false);
   }
@@ -38,14 +41,14 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
   // function to remove a stock from a list
   const removeFromList = () => {
     setLoading(true);
-    removeStockFromList(list, stock.symbol);
+    removeStockFromList(list, stock.symbol, UPDATE_LISTS);
     setLoading(false);
   }
 
   // function to remove the stock altogether
   const handleRemove = () => {
     setLoading(true);
-    removeStock(stock.id);
+    removeStock(stock.id, UPDATE_STOCKS, UPDATE_FAVORITES, UPDATE_LISTS, user.sub);
     setLoading(false);
   }
 

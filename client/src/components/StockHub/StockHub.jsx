@@ -40,8 +40,7 @@ const StockHub = ({ user }) => {
 
   //TODO add an update data button to stock???
 
-  //TODO create user in database and use their id???
-  //TODO how to determine when to create user
+  //TODO create user in database and create a new ID with nanoID.
 
   // Fetch the stock data from the server and render the stocks
   // If there is no stock data for this user, create new data
@@ -69,9 +68,11 @@ const StockHub = ({ user }) => {
             delete response.data.stocks._id;
             // set the stocks from the database
             let newStocks = [];
+            // push stocks to the list from the Context API
             for (const stock of stocks) {
               let containsStock = false;
               for (const pushedStock of newStocks) {
+                // Check if the stock is already in the list
                 if (stock.symbol === pushedStock.symbol) {
                   containsStock = true;
                 }
@@ -80,9 +81,11 @@ const StockHub = ({ user }) => {
                 newStocks.push(stock);
               }
             }
+            // push stocks to the list from the database
             for (const stock of response.data.stocks.stocks) {
               let containsStock = false;
               for (const newStock of newStocks) {
+                // Check if the stock is already in the list
                 if (stock.symbol === newStock.symbol) {
                   containsStock = true;
                 }
