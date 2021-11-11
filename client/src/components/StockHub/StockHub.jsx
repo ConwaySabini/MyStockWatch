@@ -38,7 +38,7 @@ const StockHub = ({ user }) => {
   // server url to update favorites
   const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/stocks/lists/update`;
+  const UPDATE_LISTS = `http://localhost:3000/lists/update`;
   // server url to update stocks
   const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
 
@@ -59,11 +59,10 @@ const StockHub = ({ user }) => {
       try {
         // fetch the stock data 
         const response = await axios.get(SERVER);
-        console.log("response", response);
         // handle error
         if (response.data.stocks === null) {
           setLoading(false);
-          console.log("No stock data for this user");
+          console.log("Creating new stock data for user");
           createNewStockData();
           setLoading(false);
         } else {
@@ -114,7 +113,6 @@ const StockHub = ({ user }) => {
       try {
         // create the stock data 
         const response = await axios.put(CREATE_STOCKS, { userId: user, stocks: stocks });
-        console.log("creationResponse", response);
         // handle error
       } catch (error) {
         console.error(error);
@@ -133,7 +131,6 @@ const StockHub = ({ user }) => {
         try {
           // update the stock data 
           const response = await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
-          console.log("updateResponse", response);
           setLoading(false);
           // handle error
         } catch (error) {
@@ -159,6 +156,7 @@ const StockHub = ({ user }) => {
     }
   };
 
+  //TODO stop executing on page refresh (callback function??)
   // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
   useEffect(() => {
     const changeStockData = async () => {
@@ -394,7 +392,7 @@ const StockHub = ({ user }) => {
           <div class="columns">
             <div class="column is-4">
               <button class="button is-link ml-2" onClick={handleSubmit} disabled={loading}>Add Stock</button>
-              <button class="button is-danger ml-5" onClick={confirmClear} disabled={loading} onClientClick="return ">
+              <button class="button is-danger ml-5" onClick={confirmClear} disabled={loading}>
                 Clear All Stocks
               </button>
 

@@ -57,26 +57,32 @@ const StockContextProvider = props => {
 
   // Find Favorite
   const findFavorite = symbol => {
-    return favorites.find(favorite => favorite.symbol === symbol);
+    return favorites.find(favorite => favorite.symbol.toUpperCase() === symbol.toUpperCase());
   }
 
   // Add List
   const addList = (name, stocks, url, userId) => {
-    let newLists = [...lists, { name, stocks, id: nanoid() }];
-    // update database with new lists
-    updateListData(url, userId, newLists);
-    // update context
-    setLists(newLists);
+    //check if list name already exists
+    const listExists = lists.find(list => list.name.toUpperCase() === name.toUpperCase());
+    if (listExists === undefined) {
+      // add the list to the lists
+      let newLists = [...lists, { name, stocks, id: nanoid() }];
+      // update database with new lists
+      updateListData(url, userId, newLists);
+      // update context
+      setLists(newLists);
+    }
+
   }
 
   // Find List
   const findList = name => {
-    return lists.find(list => list.name === name);
+    return lists.find(list => list.name.toUpperCase() === name.toUpperCase());
   }
 
   // Find and remove List
   const removeList = (name, url, userId) => {
-    let newLists = lists.filter(list => list.name !== name);
+    let newLists = lists.filter(list => list.name.toUpperCase() !== name.toUpperCase());
     // update context
     setLists(newLists);
     // update database with new lists
@@ -86,35 +92,39 @@ const StockContextProvider = props => {
   // Add a stock to a list
   const addStockToList = (name, symbol, url, userId) => {
     // edit stock if it exists
-    const foundStock = stocks.find(stock => stock.symbol === symbol);
+    const foundStock = stocks.find(stock => stock.symbol.toUpperCase() === symbol.toUpperCase());
     // find the list with the stock
-    const foundList = lists.find(list => list.name === name);
-    // set the new stocks with added stock
-    let newStocks = [...foundList.stocks, foundStock];
-    foundList.stocks = newStocks;
-    // update the lists
-    const newLists = lists.map(list => (list.name === name ? foundList : list));
-    // update the database and context
-    updateListData(url, userId, newLists);
-    setLists(newLists);
+    const foundList = lists.find(list => list.name.toUpperCase() === name.toUpperCase());
+    // check if stock already exists in list
+    const inList = foundList.stocks.find(stock => stock.symbol.toUpperCase() === symbol.toUpperCase());
+    // add the stock to the list if it is not in the list already
+    if (inList === undefined) {
+      // set the new stocks with added stock
+      let newStocks = [...foundList.stocks, foundStock];
+      foundList.stocks = newStocks;
+      // update the lists
+      const newLists = lists.map(list => (list.name.toUpperCase() === name.toUpperCase() ? foundList : list));
+      // update the database and context
+      updateListData(url, userId, newLists);
+      setLists(newLists);
+    }
   }
 
   // remove a stock from a list
   const removeStockFromList = (name, symbol, url, userId) => {
     // edit stock if it exists
-    const foundStock = stocks.find(stock => stock.symbol === symbol);
-    const foundList = lists.find(list => list.name === name);
+    const foundStock = stocks.find(stock => stock.symbol.toUpperCase() === symbol.toUpperCase());
+    const foundList = lists.find(list => list.name.toUpperCase() === name.toUpperCase());
     // change the lists stocks to remove the stock
-    foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== foundStock.symbol);
+    foundList.stocks = foundList.stocks.filter(stock => stock.symbol.toUpperCase() !== foundStock.symbol.toUpperCase());
     // Add the list to the lists
-    const newLists = lists.map(list => (list.name === name ? foundList : list));
+    const newLists = lists.map(list => (list.name.toUpperCase() === name.toUpperCase() ? foundList : list));
     // update the list in the database
     updateListData(url, userId, newLists);
     // update context API lists
     setLists(newLists);
   }
 
-  //TODO test this for multiple lists
   // check if a list contains a stock
   const deleteStockFromLists = (symbol, userId, url) => {
     let newLists = [];
@@ -126,7 +136,7 @@ const StockContextProvider = props => {
       for (let stock of list.stocks) {
         if (stock.symbol === symbol) {
           // remove the stock from the list
-          list.stocks = list.stocks.filter(stock => stock.symbol !== symbol);
+          list.stocks = list.stocks.filter(stock => stock.symbol.toUpperCase() !== symbol.toUpperCase());
         }
       }
     }
@@ -190,7 +200,7 @@ const StockContextProvider = props => {
 
   // Find stock with matching symbol
   const findSymbol = symbol => {
-    const stockToGet = stocks.find(stock => stock.symbol === symbol);
+    const stockToGet = stocks.find(stock => stock.symbol.toUpperCase() === symbol.toUpperCase());
     if (stockToGet !== undefined) {
       return stockToGet;
     }
@@ -208,7 +218,7 @@ const StockContextProvider = props => {
       newLists.push(list);
     }
     for (let list of newLists) {
-      list.stocks = list.stocks.map(stock => (stock.symbol === symbol ? { symbol, data, percentChange, timeline, id } : stock));
+      list.stocks = list.stocks.map(stock => (stock.symbol.toUpperCase() === symbol.toUpperCase() ? { symbol, data, percentChange, timeline, id } : stock));
     }
     setLists(newLists);
     updateStockData(stocksURL, userId, newStocks);

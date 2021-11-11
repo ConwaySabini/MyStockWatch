@@ -61,24 +61,29 @@ function Menu({ user }) {
             console.log("created new lists");
           }
         } else {
-          // user already exists so set the id
+          // lists already exists so update the lists
           const newLists = [];
+          // push each list from local storage
           for (const list of lists) {
             newLists.push(list);
           }
-          for (const list of response.data.lists.lists) {
-            let found = false;
-            for (const newList of newLists) {
-              if (list.id === newList.id) {
-                found = true;
+          // push lists from database if not already in local storage
+          if (response.data.lists.lists !== undefined) {
+            for (const list of response.data.lists.lists) {
+              let found = false;
+              for (const newList of newLists) {
+                if (list.id === newList.id) {
+                  found = true;
+                }
+              }
+              if (!found) {
+                newLists.push(list);
               }
             }
-            if (!found) {
-              newLists.push(list);
-            }
           }
+
           setNewLists(newLists);
-          // update the stock data 
+          // update the lists data 
           const res = await axios.put(UPDATE_LISTS, { userId: user, lists: newLists });
         }
         // handle error
@@ -95,10 +100,8 @@ function Menu({ user }) {
       try {
         // fetch the stock data 
         const response = await axios.get(GET_FAVORITES);
-        console.log("FavoriteResponse", response);
         // handle error
         if (response.data.favorites === null) {
-          console.log("No favorites have been created");
           // create the new lists
           const FavoriteResponse = await axios.put(GET_FAVORITES,
             { userId: user, favorites: favorites });
@@ -109,7 +112,6 @@ function Menu({ user }) {
           }
         } else {
           // user already exists so set the id
-          console.log("retrieved favorites", response.data.favorites);
           const newFavorites = [];
           for (const favorite of favorites) {
             newFavorites.push(favorite);
@@ -131,9 +133,6 @@ function Menu({ user }) {
 
           // update the stock data 
           const res = await axios.put(UPDATE_FAVORITES, { userId: user, favorites: newFavorites });
-          console.log("updatedFavorites", res);
-          console.log("newFavorites", newFavorites);
-          console.log("favorites", favorites);
         }
         // handle error
       } catch (error) {
@@ -143,8 +142,6 @@ function Menu({ user }) {
 
     checkForFavorites();
   }, []);
-
-  console.log("favoritesAfterUpdate", favorites);
 
   let index = 0;
   let gainers = [];

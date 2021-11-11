@@ -29,7 +29,6 @@ function Dashboard() {
       try {
         // fetch the stock data 
         const response = await axios.get(GET_USER);
-        console.log("UserResponse", response);
         // handle error
         if (response.data.user === null) {
           console.log("No user has been created");
@@ -50,7 +49,6 @@ function Dashboard() {
           }
         } else {
           // user already exists so set the id
-          console.log("retrieved user", response.data.user._id);
           setUserId(response.data.user._id);
         }
         // handle error

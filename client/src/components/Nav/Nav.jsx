@@ -1,21 +1,22 @@
 import './Nav.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import Profile from '../Profile/Profile';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 //import { useTheme } from "../../context/ThemeContext";
 
 //TODO add navbar links to hamburger menu
 
 // Component to render the navigation bar
 function Nav() {
-  const { logout, loginWithRedirect } = useAuth0();
+  const { logout } = useAuth0();
 
   return (
     <div className="navigation">
       <nav class="navbar" role="navigation" aria-label="main navigation" id="navigation-bar">
         <div class="navbar-brand">
           <a class="navbar-item" href="/dashboard/#title">
-            <i class="fas fa-chart-line fa-2x"></i>
+            <FontAwesomeIcon icon={faChartLine} size="2x" />
             <a class="nav-title fa-2x" href="/dashboard/#title">
               MyStockWatch
             </a>
