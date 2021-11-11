@@ -3,6 +3,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { StockContext } from "../../context/StockContext";
 import Favorite from '../Favorite/Favorite';
 import RenderLists from './RenderLists';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleUp, faAngleDown, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 const axios = require('axios').default;
 
 // Component to display all favorite stocks
@@ -33,8 +35,6 @@ function Menu({ user }) {
   const GET_LISTS = `http://localhost:3000/lists/`;
   // server url to get favorites
   const GET_FAVORITES = `http://localhost:3000/favorites/`;
-
-  //TODO check for lists and favorites from the database like in stockhub
 
   useEffect(() => {
     let renderLists = listsToRender;
@@ -259,7 +259,7 @@ function Menu({ user }) {
       <div>
         <aside class="menu">
           <a onClick={() => showMenu()} href="#toggleMenu">
-            <i class="fas fa-angle-up fa-2x" aria-hidden="true"></i>
+            <FontAwesomeIcon icon={faAngleUp} size="2x" />
           </a>
         </aside>
       </div>
@@ -271,13 +271,15 @@ function Menu({ user }) {
           <aside class="menu">
             <form onSubmit={handleSubmit} className="AddListsForm">
               <a onClick={() => hideMenuFunc()} href="#toggleMenu">
-                <i class="fas fa-angle-down fa-2x" aria-hidden="true"></i>
+                <FontAwesomeIcon id="angle-down" icon={faAngleDown} size="2x" />
+                {/* <i class="fas fa-angle-down fa-2x" aria-hidden="true"></i> */}
               </a>
               <a
                 href="#createList"
                 onKeyDown={() => handleSubmit()}
                 onClick={() => handleSubmit()}>
-                <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" ></i>
+                <FontAwesomeIcon id="circle-icon" icon={faPlusCircle} size="2x" />
+                {/* <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" ></i> */}
               </a>
               <input
                 id="menu-input"
@@ -294,7 +296,7 @@ function Menu({ user }) {
                 <p class="menu-label">
                   <strong id="menu-label">Gainers</strong>
                   <a onClick={() => hideList("gainers")} href="#gainers">
-                    <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                    <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
                   </a>
                   <p id="gainers">
                     {
@@ -316,7 +318,7 @@ function Menu({ user }) {
                 <p class="menu-label">
                   <strong id="menu-label">Gainers</strong>
                   <a onClick={() => showList("gainers")} href="#gainers">
-                    <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                    <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                   </a>
                 </p>
               )
@@ -326,7 +328,7 @@ function Menu({ user }) {
                 <p class="menu-label">
                   <strong id="menu-label">Losers</strong>
                   <a onClick={() => hideList("losers")} href="#losers">
-                    <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                    <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
                   </a>
                   <p id="losers">
                     {
@@ -348,7 +350,7 @@ function Menu({ user }) {
                 <p class="menu-label">
                   <strong id="menu-label">Losers</strong>
                   <a onClick={() => showList("losers")} href="#losers">
-                    <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                    <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                   </a>
                 </p>
               )
@@ -358,7 +360,7 @@ function Menu({ user }) {
                 <p class="menu-label">
                   <strong id="menu-label">Favorites</strong>
                   <a onClick={() => hideList("favorites")} href="#favorites">
-                    <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+                    <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
                   </a>
                   <p id="favorites">
                     {
@@ -380,7 +382,7 @@ function Menu({ user }) {
                 <p class="menu-label">
                   <strong id="menu-label">Favorites</strong>
                   <a onClick={() => showList("favorites")} href="#favorites">
-                    <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                    <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                   </a>
                 </p>
               )
@@ -408,7 +410,7 @@ function Menu({ user }) {
                         <p class="menu-label mt-5">
                           <strong id="menu-label">{list.name}</strong>
                           <a onClick={() => showList(list.name)} href="#list">
-                            <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+                            <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                           </a>
                           <button
                             class="button is-danger is-small ml-6"

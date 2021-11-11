@@ -133,16 +133,6 @@ const StockContextProvider = props => {
     setLists(newLists);
     // delete the stock from the lists database
     updateListData(url, userId, newLists);
-    // const foundList = lists.find(list => list.stocks.find(stock => stock.symbol === symbol));
-    // if (foundList) {
-    //   // remove the stock from the list
-    //   foundList.stocks = foundList.stocks.filter(stock => stock.symbol !== symbol);
-    //   // update the list in the lists
-    //   const newLists = lists.map(list => (list.name === foundList.name ? foundList : list));
-    //   setLists(newLists);
-    //   // delete the stock from the lists database
-    //   updateListData(url, userId, newLists);
-    // }
   }
 
   // Clear favorites
@@ -238,7 +228,6 @@ const StockContextProvider = props => {
   // Set all favorites, method does not need to use database API
   const setNewFavorites = (newFavorites) => {
     setFavorites(newFavorites);
-    console.log("newFavorites", newFavorites);
   }
 
   // Edit favorite
@@ -255,7 +244,6 @@ const StockContextProvider = props => {
     try {
       // update the stock data 
       const response = await axios.put(url, { userId: userId, stocks: newStocks });
-      console.log("updatedStocks", response);
       // handle error
     } catch (error) {
       console.error(error);
@@ -267,7 +255,6 @@ const StockContextProvider = props => {
     try {
       // update the stock data 
       const response = await axios.put(url, { userId: userId, favorites: newFavorites });
-      console.log("updatedFavorites", response);
       // handle error
     } catch (error) {
       console.error(error);
@@ -279,7 +266,6 @@ const StockContextProvider = props => {
     try {
       // update the stock data 
       const response = await axios.put(url, { userId: userId, lists: newLists });
-      console.log("updatedLists", response);
       // handle error
     } catch (error) {
       console.error(error);

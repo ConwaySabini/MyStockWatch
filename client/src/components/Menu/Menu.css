@@ -5,3 +5,17 @@
 #menu-label {
   font-size: 1.2rem;
 }
+
+#circle-icon {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  margin-right: 1.5rem;
+}
+
+#angle-down {
+  margin-right: 1rem;
+}
+
+#angle-down-menu {
+  margin-left: 1rem;
+}

@@ -28,7 +28,6 @@ function RenderLists({ list, hideList, removeList, url, userId }) {
       </p>
     </>
   );
-  // return null;
 }
 
 export default RenderLists;

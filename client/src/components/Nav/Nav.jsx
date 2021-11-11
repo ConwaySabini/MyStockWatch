@@ -1,6 +1,7 @@
 import './Nav.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import Profile from '../Profile/Profile';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //import { useTheme } from "../../context/ThemeContext";
 
 //TODO add navbar links to hamburger menu

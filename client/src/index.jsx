@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'bulma/css/bulma.css';
+// import { library } from '@fortawesome/fontawesome-svg-core';
+// import { fas, faAngleDown, faAngleUp, faChartLine, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+// library.add(fas, faAngleDown, faAngleUp, faChartLine, faPlusCircle);
 
 ReactDOM.render(
   <React.StrictMode>

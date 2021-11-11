@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from 'react'
 import { StockContext } from "../../context/StockContext";
 import StockList from '../StockList/StockList';
 import './StockHub.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 const axios = require('axios').default;
 
 // Component to display all stocks and the forms to add/edit stocks
@@ -357,7 +359,7 @@ const StockHub = ({ user }) => {
         {showHero ? (
           <div>
             <a onClick={() => toggleHero()} href="#instructions">
-              <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+              <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
             </a>
             {/* Title and information about the dashboard */}
             <section class="hero is-link" id="hero-dash">
@@ -382,7 +384,7 @@ const StockHub = ({ user }) => {
           </div>) :
           (
             <a onClick={() => toggleHero()} href="#instructions">
-              <i class="fas fa-angle-up fa-2x ml-4" aria-hidden="true"></i>
+              <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
             </a>
           )
         }
@@ -436,7 +438,7 @@ const StockHub = ({ user }) => {
                   <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading}>
                     <span>Ascending/Descending</span>
                     <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                      <FontAwesomeIcon icon={faAngleDown} />
                     </span>
                   </button>
                 </div>

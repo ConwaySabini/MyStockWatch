@@ -1,10 +1,13 @@
+import './Stock.css'
 import { useState, useEffect, useContext } from "react";
 import { StockContext } from "../../context/StockContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 //Component to render the buttons and handle changes to data
 function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user }) {
   // stock context api shared data across components
-  const { stocks, removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
+  const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
   // State to track which list to add the stock to
   const [list, setList] = useState("");
   // URLS to make API calls from the Context API
@@ -72,7 +75,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
             id="stock-dropdown">
             <span id="dropdown-font">Lists</span>
             <span class="icon is-small">
-              <i class="fas fa-angle-down" aria-hidden="true"></i>
+              <FontAwesomeIcon icon={faAngleDown} />
             </span>
           </button>
         </div>
@@ -114,7 +117,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
         className="delete-stock"
         class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2"
         onClick={() => handleRemove(stock.id)}>
-        <i className="fas fa-trash-alt"></i>
+        <FontAwesomeIcon id="trash" icon={faTrashAlt} />
       </button>
       <br />
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
