@@ -1,5 +1,4 @@
 import './Dashboard.css';
-import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from 'react';
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
@@ -9,9 +8,8 @@ import Menu from '../Menu/Menu';
 const axios = require('axios').default;
 
 // Component for the dashboard of the application providing the main functionality
-function Dashboard() {
-  // user authentication from auth0
-  const { user } = useAuth0();
+function Dashboard({ user }) {
+
   // user Id for the user
   const [userId, setUserId] = useState('');
   // server url to update user

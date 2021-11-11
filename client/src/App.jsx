@@ -1,41 +1,39 @@
-import { BrowserRouter as Router, Switch, Redirect, Link, Route } from 'react-router-dom';
-import Login from './components/Login/Login';
-import Register from './components/Register/Register';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
 import Home from './components/Home/Home';
 import News from './components/News/News.jsx';
-import { Auth0Provider } from '@auth0/auth0-react';
+import { useAuth0 } from "@auth0/auth0-react";
 
 if (process.env.REACT_APP === "development") {
   console.log('hello dev mode');
   // do something
 }
 
-const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
-
 function App() {
-  //Router for the application
-  return (
-    <div className="app">
-      <Router>
-        <Auth0Provider
-          domain={domain}
-          clientId={clientId}
-          // redirectUri={window.location.origin}
-          redirectUri={"http://localhost:3001/dashboard"}>
-          {/* <Redirect exact from="/" to="/login" /> */}
-          <Route path="/" exact component={Home} />
-          <Route path="/dashboard" exact component={Dashboard} />
-          <Route path="/home" exact component={Home} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/register" exact component={Register} />
-          <Route path="/news" exact component={News} />
-        </Auth0Provider>
-      </Router>
+  // user authentication from auth0
+  const { user, isAuthenticated } = useAuth0();
 
-    </div >
-  );
+  //Router for the application
+  if (isAuthenticated) {
+    return (
+      <div className="app">
+        <Router>
+          <Route path="/" exact children={<Home />} />
+          <Route path="/dashboard" exact children={<Dashboard user={user} />} />
+          <Route path="/home" exact children={<Home />} />
+          <Route path="/news" exact children={<News user={user} />} />
+        </Router>
+      </div >
+    );
+  } else {
+    return (
+      <div className="app">
+        <Router>
+          <Route path="/" exact children={<Home />} />
+        </Router>
+      </div>
+    );
+  }
 }
 
 export default App;

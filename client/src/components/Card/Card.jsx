@@ -93,11 +93,11 @@ function Card({ article, type }) {
   if (type === "trending") {
     return (
       <div class="card" id="news-card">
-        <div class="card-image">
+        {/* <div class="card-image">
           <figure class="image is-4by3">
             <img src={image} alt="main section" />
           </figure>
-        </div>
+        </div> */}
         <div class="card-content" id="news-content">
           <div class="media">
             <div class="media-left">
@@ -142,11 +142,11 @@ function Card({ article, type }) {
   } else {
     return (
       <div class="card mt-6" id="news-card">
-        <div class="card-image">
+        {/* <div class="card-image">
           <figure class="image is-4by3">
             <img src={image} alt="main section" />
           </figure>
-        </div>
+        </div> */}
         <div class="card-content" id="news-content">
           <div class="media">
             <div class="media-left">

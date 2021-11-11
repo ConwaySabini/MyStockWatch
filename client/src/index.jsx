@@ -4,14 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bulma/css/bulma.css';
-// import { library } from '@fortawesome/fontawesome-svg-core';
-// import { fas, faAngleDown, faAngleUp, faChartLine, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-// library.add(fas, faAngleDown, faAngleUp, faChartLine, faPlusCircle);
+import { Auth0Provider } from '@auth0/auth0-react';
+
+if (process.env.REACT_APP === "development") {
+  console.log('hello dev mode');
+  // do something
+}
+
+const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Auth0Provider
+    domain={domain}
+    clientId={clientId}
+    // redirectUri={window.location.origin}
+    redirectUri={"http://localhost:3001/dashboard"}>
     <App />
-  </React.StrictMode>,
+  </Auth0Provider >,
   document.getElementById('root')
 );
 
