@@ -170,7 +170,8 @@ function Menu({ user }) {
   }
 
   // Add the new list from the input
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     addList(listName, [], UPDATE_LISTS, user);
     setListName("");
   }
