@@ -86,12 +86,17 @@ var _default = {
     try {
       let validation = true;
       const {
+        userId,
         firstName,
         lastName,
         type,
         email,
         password
       } = req.body; // Validate the data from the request
+
+      if (!(typeof userId === 'string' || userId instanceof String)) {
+        validation = false;
+      }
 
       if (!validator.isEmail(email)) {
         validation = false;
@@ -123,7 +128,7 @@ var _default = {
         error: 'There is already an account associated with this email.'
       }); // create the user
 
-      const user = await _User.default.createUser(firstName, lastName, type, email, password); // return the user and success message
+      const user = await _User.default.createUser(userId, firstName, lastName, type, email, password); // return the user and success message
 
       return res.status(200).json({
         success: true,

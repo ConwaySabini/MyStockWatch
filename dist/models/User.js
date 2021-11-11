@@ -37,12 +37,13 @@ const userSchema = new _mongoose.default.Schema({
 }); // Creates a new user with the given email, password, firstName, lastName, and type
 // Returns the newly created user
 
-userSchema.statics.createUser = async function (firstName, lastName, type, email, pass) {
+userSchema.statics.createUser = async function (userId, firstName, lastName, type, email, pass) {
   try {
     // Hash the password with 10 rounds of salting
     const password = await _bcrypt.default.hash(pass, 10); // create the user
 
     return await this.create({
+      userId,
       firstName,
       lastName,
       type,
