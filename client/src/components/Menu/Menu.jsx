@@ -272,14 +272,12 @@ function Menu({ user }) {
             <form onSubmit={handleSubmit} className="AddListsForm">
               <a onClick={() => hideMenuFunc()} href="#toggleMenu">
                 <FontAwesomeIcon id="angle-down" icon={faAngleDown} size="2x" />
-                {/* <i class="fas fa-angle-down fa-2x" aria-hidden="true"></i> */}
               </a>
               <a
                 href="#createList"
                 onKeyDown={() => handleSubmit()}
                 onClick={() => handleSubmit()}>
                 <FontAwesomeIcon id="circle-icon" icon={faPlusCircle} size="2x" />
-                {/* <i class="fas fa-plus-circle fa-2x mb-2 mr-5 mt-1" ></i> */}
               </a>
               <input
                 id="menu-input"

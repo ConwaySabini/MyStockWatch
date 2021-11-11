@@ -1,13 +1,14 @@
 import ListStock from "./ListStock";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
 function RenderLists({ list, hideList, removeList, url, userId }) {
-
   return (
     <>
       <p class="menu-label mt-5" >
         <strong id="menu-label">{list.name}</strong>
         <a onClick={() => hideList(list.name)}>
-          <i class="fas fa-angle-down fa-2x ml-4" aria-hidden="true"></i>
+          <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
         </a>
         <button class="button is-danger is-small ml-6" onClick={() => removeList(list.name, url, userId)}>Delete</button>
         <p id="favorites">
