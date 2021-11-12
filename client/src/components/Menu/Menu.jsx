@@ -28,17 +28,17 @@ function Menu({ user }) {
   // state to hide the entire menu
   const [hideMenu, setHideMenu] = useState(false);
   // server url to create lists
-  const CREATE_LISTS = `http://localhost:3000/lists`;
+  const CREATE_LISTS = process.env.REACT_APP_CREATE_LISTS;
   // server url to create lists
-  const CREATE_FAVORITES = `http://localhost:3000/favorites`;
+  const CREATE_FAVORITES = process.env.REACT_APP_CREATE_FAVORITES;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/lists/update`;
+  const UPDATE_LISTS = process.env.REACT_APP_UPDATE_LISTS;
   // server url to get lists
-  const GET_LISTS = `http://localhost:3000/lists/userId/${user}`;
+  const GET_LISTS = process.env.REACT_APP_GET_LISTS + user;
   // server url to get favorites
-  const GET_FAVORITES = `http://localhost:3000/favorites/userId/${user}`;
+  const GET_FAVORITES = process.env.REACT_APP_GET_FAVORITES + user;
   // server url to update favorites
-  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
+  const UPDATE_FAVORITES = process.env.REACT_APP_UPDATE_FAVORITES;
 
   useEffect(() => {
     let renderLists = listsToRender;

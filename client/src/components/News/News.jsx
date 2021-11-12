@@ -19,32 +19,22 @@ function News() {
   // News API
   const BingNewsOptions = {
     method: 'GET',
-    url: 'https://bing-news-search1.p.rapidapi.com/news',
+    url: process.env.REACT_APP_NEWS_URL,
     params: { textFormat: 'Raw', safeSearch: 'Off', category: 'Business' },
     headers: {
       'x-bingapis-sdk': 'true',
-      'x-rapidapi-host': 'bing-news-search1.p.rapidapi.com',
-      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+      'x-rapidapi-host': process.env.REACT_APP_NEWS_HOST,
+      'x-rapidapi-key': process.env.REACT_APP_NEWS_KEY
     }
   };
 
-  // // More Trending News from API
-  // const SeekingAlphaOptions = {
-  //   method: 'GET',
-  //   url: 'https://seeking-alpha.p.rapidapi.com/news/list-trending',
-  //   headers: {
-  //     'x-rapidapi-host': 'seeking-alpha.p.rapidapi.com',
-  //     'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-  //   }
-  // };
-
-  var SeekingAlphaIndividual = {
+  const SeekingAlphaIndividual = {
     method: 'GET',
-    url: 'https://seeking-alpha.p.rapidapi.com/news/list',
+    url: process.env.REACT_APP_NEWS_SYMBOL_URL,
     params: { id: `${symbol}`, size: '20', until: '0' },
     headers: {
-      'x-rapidapi-host': 'seeking-alpha.p.rapidapi.com',
-      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+      'x-rapidapi-host': process.env.REACT_APP_NEWS_SYMBOL_HOST,
+      'x-rapidapi-key': process.env.REACT_APP_NEWS_SYMBOL_KEY
     }
   };
 

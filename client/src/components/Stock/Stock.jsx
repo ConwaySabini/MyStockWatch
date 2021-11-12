@@ -161,6 +161,12 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
     setLoading(false);
   }
 
+  const handleUpdate = () => {
+    setLoading(true);
+    handleStockChange();
+    setLoading(false);
+  }
+
   // function to set the chart to simple or technical
   const handleChart = (flag) => {
     setSimpleChart(flag);
@@ -224,6 +230,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
           <StockButtons
             handleTime={handleTime}
             handleChart={handleChart}
+            hanelUpdate={handleUpdate}
             loading={loading}
             setLoading={setLoading}
             stock={stock}

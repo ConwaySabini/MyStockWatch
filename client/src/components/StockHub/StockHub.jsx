@@ -36,24 +36,21 @@ const StockHub = ({ user }) => {
   // flag for updating the stocks on the database
   const [updateStocks, setUpdateStocks] = useState(false);
   // server url to update favorites
-  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
+  const UPDATE_FAVORITES = process.env.REACT_APP_UPDATE_FAVORITES;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/lists/update`;
+  const UPDATE_LISTS = process.env.REACT_APP_UPDATE_LISTS;
   // server url to update stocks
-  const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
-
-  //console.log("stocks", stocks);
+  const UPDATE_STOCKS = process.env.REACT_APP_UPDATE_STOCKS;
+  //server url
+  const SERVER = process.env.REACT_APP_GET_USER_STOCKS + user;
+  // server url to create stocks
+  const CREATE_STOCKS = process.env.REACT_APP_CREATE_STOCKS;
 
   //TODO add an update data button to stock???
 
   // Fetch the stock data from the server and render the stocks
   // If there is no stock data for this user, create new data
   useEffect(() => {
-    //server url
-    const SERVER = `http://localhost:3000/stocks/userId/${user}`;
-    // server url to create stocks
-    const CREATE_STOCKS = `http://localhost:3000/stocks/`;
-
     const fetchDataFromServer = async () => {
       setLoading(true);
       try {
@@ -112,7 +109,7 @@ const StockHub = ({ user }) => {
       setLoading(true);
       try {
         // create the stock data 
-        const response = await axios.put(CREATE_STOCKS, { userId: user, stocks: stocks });
+        await axios.put(CREATE_STOCKS, { userId: user, stocks: stocks });
         // handle error
       } catch (error) {
         console.error(error);
@@ -129,7 +126,7 @@ const StockHub = ({ user }) => {
         setLoading(true);
         try {
           // update the stock data 
-          const response = await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
+          await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
           setLoading(false);
           // handle error
         } catch (error) {

@@ -5,18 +5,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 //Component to render the buttons and handle changes to data
-function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user }) {
+function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user, handleUpdate }) {
   // stock context api shared data across components
   const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
   // State to track which list to add the stock to
   const [list, setList] = useState("");
   // URLS to make API calls from the Context API
   // server url to update favorites
-  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
+  const UPDATE_FAVORITES = process.env.REACT_APP_UPDATE_FAVORITES;
   // server url to update lists
-  const UPDATE_LISTS = `http://localhost:3000/lists/update`;
+  const UPDATE_LISTS = process.env.REACT_APP_UPDATE_LISTS;
   // server url to update stocks
-  const UPDATE_STOCKS = `http://localhost:3000/stocks/update/`;
+  const UPDATE_STOCKS = process.env.REACT_APP_UPDATE_STOCKS;
 
   // When the user adds a favorite to their list update the list
   const handleFavorite = () => {
@@ -129,6 +129,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
+      <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate()}>Update Stock</button>
     </div>
   );
 }
