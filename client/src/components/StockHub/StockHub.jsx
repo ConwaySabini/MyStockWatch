@@ -67,32 +67,32 @@ const StockHub = ({ user }) => {
           delete response.data.stocks._id;
           // set the stocks from the database
           let newStocks = [];
-          // push stocks to the list from the Context API
-          // for (const stock of stocks) {
-          //   let containsStock = false;
-          //   for (const pushedStock of newStocks) {
-          //     // Check if the stock is already in the list
-          //     if (stock.symbol === pushedStock.symbol) {
-          //       containsStock = true;
-          //     }
-          //   }
-          //   if (!containsStock) {
-          //     newStocks.push(stock);
-          //   }
-          // }
+          //push stocks to the list from the Context API
+          for (const stock of stocks) {
+            let containsStock = false;
+            for (const pushedStock of newStocks) {
+              // Check if the stock is already in the list
+              if (stock.symbol === pushedStock.symbol) {
+                containsStock = true;
+              }
+            }
+            if (!containsStock) {
+              newStocks.push(stock);
+            }
+          }
           // push stocks to the list from the database
           for (const stock of response.data.stocks.stocks) {
-            // let containsStock = false;
-            // for (const newStock of newStocks) {
-            //   // Check if the stock is already in the list
-            //   if (stock.symbol === newStock.symbol) {
-            //     containsStock = true;
-            //   }
-            // }
-            // if (!containsStock) {
-            //   newStocks.push(stock);
-            // }
-            newStocks.push(stock);
+            let containsStock = false;
+            for (const newStock of newStocks) {
+              // Check if the stock is already in the list
+              if (stock.symbol === newStock.symbol) {
+                containsStock = true;
+              }
+            }
+            if (!containsStock) {
+              newStocks.push(stock);
+            }
+            //newStocks.push(stock);
           }
           setNewStocks(newStocks);
           // cleanup function
