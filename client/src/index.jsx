@@ -6,11 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import 'bulma/css/bulma.css';
 import { Auth0Provider } from '@auth0/auth0-react';
 
-if (process.env.REACT_APP === "development") {
-  console.log('hello dev mode');
-  // do something
-}
-
 const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 

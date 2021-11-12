@@ -157,7 +157,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
   const handleTime = (time) => {
     setLoading(true);
     handleTimeChange(time, stock);
-    handleStockChange(time);
+    handleStockChange();
     setLoading(false);
   }
 

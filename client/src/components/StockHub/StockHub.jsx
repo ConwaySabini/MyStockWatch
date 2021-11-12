@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { StockContext } from "../../context/StockContext";
 import StockList from '../StockList/StockList';
 import './StockHub.css';
@@ -118,10 +118,9 @@ const StockHub = ({ user }) => {
         console.error(error);
         setLoading(false);
       }
-
-      fetchDataFromServer();
     }
-  }, [user]);
+    fetchDataFromServer();
+  }, []);
 
   useEffect(() => {
     if (user !== undefined) {
@@ -143,22 +142,21 @@ const StockHub = ({ user }) => {
     }
   }, [updateStocks]);
 
-
-
   // Axios options for getting stock data from 12 Data API
   const options = {
     method: 'GET',
-    url: 'https://twelve-data1.p.rapidapi.com/time_series',
+    url: process.env.REACT_APP_RAPIDAPI_TIME_URL,
     params: { interval: `${timeline}`, symbol: `${symbol}`, format: 'json', outputsize: '30' },
     headers: {
-      'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-      'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+      'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+      'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
     }
   };
 
-  //TODO stop executing on page refresh (callback function??)
-  // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
+  const firstRender = useRef(true);
+
   useEffect(() => {
+    // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
     const changeStockData = async () => {
       setLoading(true);
       try {
@@ -193,8 +191,15 @@ const StockHub = ({ user }) => {
       }
     }
 
-    changeStockData();
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    } else {
+      changeStockData();
+    }
   }, [stockChange]);
+
+
 
   // Fetches the stock data with the symbol and displays is in a graph
   const addStockData = async () => {
@@ -202,6 +207,7 @@ const StockHub = ({ user }) => {
     try {
       // fetch the data
       const response = await axios.request(options);
+      console.log("stock", response.data);
       // handle error
       if (response.data.status === "error") {
         setSymbol('');

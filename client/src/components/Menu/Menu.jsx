@@ -27,14 +27,18 @@ function Menu({ user }) {
   const [ListsModal, setListModal] = useState(false);
   // state to hide the entire menu
   const [hideMenu, setHideMenu] = useState(false);
-  // server url to update favorites
-  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
+  // server url to create lists
+  const CREATE_LISTS = `http://localhost:3000/lists`;
+  // server url to create lists
+  const CREATE_FAVORITES = `http://localhost:3000/favorites`;
   // server url to update lists
   const UPDATE_LISTS = `http://localhost:3000/lists/update`;
   // server url to get lists
-  const GET_LISTS = `http://localhost:3000/lists/`;
+  const GET_LISTS = `http://localhost:3000/lists/userId/${user}`;
   // server url to get favorites
-  const GET_FAVORITES = `http://localhost:3000/favorites/`;
+  const GET_FAVORITES = `http://localhost:3000/favorites/userId/${user}`;
+  // server url to update favorites
+  const UPDATE_FAVORITES = `http://localhost:3000/favorites/update/`;
 
   useEffect(() => {
     let renderLists = listsToRender;
@@ -53,7 +57,7 @@ function Menu({ user }) {
         if (response.data.lists.length === 0) {
           console.log("No lists have been created");
           // create the new lists
-          const listResponse = await axios.put(GET_LISTS,
+          const listResponse = await axios.put(CREATE_LISTS,
             { userId: user, lists: lists });
           if (listResponse.data.lists === null) {
             console.log("error creating new lists");
@@ -69,11 +73,25 @@ function Menu({ user }) {
           }
           // push lists from database if not already in local storage
           if (response.data.lists.lists !== undefined) {
+            // loop through every list in the response
             for (const list of response.data.lists.lists) {
               let found = false;
+              // loop through every list already in memory
               for (const newList of newLists) {
                 if (list.id === newList.id) {
                   found = true;
+                  // loop through every stock in the list and push new stocks
+                  for (const stock of list.stocks) {
+                    let foundStock = false;
+                    for (const newStock of newList.stocks) {
+                      if (stock.symbol === newStock.symbol) {
+                        foundStock = true;
+                      }
+                    }
+                    if (!foundStock) {
+                      newList.stocks.push(stock);
+                    }
+                  }
                 }
               }
               if (!found) {
@@ -103,7 +121,7 @@ function Menu({ user }) {
         // handle error
         if (response.data.favorites === null) {
           // create the new lists
-          const FavoriteResponse = await axios.put(GET_FAVORITES,
+          const FavoriteResponse = await axios.put(CREATE_FAVORITES,
             { userId: user, favorites: favorites });
           if (FavoriteResponse.data.favorites === null) {
             console.log("error creating new favorites");
@@ -116,7 +134,7 @@ function Menu({ user }) {
           for (const favorite of favorites) {
             newFavorites.push(favorite);
           }
-          for (const favorite of response.data.favorites) {
+          for (const favorite of response.data.favorites.favorites) {
             let found = false;
             for (const newFavorite of newFavorites) {
               if (favorite.symbol === newFavorite.symbol) {
@@ -127,6 +145,7 @@ function Menu({ user }) {
               newFavorites.push(favorite);
             }
           }
+          console.log(newFavorites);
           if (newFavorites !== undefined) {
             setNewFavorites(newFavorites);
           }
