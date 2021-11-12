@@ -13,12 +13,12 @@ function Dashboard({ user }) {
   // user Id for the user
   const [userId, setUserId] = useState('');
   // server url to update user
-  const CREATE_USER = `http://localhost:3000/users/`;
+  const CREATE_USER = process.env.REACT_APP_CREATE_USER;
   // server url to get user
-  let GET_USER = `http://localhost:3000/users/email/`;
+  let GET_USER = process.env.REACT_APP_GET_USER;
 
   if (user !== undefined) {
-    GET_USER = `http://localhost:3000/users/email/${user.email}`;
+    GET_USER = process.env.REACT_APP_GET_USER + user.email;
   }
 
   // Check if user exists and creat a new user if they do not exist

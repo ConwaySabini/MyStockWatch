@@ -182,9 +182,10 @@ const StockContextProvider = props => {
     setFavorites([]);
     setLists([]);
     // update database
-    updateStockData(stocksURL, userID, []);
-    updateFavoriteData(favoritesURL, userID, []);
-    updateListData(listsURL, userID, []);
+    let newStocks = [];
+    updateStockData(stocksURL, userID, newStocks);
+    updateFavoriteData(favoritesURL, userID, newStocks);
+    updateListData(listsURL, userID, newStocks);
   }
 
   // Find stock and return it

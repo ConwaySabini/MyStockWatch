@@ -68,38 +68,37 @@ function Menu({ user }) {
           // lists already exists so update the lists
           const newLists = [];
           // push each list from local storage
-          for (const list of lists) {
-            newLists.push(list);
-          }
+          // for (const list of lists) {
+          //   newLists.push(list);
+          // }
           // push lists from database if not already in local storage
           if (response.data.lists.lists !== undefined) {
             // loop through every list in the response
             for (const list of response.data.lists.lists) {
-              let found = false;
-              // loop through every list already in memory
-              for (const newList of newLists) {
-                if (list.id === newList.id) {
-                  found = true;
-                  // loop through every stock in the list and push new stocks
-                  for (const stock of list.stocks) {
-                    let foundStock = false;
-                    for (const newStock of newList.stocks) {
-                      if (stock.symbol === newStock.symbol) {
-                        foundStock = true;
-                      }
-                    }
-                    if (!foundStock) {
-                      newList.stocks.push(stock);
-                    }
-                  }
-                }
-              }
-              if (!found) {
-                newLists.push(list);
-              }
+              newLists.push(list);
+              // let found = false;
+              // // loop through every list already in memory
+              // for (const newList of newLists) {
+              //   if (list.id === newList.id) {
+              //     found = true;
+              //     // loop through every stock in the list and push new stocks
+              //     for (const stock of list.stocks) {
+              //       let foundStock = false;
+              //       for (const newStock of newList.stocks) {
+              //         if (stock.symbol === newStock.symbol) {
+              //           foundStock = true;
+              //         }
+              //       }
+              //       if (!foundStock) {
+              //         newList.stocks.push(stock);
+              //       }
+              //     }
+              //   }
             }
+            // if (!found) {
+            //   newLists.push(list);
+            // }
           }
-
           setNewLists(newLists);
           // update the lists data 
           const res = await axios.put(UPDATE_LISTS, { userId: user, lists: newLists });
@@ -131,21 +130,21 @@ function Menu({ user }) {
         } else {
           // user already exists so set the id
           const newFavorites = [];
-          for (const favorite of favorites) {
-            newFavorites.push(favorite);
-          }
+          // for (const favorite of favorites) {
+          //   newFavorites.push(favorite);
+          // }
           for (const favorite of response.data.favorites.favorites) {
-            let found = false;
-            for (const newFavorite of newFavorites) {
-              if (favorite.symbol === newFavorite.symbol) {
-                found = true;
-              }
-            }
-            if (!found) {
-              newFavorites.push(favorite);
-            }
+            newFavorites.push(favorite);
+            // let found = false;
+            // for (const newFavorite of newFavorites) {
+            //   if (favorite.symbol === newFavorite.symbol) {
+            //     found = true;
+            //   }
+            // }
+            // if (!found) {
+            //   newFavorites.push(favorite);
+            // }
           }
-          console.log(newFavorites);
           if (newFavorites !== undefined) {
             setNewFavorites(newFavorites);
           }
