@@ -51,7 +51,7 @@ function Menu({ user }) {
 
     const checkForLists = async () => {
       try {
-        // fetch the stock data 
+        // fetch the lists data 
         const response = await axios.get(GET_LISTS);
         // handle error
         if (response.data.lists.length === 0) {
@@ -59,6 +59,7 @@ function Menu({ user }) {
           // create the new lists
           const listResponse = await axios.put(CREATE_LISTS,
             { userId: user, lists: lists });
+          // check for null lists
           if (listResponse.data.lists === null) {
             console.log("error creating new lists");
           } else {
@@ -67,37 +68,11 @@ function Menu({ user }) {
         } else {
           // lists already exists so update the lists
           const newLists = [];
-          //push each list from local storage
-          for (const list of lists) {
-            newLists.push(list);
-          }
-          // push lists from database if not already in local storage
+          // check if lists exist
           if (response.data.lists.lists !== undefined) {
             // loop through every list in the response
             for (const list of response.data.lists.lists) {
-              //newLists.push(list);
-              let found = false;
-              // loop through every list already in memory
-              for (const newList of newLists) {
-                if (list.id === newList.id) {
-                  found = true;
-                  // loop through every stock in the list and push new stocks
-                  for (const stock of list.stocks) {
-                    let foundStock = false;
-                    for (const newStock of newList.stocks) {
-                      if (stock.symbol === newStock.symbol) {
-                        foundStock = true;
-                      }
-                    }
-                    if (!foundStock) {
-                      newList.stocks.push(stock);
-                    }
-                  }
-                }
-              }
-              if (!found) {
-                newLists.push(list);
-              }
+              newLists.push(list);
             }
           }
           setNewLists(newLists);
@@ -109,48 +84,36 @@ function Menu({ user }) {
         console.error(error);
       }
     }
-
     checkForLists();
   }, []);
 
   useEffect(() => {
     const checkForFavorites = async () => {
       try {
-        // fetch the stock data 
+        // fetch the favorite data 
         const response = await axios.get(GET_FAVORITES);
         // handle error
         if (response.data.favorites === null) {
-          // create the new lists
+          // create the new favorites
           const FavoriteResponse = await axios.put(CREATE_FAVORITES,
             { userId: user, favorites: favorites });
+          // check for null favorites
           if (FavoriteResponse.data.favorites === null) {
             console.log("error creating new favorites");
           } else {
             console.log("created new favorites");
           }
         } else {
-          // user already exists so set the id
+          // create the new favorites
           const newFavorites = [];
-          for (const favorite of favorites) {
-            newFavorites.push(favorite);
-          }
+          // check for favorites from database
           for (const favorite of response.data.favorites.favorites) {
             newFavorites.push(favorite);
-            let found = false;
-            for (const newFavorite of newFavorites) {
-              if (favorite.symbol === newFavorite.symbol) {
-                found = true;
-              }
-            }
-            if (!found) {
-              newFavorites.push(favorite);
-            }
           }
           if (newFavorites !== undefined) {
             setNewFavorites(newFavorites);
           }
-
-          // update the stock data 
+          // update the favorite data 
           const res = await axios.put(UPDATE_FAVORITES, { userId: user, favorites: newFavorites });
         }
         // handle error
@@ -454,7 +417,6 @@ function Menu({ user }) {
         <div class="modal is-active">
           <div class="modal-background"> </div>
           <div class="modal-content">
-            {/* <!-- Any other Bulma elements you want --> */}
             <div class="section" id="modal-section">
               <h3 id="modal-heading">Are you sure you want to clear all Favorites?</h3>
               <button
@@ -477,7 +439,6 @@ function Menu({ user }) {
         <div class="modal is-active">
           <div class="modal-background"> </div>
           <div class="modal-content">
-            {/* <!-- Any other Bulma elements you want --> */}
             <div class="section" id="modal-section">
               <h3 id="modal-heading">Are you sure you want to clear all lists?</h3>
               <button
@@ -491,7 +452,6 @@ function Menu({ user }) {
                 Cancel
               </button>
             </div>
-
           </div>
           <button class="modal-close is-large" aria-label="close"></button>
         </div>
