@@ -5,9 +5,9 @@ import './Footer.css';
 function Footer() {
   return (
 
-    <div className="HomeFooter">
+    <div className="HomeFooter" >
       {/* Footer with information and links */}
-      <footer class="footer">
+      <footer class="footer" id="home-footer">
         <section class="section is-small">
           <div class="container">
             <div class="content has-text-centered">

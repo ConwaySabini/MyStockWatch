@@ -106,7 +106,7 @@ function Card({ article, type }) {
               </figure>
             </div>
             <div class="media-content">
-              <p class="title is-4">{name}</p>
+              <p class="title is-4" id="card-title">{name}</p>
             </div>
           </div>
           <div class="content">
@@ -152,7 +152,7 @@ function Card({ article, type }) {
             <div class="media-left">
             </div>
             <div class="media-content">
-              <p class="title is-4">{name}</p>
+              <p class="title is-4" id="card-title">{name}</p>
             </div>
           </div>
           <time datetime={date}>Date: {date}</time>

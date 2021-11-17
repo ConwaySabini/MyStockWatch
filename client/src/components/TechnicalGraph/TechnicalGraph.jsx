@@ -1,4 +1,3 @@
-import './TechnicalGraph.css';
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import {
@@ -75,9 +74,10 @@ function TechnicalGraph({ stock, width, height }) {
       xScale={xScale}
       xAccessor={xAccessor}
       zoomAnchor={lastVisibleItemBasedZoomAnchor}
+      id="technical-chart"
     >
       <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
-        <XAxis showGridLines showTickLabel={false} />
+        {/* <XAxis showGridLines showTickLabel={false} id="XAxis" /> */}
         <YAxis showGridLines tickFormat={pricesDisplayFormat} />
         {/* This is the main chart of candlesticks */}
         <CandlestickSeries />
@@ -100,8 +100,8 @@ function TechnicalGraph({ stock, width, height }) {
         />
         <ZoomButtons />
         <OHLCTooltip origin={[8, 16]} />
-        <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-        <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+        <XAxis />
+        {/* <YAxis ticks={4} tickFormat={pricesDisplayFormat} /> */}
         <MouseCoordinateX displayFormat={timeDisplayFormat} />
         <MouseCoordinateY
           rectWidth={margin.right}

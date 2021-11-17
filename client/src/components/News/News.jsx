@@ -6,7 +6,7 @@ import { useState, useEffect, useContext } from "react";
 const axios = require('axios').default;
 
 // Component to display the news cards
-function News() {
+function News({ toggleTheme }) {
   // array of news articles
   const [news, setNews] = useState([]);
   // symbol of the stock to be searched
@@ -125,7 +125,7 @@ function News() {
       <div classname="News" id="NewsSection">
         {/* Navigation */}
         <header className="app-header">
-          <Nav />
+          <Nav toggleTheme={toggleTheme} />
         </header>
         <div class="block"></div>
 
@@ -139,8 +139,8 @@ function News() {
                 <div class="column is-6">
                   <section class="hero is-link" id="hero-dash">
                     <div class="hero-body">
-                      <p class="subtitle">
-                        Enter the symbol and click the <strong>Add News button or Enter</strong>, to get news pertaining to the stock.
+                      <p class="subtitle" id="hero-color">
+                        Enter the symbol and click the <strong id="hero-color">Add News button or Enter</strong>, to get news pertaining to the stock.
                       </p>
                     </div>
                   </section>

@@ -8,7 +8,7 @@ import Menu from '../Menu/Menu';
 const axios = require('axios').default;
 
 // Component for the dashboard of the application providing the main functionality
-function Dashboard({ user }) {
+function Dashboard({ user, toggleTheme, theme }) {
 
   // user Id for the user
   const [userId, setUserId] = useState('');
@@ -65,7 +65,7 @@ function Dashboard({ user }) {
         <div className="Dashboard">
           {/* Navigation */}
           <header className="app-header">
-            <Nav />
+            <Nav toggleTheme={toggleTheme} theme={theme} />
           </header>
           <div class="block"></div>
           {/* Column Layout */}

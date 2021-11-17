@@ -1,0 +1,70 @@
+import { createGlobalStyle } from 'styled-components';
+
+export const GlobalStyles = createGlobalStyle`
+  body {
+    background: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+  
+  .Dashboard {
+    background-color: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #NewsSection {
+    background-color: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #news-card {
+    background-color: ${({ theme }) => theme.navBar};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #menu-label {
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #card-title {
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #navigation-bar {
+    background-color: ${({ theme }) => theme.navBar};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #navbar-item:hover {
+    background-color: ${({ theme }) => theme.hover};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #navbar-item {
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #home-footer {
+    background-color: ${({ theme }) => theme.navBar};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #StockChart {
+    background-color: ${({ theme }) => theme.stockBody};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
+  #hero-color {
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }`;

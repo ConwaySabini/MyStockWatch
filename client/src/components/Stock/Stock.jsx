@@ -30,15 +30,20 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
   // prices of the stock for the graph
   const prices = [];
 
+  let militaryTime = false;
   let timeline = "";
   switch (stock.timeline) {
     case '1min': timeline = "30 minutes";
+      militaryTime = true;
       break;
     case '5min': timeline = "2.5 hours";
+      militaryTime = true;
       break;
     case '15min': timeline = "7.5 hours";
+      militaryTime = true;
       break;
     case '30min': timeline = "15 hours";
+      militaryTime = true;
       break;
     case '1h': timeline = "30 hours";
       break;
@@ -61,6 +66,14 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
     labels[index] = stock.data.values[i].datetime;
     prices[index] = stock.data.values[i].close;
     index--;
+  }
+
+  if (militaryTime) {
+    let timeIndex = 0;
+    for (let label of labels) {
+      labels[timeIndex] = label.slice(11);
+      timeIndex++;
+    }
   }
 
   // options for the graph
@@ -182,6 +195,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
           <StockButtons
             handleTime={handleTime}
             handleChart={handleChart}
+            handleUpdate={handleUpdate}
             loading={loading}
             setLoading={setLoading}
             stock={stock}
@@ -197,6 +211,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
           <StockButtons
             handleTime={handleTime}
             handleChart={handleChart}
+            handleUpdate={handleUpdate}
             loading={loading}
             setLoading={setLoading}
             stock={stock}
@@ -215,6 +230,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user }) {
           <StockButtons
             handleTime={handleTime}
             handleChart={handleChart}
+            handleUpdate={handleUpdate}
             loading={loading}
             setLoading={setLoading}
             stock={stock}

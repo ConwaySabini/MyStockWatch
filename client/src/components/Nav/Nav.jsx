@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Profile from '../Profile/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 //import { useTheme } from "../../context/ThemeContext";
 
 //TODO add navbar links to hamburger menu
 
 // Component to render the navigation bar
-function Nav() {
+function Nav({ toggleTheme, theme }) {
   const { logout } = useAuth0();
   const [isBurger, setIsBurger] = useState(false);
 
@@ -44,13 +44,13 @@ function Nav() {
                 </div>
                 <div id="navbarBasicExample" class="navbar-menu is-active">
                   <div class="navbar-start">
-                    <a class="navbar-item" href="/home">
+                    <a class="navbar-item" href="/home" id="navbar-hover">
                       Home
                     </a>
-                    <a class="navbar-item" href="/dashboard">
+                    <a class="navbar-item" href="/dashboard" id="navbar-hover">
                       Dashboard
                     </a>
-                    <a class="navbar-item" href="/news">
+                    <a class="navbar-item" href="/news" id="navbar-hover">
                       News
                     </a>
                     {/* <a class="navbar-item" href="about">
@@ -95,13 +95,13 @@ function Nav() {
                 </div>
                 <div id="navbarBasicExample" class="navbar-menu">
                   <div class="navbar-start">
-                    <a class="navbar-item" href="/home">
+                    <a class="navbar-item" href="/home" id="navbar-item">
                       Home
                     </a>
-                    <a class="navbar-item" href="/dashboard">
+                    <a class="navbar-item" href="/dashboard" id="navbar-item">
                       Dashboard
                     </a>
-                    <a class="navbar-item" href="/news">
+                    <a class="navbar-item" href="/news" id="navbar-item">
                       News
                     </a>
                     {/* <a class="navbar-item" href="about">
@@ -111,6 +111,17 @@ function Nav() {
                   <div class="navbar-end">
                     <div class="navbar-item">
                       <div class="buttons">
+                        {
+                          theme === 'light' ? (
+                            <button class="button is-link mt-2" onClick={toggleTheme}>
+                              <FontAwesomeIcon icon={faMoon} />
+                            </button>
+                          ) : (
+                            <button class="button is-link mt-2" onClick={toggleTheme}>
+                              <FontAwesomeIcon icon={faSun} />
+                            </button>
+                          )
+                        }
                         <button class="button is-primary mt-2 ml-2 mb-2" onClick={() => logout()}>
                           <strong>Log Out</strong>
                         </button>

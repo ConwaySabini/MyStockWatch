@@ -364,20 +364,20 @@ const StockHub = ({ user }) => {
             </a>
             {/* Title and information about the dashboard */}
             <section class="hero is-link" id="hero-dash">
-              <div class="hero-body">
-                <p class="title">
+              <div class="hero-body" >
+                <p class="title" id="hero-color">
                   Welcome to MyStockWatch
                 </p>
-                <p class="subtitle">
-                  Enter the symbol and click the <strong>Add Stock button or Enter</strong>, to add the stock.
+                <p class="subtitle" id="hero-color">
+                  Enter the symbol and click the <strong id="hero-color">Add Stock button or Enter</strong>, to add the stock.
                 </p>
-                <h2 class="subtitle">
+                <h2 class="subtitle" id="hero-color">
                   Enter a symbol or multiple symbols separated by a comma or space to filter the stocks. Then hit the
-                  <strong> Filter button or Enter</strong>, to filter the stocks.
+                  <strong id="hero-color"> Filter button or Enter</strong>, to filter the stocks.
                 </h2>
-                <h2 class="subtitle">
+                <h2 class="subtitle" id="hero-color">
                   Use the dropdown menu and select an option then press the
-                  <strong> Sort button</strong>, to sort the stocks by change in price.
+                  <strong id="hero-color"> Sort button</strong>, to sort the stocks by change in price.
                 </h2>
               </div>
             </section>
