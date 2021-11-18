@@ -72,9 +72,9 @@ function Nav({ toggleTheme, theme }) {
             ) : (
               <>
                 <div class="navbar-brand">
-                  <a class="navbar-item" href="/dashboard/#title">
+                  <a class="navbar-item" href="/dashboard#title">
                     <FontAwesomeIcon icon={faChartLine} size="2x" />
-                    <a class="nav-title fa-2x" href="/dashboard/#title">
+                    <a class="nav-title fa-2x" href="/dashboard#title">
                       MyStockWatch
                     </a>
                     {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}

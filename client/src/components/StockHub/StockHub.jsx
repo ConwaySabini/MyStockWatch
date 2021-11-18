@@ -4,6 +4,7 @@ import StockList from '../StockList/StockList';
 import './StockHub.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import Stock from '../Stock/Stock';
 const axios = require('axios').default;
 
 // Component to display all stocks and the forms to add/edit stocks
@@ -31,6 +32,10 @@ const StockHub = ({ user }) => {
   const [descending, setDescending] = useState(true);
   // modal for confirming events
   const [modal, setModal] = useState(false);
+  // modal for viewing stock
+  const [stockModal, setStockModal] = useState(false);
+  // stock to display for stock modal
+  const [stock, setStock] = useState(null);
   // flag for displaying the instructions
   const [showHero, setShowHero] = useState(true);
   // flag for updating the stocks on the database
@@ -316,6 +321,18 @@ const StockHub = ({ user }) => {
     setDescending(true);
   }
 
+  const handleStockModal = (symbol) => {
+    const stock = findSymbol(symbol);
+    if (stock !== undefined) {
+      setStock(stock);
+      setStockModal(true);
+    }
+  }
+
+  const clearStockModal = () => {
+    setStockModal(false);
+  }
+
   // function to confirm the deletion of all stocks
   const confirmClear = () => {
     setModal(true);
@@ -331,7 +348,7 @@ const StockHub = ({ user }) => {
     setShowHero(!showHero);
   }
 
-  if (!modal) {
+  if (!modal && !stockModal) {
     return (
       <div class="StockForm">
         {showHero ? (
@@ -413,7 +430,7 @@ const StockHub = ({ user }) => {
               <button class="button is-link ml-4 mr-4" onClick={handleSort} disabled={loading}>Sort</button>
               <div class="dropdown is-hoverable ml-4">
                 <div class="dropdown-trigger">
-                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading}>
+                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading} id="form-button">
                     <span>Ascending/Descending</span>
                     <span class="icon is-small">
                       <FontAwesomeIcon icon={faAngleDown} />
@@ -450,8 +467,31 @@ const StockHub = ({ user }) => {
           filterSymbols={filterSymbols}
           handleStockChange={handleStockChange}
           user={user}
+          handleStockModal={handleStockModal}
         />
       </div >
+    );
+  } else if (stockModal) {
+    return (
+      <div class="modal is-active">
+        <div class="modal-background"> </div>
+        <div class="modal-content" id="stock-modal">
+          {/* <!-- Any other Bulma elements you want --> */}
+          {/* <div class="section" id="stock-modal-section"> */}
+          <Stock
+            stock={stock}
+            key={stock.id}
+            handleTimeChange={handleTimeChange}
+            handleStockChange={handleStockChange}
+            user={user}
+            handleStockModal={handleStockModal}
+            id="viewing-stock"
+          />
+          <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
+          {/* </div> */}
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+      </div>
     );
   } else {
     return (

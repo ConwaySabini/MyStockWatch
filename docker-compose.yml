@@ -1,0 +1,23 @@
+services:
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "200k"
+      max-file: "10"
+  backend:
+    env_file: ".env"
+    build:
+      context: .
+      dockerfile: DockerFile
+    image: "conwaysabini/stock-server"
+    ports:
+      - "3000:3000"
+  frontend:
+    build:
+      context: ./client
+      dockerfile: DockerFile
+    image: "conwaysabini/stock-server"
+    ports:
+      - "3001:3001"
+    links:
+      - "backend:be"

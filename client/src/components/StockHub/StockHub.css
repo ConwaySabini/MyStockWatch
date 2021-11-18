@@ -27,6 +27,16 @@
   font-weight: bold;
 }
 
+#stock-modal {
+  width: 60%;
+
+}
+
+#viewing-stock {
+  height: 100%;
+  width: 100%;
+}
+
 /* #dropdown-button:focus {
   background-color: #263680;
 } */

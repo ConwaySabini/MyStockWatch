@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 //Component to render the buttons and handle changes to data
-function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user, handleUpdate }) {
+function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user, handleUpdate, handleStockModal }) {
   // stock context api shared data across components
   const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
   // State to track which list to add the stock to
@@ -37,14 +37,18 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
   // function to add a stock to a list
   const addToList = () => {
     setLoading(true);
-    addStockToList(list, stock.symbol, UPDATE_LISTS, user.sub);
+    if (list !== "") {
+      addStockToList(list, stock.symbol, UPDATE_LISTS, user.sub);
+    }
     setLoading(false);
   }
 
   // function to remove a stock from a list
   const removeFromList = () => {
     setLoading(true);
-    removeStockFromList(list, stock.symbol, UPDATE_LISTS, user.sub);
+    if (list !== "") {
+      removeStockFromList(list, stock.symbol, UPDATE_LISTS, user.sub);
+    }
     setLoading(false);
   }
 
@@ -129,7 +133,8 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
       <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
-      <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate()}>Update Stock</button>
+      <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate(stock.timeline)}>Update</button>
+      <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleStockModal(stock.symbol)}>View</button>
     </div>
   );
 }
