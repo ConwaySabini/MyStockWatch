@@ -112,4 +112,9 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.text};
     transition: all 0.25s linear;
   }
-`;
+  
+  #burger {
+    background-color: ${({ theme }) => theme.navBar};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }`;

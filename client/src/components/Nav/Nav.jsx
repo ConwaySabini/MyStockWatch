@@ -1,12 +1,8 @@
 import './Nav.css';
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import Profile from '../Profile/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
-//import { useTheme } from "../../context/ThemeContext";
-
-//TODO add navbar links to hamburger menu
 
 // Component to render the navigation bar
 function Nav({ toggleTheme, theme }) {
@@ -20,8 +16,8 @@ function Nav({ toggleTheme, theme }) {
           {
             isBurger ? (
               <>
-                <div class="navbar-brand">
-                  <a class="navbar-item" href="/dashboard#title">
+                <div class="navbar-brand" id="navbar-hover">
+                  <a class="navbar-item" href="/dashboard#title" >
                     <FontAwesomeIcon icon={faChartLine} size="2x" />
                     <a class="nav-title fa-2x" href="/dashboard#title">
                       MyStockWatch
@@ -36,21 +32,22 @@ function Nav({ toggleTheme, theme }) {
                     onClick={() => setIsBurger(!isBurger)}
                     aria-label="menu"
                     aria-expanded="false"
+                    id="burger"
                   >
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true" id="burger"></span>
+                    <span aria-hidden="true" id="burger"></span>
+                    <span aria-hidden="true" id="burger"></span>
                   </a>
                 </div>
-                <div id="navbarBasicExample" class="navbar-menu is-active">
+                <div id="navigation-bar" class="navbar-menu is-active">
                   <div class="navbar-start">
-                    <a class="navbar-item" href="/home" id="navbar-hover">
+                    <a class="navbar-item" href="/home" id="navbar-item">
                       Home
                     </a>
-                    <a class="navbar-item" href="/dashboard" id="navbar-hover">
+                    <a class="navbar-item" href="/dashboard" id="navbar-item">
                       Dashboard
                     </a>
-                    <a class="navbar-item" href="/news" id="navbar-hover">
+                    <a class="navbar-item" href="/news" id="navbar-item">
                       News
                     </a>
                     {/* <a class="navbar-item" href="about">
@@ -60,6 +57,17 @@ function Nav({ toggleTheme, theme }) {
                   <div class="navbar-end">
                     <div class="navbar-item">
                       <div class="buttons">
+                        {
+                          theme === 'light' ? (
+                            <button class="button is-link mt-2" onClick={toggleTheme}>
+                              <FontAwesomeIcon icon={faMoon} />
+                            </button>
+                          ) : (
+                            <button class="button is-link mt-2" onClick={toggleTheme}>
+                              <FontAwesomeIcon icon={faSun} />
+                            </button>
+                          )
+                        }
                         <button class="button is-primary mt-2 ml-2 mb-2" onClick={() => logout()}>
                           <strong>Log Out</strong>
                         </button>

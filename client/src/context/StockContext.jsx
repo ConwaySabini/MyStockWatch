@@ -254,7 +254,7 @@ const StockContextProvider = props => {
   const updateStockData = async (url, userId, newStocks) => {
     try {
       // update the stock data 
-      const response = await axios.put(url, { userId: userId, stocks: newStocks });
+      await axios.put(url, { userId: userId, stocks: newStocks });
       // handle error
     } catch (error) {
       console.error(error);
@@ -265,7 +265,7 @@ const StockContextProvider = props => {
   const updateFavoriteData = async (url, userId, newFavorites) => {
     try {
       // update the stock data 
-      const response = await axios.put(url, { userId: userId, favorites: newFavorites });
+      await axios.put(url, { userId: userId, favorites: newFavorites });
       // handle error
     } catch (error) {
       console.error(error);
@@ -276,7 +276,7 @@ const StockContextProvider = props => {
   const updateListData = async (url, userId, newLists) => {
     try {
       // update the stock data 
-      const response = await axios.put(url, { userId: userId, lists: newLists });
+      await axios.put(url, { userId: userId, lists: newLists });
       // handle error
     } catch (error) {
       console.error(error);

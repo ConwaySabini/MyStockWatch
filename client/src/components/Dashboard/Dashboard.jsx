@@ -57,6 +57,7 @@ function Dashboard({ user, toggleTheme, theme }) {
     if (user !== undefined) {
       checkForUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (user !== undefined && userId !== '') {

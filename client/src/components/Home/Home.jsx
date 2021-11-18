@@ -1,8 +1,5 @@
 import './Home.css';
 import { useAuth0 } from "@auth0/auth0-react";
-import { Redirect } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-
 
 // Component to display the home page of the application
 function Home() {

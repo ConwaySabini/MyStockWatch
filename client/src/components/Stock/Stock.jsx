@@ -1,6 +1,5 @@
 import './Stock.css';
-import { useState, useEffect } from "react";
-import { StockContext } from "../../context/StockContext";
+import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import useDimensions from "react-cool-dimensions";
 import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
@@ -13,7 +12,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
   // loading state to have components wait for data to load
   const [loading, setLoading] = useState(false);
   // Observe the size of the Stock Card for responsive design
-  const { observe, unobserve, width, height, entry } = useDimensions({
+  const { observe, width, height } = useDimensions({
     // breakpoints to change the size of the graph
     breakpoints: { XS: 0, SM: 320, MD: 480, LG: 640 },
     // Will only update the state on breakpoint changed, default is false

@@ -77,7 +77,7 @@ function Menu({ user }) {
           }
           setNewLists(newLists);
           // update the lists data 
-          const res = await axios.put(UPDATE_LISTS, { userId: user, lists: newLists });
+          await axios.put(UPDATE_LISTS, { userId: user, lists: newLists });
         }
         // handle error
       } catch (error) {
@@ -85,6 +85,7 @@ function Menu({ user }) {
       }
     }
     checkForLists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -114,15 +115,15 @@ function Menu({ user }) {
             setNewFavorites(newFavorites);
           }
           // update the favorite data 
-          const res = await axios.put(UPDATE_FAVORITES, { userId: user, favorites: newFavorites });
+          await axios.put(UPDATE_FAVORITES, { userId: user, favorites: newFavorites });
         }
         // handle error
       } catch (error) {
         console.error(error);
       }
     }
-
     checkForFavorites();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let index = 0;

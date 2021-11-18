@@ -2,7 +2,7 @@ import './News.css';
 import Nav from '../Nav/Nav';
 import CardList from '../CardList/CardList';
 import Footer from '../Footer/Footer';
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 const axios = require('axios').default;
 
 // Component to display the news cards
@@ -85,6 +85,7 @@ function News({ toggleTheme }) {
       addNewsData();
     }
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

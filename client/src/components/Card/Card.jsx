@@ -1,12 +1,11 @@
 import './Card.css';
-import { useState } from "react";
 
 // Component for individual news card
 function Card({ article, type }) {
   let name = "";
   let count = 0;
   let thumbnail = "https://bulma.io/images/placeholders/1280x960.png";
-  let image = "https://bulma.io/images/placeholders/1280x960.png";
+  //let image = "https://bulma.io/images/placeholders/1280x960.png";
   let organization = "";
   let description = "";
   let date = "";
@@ -48,9 +47,9 @@ function Card({ article, type }) {
         date += article.datePublished[index];
       }
     }
-    if (article.image !== undefined) {
-      image = article.image.thumbnail.contentUrl;
-    }
+    // if (article.image !== undefined) {
+    //   image = article.image.thumbnail.contentUrl;
+    // }
     if (article.url !== undefined) {
       link = article.url;
     }
@@ -67,9 +66,9 @@ function Card({ article, type }) {
     if (name.length < 49) {
       name += "\r\n ";
     }
-    if (article.attributes.gettyImage !== undefined && article.attributes.gettyImage !== null) {
-      image = article.attributes.gettyImage.crop_4_3;
-    }
+    // if (article.attributes.gettyImage !== undefined && article.attributes.gettyImage !== null) {
+    //   image = article.attributes.gettyImage.crop_4_3;
+    // }
     if (article.attributes.publishOn !== undefined) {
       for (let index = 0; index < 10; index++) {
         date += article.attributes.publishOn[index];

@@ -1,12 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
-const axios = require('axios').default;
 
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   return (
     isAuthenticated && (

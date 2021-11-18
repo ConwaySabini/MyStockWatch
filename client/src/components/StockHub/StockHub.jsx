@@ -35,7 +35,7 @@ const StockHub = ({ user }) => {
   // modal for viewing stock
   const [stockModal, setStockModal] = useState(false);
   // stock to display for stock modal
-  const [stock, setStock] = useState(null);
+  const [stockView, setStock] = useState(null);
   // flag for displaying the instructions
   const [showHero, setShowHero] = useState(true);
   // flag for updating the stocks on the database
@@ -50,8 +50,6 @@ const StockHub = ({ user }) => {
   const SERVER = process.env.REACT_APP_GET_USER_STOCKS + user;
   // server url to create stocks
   const CREATE_STOCKS = process.env.REACT_APP_CREATE_STOCKS;
-
-  //TODO add an update data button to stock???
 
   // Fetch the stock data from the server and render the stocks
   // If there is no stock data for this user, create new data
@@ -100,6 +98,7 @@ const StockHub = ({ user }) => {
       }
     }
     fetchDataFromServer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -120,6 +119,7 @@ const StockHub = ({ user }) => {
 
       updateStockData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateStocks]);
 
   // Axios options for getting stock data from 12 Data API
@@ -177,6 +177,7 @@ const StockHub = ({ user }) => {
     } else {
       changeStockData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stockChange]);
 
 
@@ -321,8 +322,8 @@ const StockHub = ({ user }) => {
     setDescending(true);
   }
 
-  const handleStockModal = (symbol) => {
-    const stock = findSymbol(symbol);
+  const handleStockModal = (stockSymbol) => {
+    const stock = findSymbol(stockSymbol);
     if (stock !== undefined) {
       setStock(stock);
       setStockModal(true);
@@ -479,8 +480,8 @@ const StockHub = ({ user }) => {
           {/* <!-- Any other Bulma elements you want --> */}
           {/* <div class="section" id="stock-modal-section"> */}
           <Stock
-            stock={stock}
-            key={stock.id}
+            stock={stockView}
+            key={stockView.id}
             handleTimeChange={handleTimeChange}
             handleStockChange={handleStockChange}
             user={user}

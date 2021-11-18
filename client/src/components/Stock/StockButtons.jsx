@@ -1,5 +1,5 @@
 import './Stock.css'
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { StockContext } from "../../context/StockContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
