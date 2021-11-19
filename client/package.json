@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && ls && serve -l 3001 -s build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "codecov": "cat ./coverage/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
     "eject": "react-scripts eject"
