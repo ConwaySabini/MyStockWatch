@@ -16,5 +16,5 @@ RUN npm install --production
 COPY . .
 # Expose the port to run the app on
 EXPOSE 3001
-
-CMD 
+# commands to run the app
+CMD ["npm", "run", "build"]

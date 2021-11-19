@@ -12,7 +12,7 @@
       "url": "http://localhost:3001",
       "pathMappings": [
         {
-          "url": "file:///home/conway/dev/stocks/client/src",
+          "url": "file:///~/dev/stocks/client/src",
           "path": "${workspaceFolder}/client/src"
         },
         {

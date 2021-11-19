@@ -12,9 +12,10 @@ WORKDIR /app
 # Copy app files from the project directory to the app directory in the container
 COPY ["package.json", "package-lock.json", "./"]
 RUN ls
+# install dependencies
 RUN npm install --production
 COPY . .
-
+# Expose the port to run the app on
 EXPOSE 3000
-
-CMD ["npm", "start:prod"]
+# commands to run the app
+CMD ["npm", "run", "start:prod"]
