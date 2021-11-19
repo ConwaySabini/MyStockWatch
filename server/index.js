@@ -38,6 +38,9 @@ const corsOptions = {
   credentials: true
 }
 
+console.log(corsOptions);
+console.log(whitelist);
+
 const app = express();
 /** Get port from environment and store in Express. */
 const port = process.env.PORT || "3000";
