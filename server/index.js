@@ -20,10 +20,10 @@ import listsRouter from "./routes/lists.js";
 // const getAsync = promisify(client.get).bind(client);
 
 //TODO remove comment if using .env file
-// const envConfig = dotenv.config();
-// if (envConfig.error) {
-//   throw envConfig.error;
-// }
+const envConfig = dotenv.config();
+if (envConfig.error) {
+  throw envConfig.error;
+}
 
 const corsDomains = process.env.CORS_DOMAINS || "";
 const whitelist = corsDomains.split(",").map(d => d.trim());
