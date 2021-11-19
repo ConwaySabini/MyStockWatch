@@ -19,10 +19,11 @@ import listsRouter from "./routes/lists.js";
 // const { promisify } = require('util');
 // const getAsync = promisify(client.get).bind(client);
 
-const envConfig = dotenv.config();
-if (envConfig.error) {
-  throw envConfig.error;
-}
+//TODO remove comment if using .env file
+// const envConfig = dotenv.config();
+// if (envConfig.error) {
+//   throw envConfig.error;
+// }
 
 const corsDomains = process.env.CORS_DOMAINS || "";
 const whitelist = corsDomains.split(",").map(d => d.trim());
