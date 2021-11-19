@@ -30,7 +30,7 @@ function Home() {
                   <h2 class="subtitle" id="homeSubtitle">
                     Track stocks individually, search, filter, and sort them.
                   </h2>
-                  <a href="register" class="button is-white is-inverted">Next&ensp;</a>
+                  <button onClick={() => loginWithRedirect()} class="button is-white is-inverted">Next&ensp;</button>
                 </div>
               </div>
             </div>
@@ -46,7 +46,7 @@ function Home() {
                   <h2 class="subtitle" id="homeSubtitle">
                     Add stocks to your favorites and get news in one place.
                   </h2>
-                  <a href="register" class="button is-white is-inverted">Next&ensp;</a>
+                  <button onClick={() => loginWithRedirect()} class="button is-white is-inverted">Next&ensp;</button>
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@ function Home() {
                   <h2 class="subtitle" id="homeSubtitle">
                     Get financial data displayed from many different timeframes of your choosing. Also display the charts using simple or technical charts.
                   </h2>
-                  <a href="register" class="button is-white is-inverted">Next&ensp; </a>
+                  <button onClick={() => loginWithRedirect()} class="button is-white is-inverted">Next&ensp;</button>
                 </div>
               </div>
             </div>
