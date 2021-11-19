@@ -30,12 +30,11 @@ const dotenv = require('dotenv');
 //   client = redis.createClient();/ // client middleware for redis
 // const { promisify } = require('util');
 // const getAsync = promisify(client.get).bind(client);
-const envConfig = dotenv.config();
-
-if (envConfig.error) {
-  throw envConfig.error;
-}
-
+//TODO remove comment if using .env file
+// const envConfig = dotenv.config();
+// if (envConfig.error) {
+//   throw envConfig.error;
+// }
 const corsDomains = process.env.CORS_DOMAINS || "";
 const whitelist = corsDomains.split(",").map(d => d.trim());
 const corsOptions = {
@@ -60,7 +59,7 @@ app.use(_express.default.json());
 app.use(_express.default.urlencoded({
   extended: false
 }));
-app.use((0, _cors.default)(corsOptions)); //{ origin: 'https://127.0.0.1:3000' }
+app.use((0, _cors.default)()); //{ origin: 'https://127.0.0.1:3000' }
 
 app.use("/users", _user.default);
 app.use("/stocks", _stocks.default);

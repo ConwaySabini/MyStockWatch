@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "npm run build:clean",
-    "build": "babel ./server --out-dir ./dist --source-maps && ls && cd dist && touch .env",
+    "build": "babel ./server --out-dir ./dist --source-maps",
     "build:clean": "rm -rf dist",
     "start": "npm run build && nodemon --exec babel-node ./server",
     "start:prod": "npm run build && node ./dist/index.js",

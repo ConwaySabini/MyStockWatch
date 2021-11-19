@@ -8,7 +8,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 require('dotenv').config(); // import environment variable for MongoDB connection
 
 
-const CONNECTION_URL = process.env.MONGODB_CONNECTION;
+const CONNECTION_URL = process.env.MONGODB_CONNECTION; //console.log(CONNECTION_URL);
 
 _mongoose.default.connect(CONNECTION_URL, {
   useNewUrlParser: true,
