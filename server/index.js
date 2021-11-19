@@ -15,9 +15,7 @@ import listsRouter from "./routes/lists.js";
 
 // Redis configuration
 // const redis = require("redis"),
-//   client = redis.createClient();
-
-// // client middleware for redis
+//   client = redis.createClient();/ // client middleware for redis
 // const { promisify } = require('util');
 // const getAsync = promisify(client.get).bind(client);
 
@@ -25,22 +23,31 @@ const envConfig = dotenv.config();
 if (envConfig.error) {
   throw envConfig.error;
 }
-//console.log(envConfig.parsed);
 
+const corsDomains = process.env.CORS_DOMAINS || "";
+const whitelist = corsDomains.split(",").map(d => d.trim());
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}
 
 const app = express();
 /** Get port from environment and store in Express. */
 const port = process.env.PORT || "3000";
 app.set("port", port);
 
-
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({ origin: "*" })); //{ origin: 'https://127.0.0.1:3000' }
+app.use(cors(corsOptions)); //{ origin: 'https://127.0.0.1:3000' }
 
-//app.use("/", indexRouter);
 app.use("/users", userRouter);
 app.use("/stocks", stockRouter);
 app.use("/favorites", favoritesRouter);
@@ -70,9 +77,6 @@ server.listen(port);
 server.on("listening", () => {
   console.log(`Listening on port:: http://localhost:${port}/`);
 });
-
-
-
 
 // const fetchGithub = require('./fetch/fetch-github')
 
