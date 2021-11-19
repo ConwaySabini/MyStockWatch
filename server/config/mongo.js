@@ -4,7 +4,7 @@ require('dotenv').config();
 
 // import environment variable for MongoDB connection
 const CONNECTION_URL = process.env.MONGODB_CONNECTION;
-//console.log(CONNECTION_URL);
+console.log(CONNECTION_URL);
 
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,
