@@ -42,9 +42,6 @@ const corsOptions = {
   credentials: true
 }
 
-console.log(corsOptions);
-console.log(whitelist);
-
 const app = express();
 /** Get port from environment and store in Express. */
 const port = "3000"; //process.env.PORT || 
@@ -53,7 +50,7 @@ app.set("port", port);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors()); //{ origin: 'https://127.0.0.1:3000' }
+app.use(cors(corsOptions)); //{ origin: 'https://127.0.0.1:3000' }
 
 app.use("/users", userRouter);
 app.use("/stocks", stockRouter);
