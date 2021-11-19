@@ -23,10 +23,10 @@ import listsRouter from "./routes/lists.js";
 //npm run build && nodemon --exec babel-node ./server
 
 //TODO remove comment if using .env file
-const envConfig = dotenv.config();
-if (envConfig.error) {
-  throw envConfig.error;
-}
+// const envConfig = dotenv.config();
+// if (envConfig.error) {
+//   throw envConfig.error;
+// }
 
 const corsDomains = process.env.CORS_DOMAINS || "";
 const whitelist = corsDomains.split(",").map(d => d.trim());
