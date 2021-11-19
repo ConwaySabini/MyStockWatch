@@ -79,9 +79,11 @@ function Home() {
                 <h2 class="subtitle" id="homeSubtitle">
                   Sign Up with your email and password become a user today!
                 </h2>
-                <a href="register">
-                  <button class="button is-black mt-2">Register</button>
-                </a>
+                <button
+                  class="button is-black mt-2"
+                  onClick={() => loginWithRedirect()}>
+                  Register
+                </button>
                 <button
                   class="button is-black mt-2 ml-4"
                   onClick={() => loginWithRedirect()}>
