@@ -49,7 +49,7 @@ app.set("port", port);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors(corsOptions)); //{ origin: 'https://127.0.0.1:3000' }
+app.use(cors()); //{ origin: 'https://127.0.0.1:3000' }
 
 app.use("/users", userRouter);
 app.use("/stocks", stockRouter);
