@@ -74,7 +74,10 @@ const StockHub = ({ user }) => {
           for (const stock of response.data.stocks.stocks) {
             newStocks.push(stock);
           }
-          setNewStocks(newStocks);
+          if (newStocks.length > 0) {
+            setNewStocks(newStocks);
+          }
+          console.log("newStocks", newStocks);
           // cleanup function
           setLoading(false);
         }
