@@ -20,7 +20,6 @@ import listsRouter from "./routes/lists.js";
 
 //TODO add to package.json in development
 //npm run build && nodemon --exec babel-node ./server
-
 //TODO remove comment if using .env file
 // const envConfig = dotenv.config();
 // if (envConfig.error) {
