@@ -12,7 +12,6 @@ import userRouter from "./routes/user.js";
 import stockRouter from "./routes/stocks.js";
 import favoritesRouter from "./routes/favorites.js";
 import listsRouter from "./routes/lists.js";
-
 // Redis configuration
 // const redis = require("redis"),
 //   client = redis.createClient();/ // client middleware for redis
