@@ -393,7 +393,7 @@ function Menu({ user }) {
                           </a>
                           <button
                             class="button is-danger is-small ml-6"
-                            onClick={() => removeList(list.name)}>
+                            onClick={() => removeList(list.name, UPDATE_LISTS, user)}>
                             Delete
                           </button>
                         </p>

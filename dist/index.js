@@ -30,6 +30,8 @@ const dotenv = require('dotenv');
 //   client = redis.createClient();/ // client middleware for redis
 // const { promisify } = require('util');
 // const getAsync = promisify(client.get).bind(client);
+//TODO add to package.json in development
+//npm run build && nodemon --exec babel-node ./server
 //TODO remove comment if using .env file
 // const envConfig = dotenv.config();
 // if (envConfig.error) {
@@ -38,17 +40,16 @@ const dotenv = require('dotenv');
 const corsDomains = process.env.CORS_DOMAINS || "";
 const whitelist = corsDomains.split(",").map(d => d.trim());
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  // origin: function (origin, callback) {
+  //   if (!origin || whitelist.indexOf(origin) !== -1) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin: whitelist,
   credentials: true
 };
-console.log(corsOptions);
-console.log(whitelist);
 const app = (0, _express.default)();
 /** Get port from environment and store in Express. */
 
@@ -59,7 +60,7 @@ app.use(_express.default.json());
 app.use(_express.default.urlencoded({
   extended: false
 }));
-app.use((0, _cors.default)()); //{ origin: 'https://127.0.0.1:3000' }
+app.use((0, _cors.default)(corsOptions)); //{ origin: 'https://127.0.0.1:3000' }
 
 app.use("/users", _user.default);
 app.use("/stocks", _stocks.default);
