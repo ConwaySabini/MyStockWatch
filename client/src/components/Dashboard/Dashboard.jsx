@@ -9,7 +9,6 @@ const axios = require('axios').default;
 
 // Component for the dashboard of the application providing the main functionality
 function Dashboard({ user, toggleTheme, theme }) {
-
   // user Id for the user
   const [userId, setUserId] = useState('');
   // server url to update user
@@ -31,12 +30,13 @@ function Dashboard({ user, toggleTheme, theme }) {
         if (response.data.user === null) {
           console.log("No user has been created");
           // create the new user
-          const name = user.name.split(' ');
-          const firstName = name[0];
-          const lastName = name[1];
+          //const name = user.name.split(' ');
+          const firstName = "first";
+          const lastName = "last";
           const type = 'consumer';
           const email = user.email;
           const password = "placeholder";
+
           const userResponse = await axios.put(CREATE_USER,
             { userId: userId, firstName: firstName, lastName: lastName, type: type, email: email, password: password });
           if (userResponse.data.user === null) {

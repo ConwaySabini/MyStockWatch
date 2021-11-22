@@ -77,7 +77,7 @@ const StockHub = ({ user }) => {
           if (newStocks.length > 0) {
             setNewStocks(newStocks);
           }
-          console.log("newStocks", newStocks);
+          //console.log("newStocks", newStocks);
           // cleanup function
           setLoading(false);
         }
@@ -119,7 +119,6 @@ const StockHub = ({ user }) => {
           setLoading(false);
         }
       }
-
       updateStockData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,6 +135,7 @@ const StockHub = ({ user }) => {
     }
   };
 
+  // ref to not call function on first render
   const firstRender = useRef(true);
 
   useEffect(() => {
@@ -173,7 +173,6 @@ const StockHub = ({ user }) => {
         setLoading(false);
       }
     }
-
     if (firstRender.current) {
       firstRender.current = false;
       return;
@@ -182,8 +181,6 @@ const StockHub = ({ user }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stockChange]);
-
-
 
   // Fetches the stock data with the symbol and displays is in a graph
   const addStockData = async () => {

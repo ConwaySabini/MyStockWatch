@@ -54,7 +54,7 @@ function Menu({ user }) {
         // fetch the lists data 
         const response = await axios.get(GET_LISTS);
         // handle error
-        if (response.data.lists.length === 0) {
+        if (response.data.lists === null || response.data.lists.length === 0) {
           console.log("No lists have been created");
           // create the new lists
           const listResponse = await axios.put(CREATE_LISTS,
