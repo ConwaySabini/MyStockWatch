@@ -18,13 +18,13 @@ export const useDarkMode = () => {
   };
 
   useEffect(() => {
-    const localTheme = window.localStorage.getItem('theme');
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !localTheme) {
-      setMode('dark');
-    } else if (localTheme) {
-      setTheme(localTheme);
-      setMode('light');
-    }
+    // const localTheme = window.localStorage.getItem('theme');
+    // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && localTheme !== 'dark') {
+    //   setMode('dark');
+    // } else if (localTheme) {
+    //   setTheme(localTheme);
+    //   setMode('light');
+    // }
     setComponentMounted(true);
   }, []);
 
