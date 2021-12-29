@@ -3,71 +3,84 @@ import { StockContext } from "../../context/StockContext";
 import Stock from "./../Stock/Stock";
 
 // Component to display a list of stocks
-const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user, handleStockModal }) => {
-  const { stocks } = useContext(StockContext);
+const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user, handleStockModal,
+    calculateEMA, calculateSMA, calculateRSI, calculateBBANDS, calculateSTOCH, calculateMACD }) => {
+    const { stocks } = useContext(StockContext);
 
-  // If there are no stocks to filter display all stocks
-  if (filterSymbols.length === 0) {
-    return (
-      <div>
-        {stocks.length ? (
-          <div className="list">
-            {stocks.map(stock => {
-              return <Stock
-                stock={stock}
-                key={stock.id}
-                handleTimeChange={handleTimeChange}
-                handleStockChange={handleStockChange}
-                user={user}
-                handleStockModal={handleStockModal}
-              />;
-            })}
-          </div>
-        ) : (
-          <article class="message is-link mt-6 ml-6">
-            <div class="message-body ">
-              <strong>No Stocks</strong>
+    // If there are no stocks to filter display all stocks
+    if (filterSymbols.length === 0) {
+        return (
+            <div>
+                {stocks.length ? (
+                    <div className="list">
+                        {stocks.map(stock => {
+                            return <Stock
+                                stock={stock}
+                                key={stock.id}
+                                handleTimeChange={handleTimeChange}
+                                handleStockChange={handleStockChange}
+                                user={user}
+                                handleStockModal={handleStockModal}
+                                calculateSMA={calculateSMA}
+                                calculateEMA={calculateEMA}
+                                calculateBBANDS={calculateBBANDS}
+                                calculateMACD={calculateMACD}
+                                calculateSTOCH={calculateSTOCH}
+                                calculateRSI={calculateRSI}
+                            />;
+                        })}
+                    </div>
+                ) : (
+                    <article class="message is-link mt-6 ml-6">
+                        <div class="message-body ">
+                            <strong>No Stocks</strong>
+                        </div>
+                    </article>
+                )}
             </div>
-          </article>
-        )}
-      </div>
-    );
-    // Display only filtered stocks
-  } else {
-    let filterStocks = [];
-    // Get each filtered stock and add it to the array
-    for (const symbol of filterSymbols) {
-      for (let stock of stocks) {
-        if (stock.symbol === symbol) {
-          filterStocks.push(stock);
+        );
+        // Display only filtered stocks
+    } else {
+        let filterStocks = [];
+        // Get each filtered stock and add it to the array
+        for (const symbol of filterSymbols) {
+            for (let stock of stocks) {
+                if (stock.symbol === symbol) {
+                    filterStocks.push(stock);
+                }
+            }
         }
-      }
-    }
-    return (
-      <div>
-        {filterStocks.length ? (
-          <div className="list">
-            {filterStocks.map(stock => {
-              return <Stock
-                stock={stock}
-                key={stock.id}
-                handleTimeChange={handleTimeChange}
-                handleStockChange={handleStockChange}
-                user={user}
-                handleStockModal={handleStockModal}
-              />;
-            })}
-          </div>
-        ) : (
-          <article class="message is-link mt-6 ml-6">
-            <div class="message-body ">
-              <strong>No Stocks</strong>
+        return (
+            <div>
+                {filterStocks.length ? (
+                    <div className="list">
+                        {filterStocks.map(stock => {
+                            return <Stock
+                                stock={stock}
+                                key={stock.id}
+                                handleTimeChange={handleTimeChange}
+                                handleStockChange={handleStockChange}
+                                user={user}
+                                handleStockModal={handleStockModal}
+                                calculateSMA={calculateSMA}
+                                calculateEMA={calculateEMA}
+                                calculateBBANDS={calculateBBANDS}
+                                calculateMACD={calculateMACD}
+                                calculateSTOCH={calculateSTOCH}
+                                calculateRSI={calculateRSI}
+                            />;
+                        })}
+                    </div>
+                ) : (
+                    <article class="message is-link mt-6 ml-6">
+                        <div class="message-body ">
+                            <strong>No Stocks</strong>
+                        </div>
+                    </article>
+                )}
             </div>
-          </article>
-        )}
-      </div>
-    );
-  }
+        );
+    }
 
 };
 
