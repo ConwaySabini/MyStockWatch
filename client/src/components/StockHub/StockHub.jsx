@@ -5,7 +5,6 @@ import './StockHub.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import Stock from '../Stock/Stock';
-import { set } from 'mongoose';
 const axios = require('axios').default;
 
 // Component to display all stocks and the forms to add/edit stocks
@@ -319,18 +318,47 @@ const StockHub = ({ user }) => {
             setLoading(true);
             try {
                 // fetch the data
-                const response = await axios.request(`${ta}`);
-                // handle error
-                if (response.data.status === "error") {
-                    setSymbol('');
-                    console.log(response.data.message);
-                    setLoading(false);
-                } else {
-                    // TODO pass data down to stock component 
-                    setTAData(response.data);
-                    // cleanup
-                    setSymbol('');
-                    setLoading(false);
+                if (ta !== '') {
+                    let dataOptions = {};
+                    switch (ta) {
+                        case 'SMA':
+                            dataOptions = SMA;
+                            break;
+                        case 'EMA':
+                            dataOptions = EMA;
+                            break;
+                        case 'BBANDS':
+                            dataOptions = BBANDS;
+                            break;
+                        case 'RSI':
+                            dataOptions = RSI;
+                            break;
+                        case 'STOCH':
+                            dataOptions = STOCH;
+                            break;
+                        case 'MACD':
+                            dataOptions = MACD;
+                            break;
+                        default:
+                            break;
+                    }
+                    // TODO fix symbol
+                    console.log("symbol", symbol);
+                    const response = await axios.request(dataOptions);
+                    // debug
+                    console.log("TA DATA: ", response.data);
+                    // handle error
+                    if (response.data.status === "error") {
+                        setSymbol('');
+                        console.log(response.data.message);
+                        setLoading(false);
+                    } else {
+                        // TODO pass data down to stock component 
+                        setTAData(response.data);
+                        // cleanup
+                        setSymbol('');
+                        setLoading(false);
+                    }
                 }
                 // handle error
             } catch (error) {
@@ -644,8 +672,7 @@ const StockHub = ({ user }) => {
                     handleStockChange={handleStockChange}
                     user={user}
                     handleStockModal={handleStockModal}
-                    setTechnicalChange={setTechnicalChange}
-                    taData={taData}
+                    handleTechnicalChange={handleTechnicalChange}
                 />
             </div >
         );
@@ -664,8 +691,7 @@ const StockHub = ({ user }) => {
                         user={user}
                         handleStockModal={handleStockModal}
                         id="viewing-stock"
-                        setTechnicalChange={setTechnicalChange}
-                        taData={taData}
+                        handleTechnicalChange={handleTechnicalChange}
                     />
                     <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
                     {/* </div> */}

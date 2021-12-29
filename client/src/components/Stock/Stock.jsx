@@ -7,7 +7,7 @@ import StockButtons from './StockButtons';
 
 // Component to display the individual stock
 function Stock({ stock, handleTimeChange, handleStockChange, user,
-    handleStockModal, setTechnicalChange, taData }) {
+    handleStockModal, handleTechnicalChange }) {
     // State to track which chart to display (simple or technical)
     const [simpleChart, setSimpleChart] = useState(true);
     // loading state to have components wait for data to load
@@ -24,10 +24,6 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
             observe(); // To re-start observing the current target element
         },
     });
-
-    if (taData != {})
-        // TODO test
-        console.log(taData);
 
     // dates of the stock for the graph
     const labels = [];
@@ -242,7 +238,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         calculateMACD={calculateMACD}
                         calculateSTOCH={calculateSTOCH}
                         calculateRSI={calculateRSI}
-                        setTechnicalChange={setTechnicalChange}
+                        handleTechnicalChange={handleTechnicalChange}
                     />
                 </div >
             );
@@ -266,7 +262,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         calculateMACD={calculateMACD}
                         calculateSTOCH={calculateSTOCH}
                         calculateRSI={calculateRSI}
-                        setTechnicalChange={setTechnicalChange}
+                        handleTechnicalChange={handleTechnicalChange}
                     />
                 </div >
             );
@@ -293,7 +289,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         calculateMACD={calculateMACD}
                         calculateSTOCH={calculateSTOCH}
                         calculateRSI={calculateRSI}
-                        setTechnicalChange={setTechnicalChange}
+                        handleTechnicalChange={handleTechnicalChange}
                     />
                 </div >
             );
@@ -317,7 +313,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         calculateMACD={calculateMACD}
                         calculateSTOCH={calculateSTOCH}
                         calculateRSI={calculateRSI}
-                        setTechnicalChange={setTechnicalChange}
+                        handleTechnicalChange={handleTechnicalChange}
                     />
                 </div >
             );

@@ -6,7 +6,7 @@ import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 //Component to render the buttons and handle changes to data
 function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user, handleUpdate, handleStockModal,
-    calculateEMA, calculateSMA, calculateRSI, calculateBBANDS, calculateSTOCH, calculateMACD, setTechnicalChange }) {
+    calculateEMA, calculateSMA, calculateRSI, calculateBBANDS, calculateSTOCH, calculateMACD, handleTechnicalChange }) {
     // stock context api shared data across components
     const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
     // State to track which list to add the stock to
@@ -61,31 +61,31 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
     }
 
     // function to handle the technical change
-    const handleTechnicalChange = (type) => {
+    const handleTADisplay = (type) => {
         setLoading(true);
         switch (type) {
             case "EMA":
-                setTechnicalChange(stock, type);
+                handleTechnicalChange(stock, type);
                 calculateEMA();
                 break;
             case "SMA":
-                setTechnicalChange(stock, type);
+                handleTechnicalChange(stock, type);
                 calculateSMA();
                 break;
             case "RSI":
-                setTechnicalChange(stock, type);
+                handleTechnicalChange(stock, type);
                 calculateRSI();
                 break;
             case "BBANDS":
-                setTechnicalChange(stock, type);
+                handleTechnicalChange(stock, type);
                 calculateBBANDS();
                 break;
             case "STOCH":
-                setTechnicalChange(stock, type);
+                handleTechnicalChange(stock, type);
                 calculateSTOCH();
                 break;
             case "MACD":
-                setTechnicalChange(stock, type);
+                handleTechnicalChange(stock, type);
                 calculateMACD();
                 break;
             default:
@@ -170,12 +170,12 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
             <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
             <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate(stock.timeline)}>Update</button>
             <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleStockModal(stock.symbol)}>View</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => calculateSMA()}>SMA</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => calculateEMA()}>EMA</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => calculateRSI()}>RSI</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => calculateMACD()}>MACD</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => calculateBBANDS()}>BBANDS</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => calculateSTOCH()}>STOCH</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("SMA")}>SMA</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("EMA")}>EMA</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("RSI")}>RSI</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("MACD")}>MACD</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("BBANDS")}>BBANDS</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("STOCH")}>STOCH</button>
         </div>
     );
 }
