@@ -6,8 +6,8 @@ import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
 import StockButtons from './StockButtons';
 
 // Component to display the individual stock
-function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockModal,
-    calculateEMA, calculateSMA, calculateRSI, calculateBBANDS, calculateSTOCH, calculateMACD }) {
+function Stock({ stock, handleTimeChange, handleStockChange, user,
+    handleStockModal, setTechnicalChange, taData }) {
     // State to track which chart to display (simple or technical)
     const [simpleChart, setSimpleChart] = useState(true);
     // loading state to have components wait for data to load
@@ -24,6 +24,10 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
             observe(); // To re-start observing the current target element
         },
     });
+
+    if (taData != {})
+        // TODO test
+        console.log(taData);
 
     // dates of the stock for the graph
     const labels = [];
@@ -166,7 +170,35 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
         };
     };
 
+    // Calculate the Simple Moving Average over a period of time
+    const calculateSMA = () => {
 
+    }
+
+    // Calculate the Exponential Moving Average over a period of time
+    const calculateEMA = () => {
+
+    }
+
+    // Calculate the Bollinger Bands over a period of time
+    const calculateBBANDS = () => {
+
+    }
+
+    // Calculate the MACD over a period of time
+    const calculateMACD = () => {
+
+    }
+
+    // Calculate the Stochastic Oscillator over a period of time
+    const calculateSTOCH = () => {
+
+    }
+
+    // Calculate the Relative Strength Index over a period of time
+    const calculateRSI = () => {
+
+    }
 
     // When the user changes the timeframe of the stock, update the graph
     const handleTime = (time) => {
@@ -207,6 +239,10 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
                         calculateSMA={calculateSMA}
                         calculateEMA={calculateEMA}
                         calculateBBANDS={calculateBBANDS}
+                        calculateMACD={calculateMACD}
+                        calculateSTOCH={calculateSTOCH}
+                        calculateRSI={calculateRSI}
+                        setTechnicalChange={setTechnicalChange}
                     />
                 </div >
             );
@@ -227,6 +263,10 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
                         calculateSMA={calculateSMA}
                         calculateEMA={calculateEMA}
                         calculateBBANDS={calculateBBANDS}
+                        calculateMACD={calculateMACD}
+                        calculateSTOCH={calculateSTOCH}
+                        calculateRSI={calculateRSI}
+                        setTechnicalChange={setTechnicalChange}
                     />
                 </div >
             );
@@ -250,6 +290,10 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
                         calculateSMA={calculateSMA}
                         calculateEMA={calculateEMA}
                         calculateBBANDS={calculateBBANDS}
+                        calculateMACD={calculateMACD}
+                        calculateSTOCH={calculateSTOCH}
+                        calculateRSI={calculateRSI}
+                        setTechnicalChange={setTechnicalChange}
                     />
                 </div >
             );
@@ -270,11 +314,14 @@ function Stock({ stock, handleTimeChange, handleStockChange, user, handleStockMo
                         calculateSMA={calculateSMA}
                         calculateEMA={calculateEMA}
                         calculateBBANDS={calculateBBANDS}
+                        calculateMACD={calculateMACD}
+                        calculateSTOCH={calculateSTOCH}
+                        calculateRSI={calculateRSI}
+                        setTechnicalChange={setTechnicalChange}
                     />
                 </div >
             );
         }
-
     }
 }
 

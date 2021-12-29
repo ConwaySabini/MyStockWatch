@@ -5,6 +5,7 @@ import './StockHub.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import Stock from '../Stock/Stock';
+import { set } from 'mongoose';
 const axios = require('axios').default;
 
 // Component to display all stocks and the forms to add/edit stocks
@@ -26,6 +27,10 @@ const StockHub = ({ user }) => {
     const [stockChange, setStockChange] = useState(false);
     // when the technical analysis is changed of a stock this state is changed to reflect that change
     const [technicalChange, setTechnicalChange] = useState(false);
+    // set the technical analysis to be displayed
+    const [ta, setTA] = useState('');
+    // set the technical analysis to be displayed
+    const [taData, setTAData] = useState({});
     // the current stock to be modified
     const [currentStock, setCurrentStock] = useState({});
     // the current favorite to be modified
@@ -42,6 +47,7 @@ const StockHub = ({ user }) => {
     const [showHero, setShowHero] = useState(true);
     // flag for updating the stocks on the database
     const [updateStocks, setUpdateStocks] = useState(false);
+
     // server url to update favorites
     const UPDATE_FAVORITES = process.env.REACT_APP_UPDATE_FAVORITES;
     // server url to update lists
@@ -143,8 +149,8 @@ const StockHub = ({ user }) => {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/macdext',
         params: {
-            interval: '1min',
-            symbol: 'AAPL',
+            interval: `${timeline}`,
+            symbol: `${symbol}`,
             slow_period: '26',
             fast_ma_type: 'SMA',
             outputsize: '30',
@@ -167,8 +173,8 @@ const StockHub = ({ user }) => {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/sma',
         params: {
-            symbol: 'AAPL',
-            interval: '1min',
+            symbol: `${symbol}`,
+            interval: `${timeline}`,
             series_type: 'close',
             format: 'json',
             outputsize: '30',
@@ -185,8 +191,8 @@ const StockHub = ({ user }) => {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/ema',
         params: {
-            interval: '1min',
-            symbol: 'AAPL',
+            interval: `${timeline}`,
+            symbol: `${symbol}`,
             time_period: '9',
             outputsize: '30',
             format: 'json',
@@ -204,8 +210,8 @@ const StockHub = ({ user }) => {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/bbands',
         params: {
-            interval: '1min',
-            symbol: 'AAPL',
+            interval: `${timeline}`,
+            symbol: `${symbol}`,
             format: 'json',
             outputsize: '30',
             time_period: '20',
@@ -226,8 +232,8 @@ const StockHub = ({ user }) => {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/rsi',
         params: {
-            symbol: 'AAPL',
-            interval: '1min',
+            symbol: `${symbol}`,
+            interval: `${timeline}`,
             outputsize: '30',
             series_type: 'close',
             time_period: '14',
@@ -244,8 +250,8 @@ const StockHub = ({ user }) => {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/stoch',
         params: {
-            interval: '1min',
-            symbol: 'AAPL',
+            interval: `${timeline}`,
+            symbol: `${symbol}`,
             outputsize: '30',
             slow_d_period: '3',
             format: 'json',
@@ -307,6 +313,41 @@ const StockHub = ({ user }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stockChange]);
 
+    useEffect(() => {
+        // Fetches the technical data
+        const addTechnicalAnalysis = async () => {
+            setLoading(true);
+            try {
+                // fetch the data
+                const response = await axios.request(`${ta}`);
+                // handle error
+                if (response.data.status === "error") {
+                    setSymbol('');
+                    console.log(response.data.message);
+                    setLoading(false);
+                } else {
+                    // TODO pass data down to stock component 
+                    setTAData(response.data);
+                    // cleanup
+                    setSymbol('');
+                    setLoading(false);
+                }
+                // handle error
+            } catch (error) {
+                console.error(error);
+                setSymbol('');
+                setLoading(false);
+            }
+        }
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        } else {
+            addTechnicalAnalysis();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [technicalChange]);
+
     // Fetches the stock data with the symbol and displays is in a graph
     const addStockData = async () => {
         setLoading(true);
@@ -328,31 +369,6 @@ const StockHub = ({ user }) => {
                 }
                 // cleanup
                 setUpdateStocks(!updateStocks);
-                setSymbol('');
-                setLoading(false);
-            }
-            // handle error
-        } catch (error) {
-            console.error(error);
-            setSymbol('');
-            setLoading(false);
-        }
-    }
-
-    // Fetches the technical data
-    const addTechnicalAnalysis = async (taOptions) => {
-        setLoading(true);
-        try {
-            // fetch the data
-            const response = await axios.request(taOptions);
-            // handle error
-            if (response.data.status === "error") {
-                setSymbol('');
-                console.log(response.data.message);
-                setLoading(false);
-            } else {
-                // cleanup
-                // setUpdateStocks(!updateStocks);
                 setSymbol('');
                 setLoading(false);
             }
@@ -396,6 +412,15 @@ const StockHub = ({ user }) => {
     // When user changes timeline change state to reflect change
     const handleStockChange = (time) => {
         setStockChange(!stockChange);
+    }
+
+    // When user wants technical data set the variables
+    const handleTechnicalChange = (stock, type) => {
+        setCurrentStock(stock);
+        setSymbol(stock.symbol);
+        setTimeline(stock.timeline);
+        setTA(type);
+        setTechnicalChange(!technicalChange);
     }
 
     // Change symbol state to match with the input 
@@ -497,36 +522,6 @@ const StockHub = ({ user }) => {
     // function to hide the instructions
     const toggleHero = () => {
         setShowHero(!showHero);
-    }
-
-    // Calculate the Simple Moving Average over a period of time
-    const calculateSMA = (period) => {
-        //TODO set the timeline
-    }
-
-    // Calculate the Exponential Moving Average over a period of time
-    const calculateEMA = (period) => {
-
-    }
-
-    // Calculate the Bollinger Bands over a period of time
-    const calculateBBANDS = (period) => {
-
-    }
-
-    // Calculate the MACD over a period of time
-    const calculateMACD = (period) => {
-
-    }
-
-    // Calculate the Stochastic Oscillator over a period of time
-    const calculateSTOCH = (period) => {
-
-    }
-
-    // Calculate the Relative Strength Index over a period of time
-    const calculateRSI = (period) => {
-
     }
 
     if (!modal && !stockModal) {
@@ -649,12 +644,8 @@ const StockHub = ({ user }) => {
                     handleStockChange={handleStockChange}
                     user={user}
                     handleStockModal={handleStockModal}
-                    calculateSMA={calculateSMA}
-                    calculateEMA={calculateEMA}
-                    calculateBBANDS={calculateBBANDS}
-                    calculateMACD={calculateMACD}
-                    calculateSTOCH={calculateSTOCH}
-                    calculateRSI={calculateRSI}
+                    setTechnicalChange={setTechnicalChange}
+                    taData={taData}
                 />
             </div >
         );
@@ -673,12 +664,8 @@ const StockHub = ({ user }) => {
                         user={user}
                         handleStockModal={handleStockModal}
                         id="viewing-stock"
-                        calculateSMA={calculateSMA}
-                        calculateEMA={calculateEMA}
-                        calculateBBANDS={calculateBBANDS}
-                        calculateMACD={calculateMACD}
-                        calculateSTOCH={calculateSTOCH}
-                        calculateRSI={calculateRSI}
+                        setTechnicalChange={setTechnicalChange}
+                        taData={taData}
                     />
                     <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
                     {/* </div> */}

@@ -3,8 +3,8 @@ import { StockContext } from "../../context/StockContext";
 import Stock from "./../Stock/Stock";
 
 // Component to display a list of stocks
-const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user, handleStockModal,
-    calculateEMA, calculateSMA, calculateRSI, calculateBBANDS, calculateSTOCH, calculateMACD }) => {
+const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user,
+    handleStockModal, taData, setTechnicalChange }) => {
     const { stocks } = useContext(StockContext);
 
     // If there are no stocks to filter display all stocks
@@ -21,12 +21,8 @@ const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user, h
                                 handleStockChange={handleStockChange}
                                 user={user}
                                 handleStockModal={handleStockModal}
-                                calculateSMA={calculateSMA}
-                                calculateEMA={calculateEMA}
-                                calculateBBANDS={calculateBBANDS}
-                                calculateMACD={calculateMACD}
-                                calculateSTOCH={calculateSTOCH}
-                                calculateRSI={calculateRSI}
+                                setTechnicalChange={setTechnicalChange}
+                                taData={taData}
                             />;
                         })}
                     </div>
@@ -62,12 +58,8 @@ const StockList = ({ handleTimeChange, filterSymbols, handleStockChange, user, h
                                 handleStockChange={handleStockChange}
                                 user={user}
                                 handleStockModal={handleStockModal}
-                                calculateSMA={calculateSMA}
-                                calculateEMA={calculateEMA}
-                                calculateBBANDS={calculateBBANDS}
-                                calculateMACD={calculateMACD}
-                                calculateSTOCH={calculateSTOCH}
-                                calculateRSI={calculateRSI}
+                                setTechnicalChange={setTechnicalChange}
+                                taData={taData}
                             />;
                         })}
                     </div>
