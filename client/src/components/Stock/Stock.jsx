@@ -225,6 +225,7 @@ function Stock({ stock, user,
             setLoading(true);
             try {
                 // fetch the data 
+                console.log("making request for update");
                 const response = await axios.request(options);
                 // handle error
                 if (response.data.status === "error") {
@@ -253,13 +254,13 @@ function Stock({ stock, user,
                 setLoading(false);
             }
         }
-        changeStockData();
-        // if (firstRender.current) {
-        //     firstRender.current = false;
-        //     return;
-        // } else {
-        //     changeStockData();
-        // }
+
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        } else {
+            changeStockData();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stockChange]);
 
@@ -293,6 +294,7 @@ function Stock({ stock, user,
                         default:
                             break;
                     }
+                    console.log("making request");
                     const response = await axios.request(dataOptions);
                     // debug
                     console.log("TA DATA: ", response.data);
@@ -373,6 +375,7 @@ function Stock({ stock, user,
                 smaValues[taIndex] = foundTAData.data.values[i].sma;
                 taIndex--;
             }
+            console.log("smaValues: ", smaValues);
             setSMA(true);
         }
     }
@@ -408,32 +411,32 @@ function Stock({ stock, user,
         switch (type) {
             case "EMA":
                 handleTechnicalChange(type);
-                handleUpdate(stock.timeline);
+                //handleUpdate(stock.timeline);
                 calculateEMA();
                 break;
             case "SMA":
                 handleTechnicalChange(type);
-                handleUpdate(stock.timeline);
+                //handleUpdate(stock.timeline);
                 calculateSMA();
                 break;
             case "RSI":
                 handleTechnicalChange(type);
-                handleUpdate(stock.timeline);
+                //handleUpdate(stock.timeline);
                 calculateRSI();
                 break;
             case "BBANDS":
                 handleTechnicalChange(type);
-                handleUpdate(stock.timeline);
+                //handleUpdate(stock.timeline);
                 calculateBBANDS();
                 break;
             case "STOCH":
                 handleTechnicalChange(type);
-                handleUpdate(stock.timeline);
+                //handleUpdate(stock.timeline);
                 calculateSTOCH();
                 break;
             case "MACD":
                 handleTechnicalChange(type);
-                handleUpdate(stock.timeline);
+                //handleUpdate(stock.timeline);
                 calculateMACD();
                 break;
             default:
@@ -568,7 +571,7 @@ function Stock({ stock, user,
             ],
         };
 
-        if (sma) {
+        if (smaValues.length) {
             const data = {
                 id: 2,
                 label: "SMA",
@@ -587,14 +590,9 @@ function Stock({ stock, user,
                 borderWidth: 4,
             };
             result.datasets.push(data);
-            console.log("smaValues", smaValues);
-            console.log("SMA", result.datasets);
+            console.log("smaValuesInGraph", smaValues);
             setSMA(false);
         }
-
-
-
-
         // TODO fix bug where it only displays sma for a second
 
         // return the data for the graph
