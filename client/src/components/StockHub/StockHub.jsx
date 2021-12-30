@@ -10,8 +10,7 @@ const axios = require('axios').default;
 // Component to display all stocks and the forms to add/edit stocks
 const StockHub = ({ user }) => {
     // context api to modify data across components
-    const { stocks, addStock, clearStocks, editStock, findFavorite,
-        editFavorite, findSymbol, setNewStocks, addTAData } = useContext(StockContext);
+    const { stocks, addStock, clearStocks, findSymbol, setNewStocks } = useContext(StockContext);
     // symbol of the stock to be searched
     const [symbol, setSymbol] = useState('');
     // array of symbols to filter from the stock list
@@ -22,16 +21,6 @@ const StockHub = ({ user }) => {
     const [loading, setLoading] = useState(false);
     // timeframe of the stock to graph
     const [timeline, setTimeline] = useState('1day');
-    // when the timeline is changed of a stock this state is changed to reflect that change
-    const [stockChange, setStockChange] = useState(false);
-    // when the technical analysis is changed of a stock this state is changed to reflect that change
-    const [technicalChange, setTechnicalChange] = useState(false);
-    // set the technical analysis to be displayed
-    const [ta, setTA] = useState('');
-    // the current stock to be modified
-    const [currentStock, setCurrentStock] = useState({});
-    // the current favorite to be modified
-    const [currentFavorite, setCurrentFavorite] = useState({});
     // when sorting the stocks decide which direction to sort
     const [descending, setDescending] = useState(true);
     // modal for confirming events
@@ -109,135 +98,6 @@ const StockHub = ({ user }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (user !== undefined) {
-            // update the stock data for the user
-            const updateStockData = async () => {
-                setLoading(true);
-                try {
-                    // update the stock data 
-                    await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
-                    setLoading(false);
-                    // handle error
-                } catch (error) {
-                    console.error(error);
-                    setLoading(false);
-                }
-            }
-            updateStockData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateStocks]);
-
-    // ref to not call function on first render
-    const firstRender = useRef(true);
-
-    useEffect(() => {
-        // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
-        const changeStockData = async () => {
-            setLoading(true);
-            try {
-                // fetch the data 
-                const response = await axios.request(options);
-                // handle error
-                if (response.data.status === "error") {
-                    setSymbol('');
-                    setLoading(false);
-                    console.log(response.data.message);
-                } else {
-                    // get the stock and calculate the percent change over the time period
-                    const percentChange = calculatePercentChange(response.data);
-                    // edit the stock being modified
-                    editStock(symbol, response.data, percentChange,
-                        timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
-                    if (currentFavorite !== undefined) {
-                        // edit the favorite in the sidebar to match the stock being modified
-                        editFavorite(symbol, response.data, percentChange,
-                            timeline, currentFavorite.id, UPDATE_FAVORITES, user);
-                    }
-                    // cleanup function
-                    setUpdateStocks(!updateStocks);
-                    setSymbol('');
-                    setLoading(false);
-                }
-                // handle error
-            } catch (error) {
-                console.error(error);
-                setSymbol('');
-                setLoading(false);
-            }
-        }
-        if (firstRender.current) {
-            firstRender.current = false;
-            return;
-        } else {
-            changeStockData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stockChange]);
-
-    useEffect(() => {
-        // Fetches the technical data
-        const addTechnicalAnalysis = async () => {
-            setLoading(true);
-            try {
-                // fetch the data
-                let dataOptions = {};
-                if (ta !== '') {
-                    switch (ta) {
-                        case 'SMA':
-                            dataOptions = SMA;
-                            break;
-                        case 'EMA':
-                            dataOptions = EMA;
-                            break;
-                        case 'BBANDS':
-                            dataOptions = BBANDS;
-                            break;
-                        case 'RSI':
-                            dataOptions = RSI;
-                            break;
-                        case 'STOCH':
-                            dataOptions = STOCH;
-                            break;
-                        case 'MACD':
-                            dataOptions = MACD;
-                            break;
-                        default:
-                            break;
-                    }
-                    const response = await axios.request(dataOptions);
-                    // debug
-                    console.log("TA DATA: ", response.data);
-                    // handle error
-                    if (response.data.status === "error") {
-                        setSymbol('');
-                        console.log(response.data.message);
-                        setLoading(false);
-                    } else {
-                        // TODO set data in context API
-                        addTAData(symbol, timeline, ta, response.data);
-                        // cleanup
-                        setSymbol('');
-                        setLoading(false);
-                    }
-                }
-                // handle error
-            } catch (error) {
-                console.error(error);
-                setSymbol('');
-                setLoading(false);
-            }
-        }
-        if (firstRender.current) {
-            firstRender.current = false;
-            return;
-        } else {
-            addTechnicalAnalysis();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [technicalChange]);
-
     // Fetches the stock data with the symbol and displays is in a graph
     const addStockData = async () => {
         setLoading(true);
@@ -281,129 +141,6 @@ const StockHub = ({ user }) => {
         }
     };
 
-    // Moving Average Convergence Divergence Extended(MACDEXT) 
-    // gives greater control over MACD input parameters. MACDEXT has an unstable period ~ 100.
-    const MACD = {
-        method: 'GET',
-        url: 'https://twelve-data1.p.rapidapi.com/macdext',
-        params: {
-            interval: `${timeline}`,
-            symbol: `${symbol}`,
-            slow_period: '26',
-            fast_ma_type: 'SMA',
-            outputsize: '30',
-            fast_period: '12',
-            slow_ma_type: 'SMA',
-            signal_period: '9',
-            format: 'json',
-            series_type: 'close',
-            signal_ma_type: 'SMA'
-        },
-        headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-        }
-    };
-
-    // Simple Moving Average(SMA) is an arithmetic moving average calculated by adding 
-    // the latest closing prices and then dividing them by the number of time periods.
-    const SMA = {
-        method: 'GET',
-        url: 'https://twelve-data1.p.rapidapi.com/sma',
-        params: {
-            symbol: `${symbol}`,
-            interval: `${timeline}`,
-            series_type: 'close',
-            format: 'json',
-            outputsize: '30',
-            time_period: '9'
-        },
-        headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-        }
-    };
-
-    // Exponential Moving Average(EMA) places greater importance on recent data points than the normal Moving Average(MA).
-    const EMA = {
-        method: 'GET',
-        url: 'https://twelve-data1.p.rapidapi.com/ema',
-        params: {
-            interval: `${timeline}`,
-            symbol: `${symbol}`,
-            time_period: '9',
-            outputsize: '30',
-            format: 'json',
-            series_type: 'close'
-        },
-        headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-        }
-    };
-
-    // Bollinger Bands®(BBANDS) are volatility bands located above and below a moving average. 
-    // The volatility size parameter depends on standard deviation.
-    const BBANDS = {
-        method: 'GET',
-        url: 'https://twelve-data1.p.rapidapi.com/bbands',
-        params: {
-            interval: `${timeline}`,
-            symbol: `${symbol}`,
-            format: 'json',
-            outputsize: '30',
-            time_period: '20',
-            ma_type: 'SMA',
-            series_type: 'close',
-            sd: '2'
-        },
-        headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-        }
-    };
-
-    // Relative Strength Index(RSI) is a momentum indicator, 
-    // which calculates the magnitude of a price change to assess 
-    // the overbought and oversold conditions in the price of an asset.
-    const RSI = {
-        method: 'GET',
-        url: 'https://twelve-data1.p.rapidapi.com/rsi',
-        params: {
-            symbol: `${symbol}`,
-            interval: `${timeline}`,
-            outputsize: '30',
-            series_type: 'close',
-            time_period: '14',
-            format: 'json'
-        },
-        headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-        }
-    };
-
-    // Stochastic Oscillator(STOCH) is used to decide if the price trend is strong.
-    const STOCH = {
-        method: 'GET',
-        url: 'https://twelve-data1.p.rapidapi.com/stoch',
-        params: {
-            interval: `${timeline}`,
-            symbol: `${symbol}`,
-            outputsize: '30',
-            slow_d_period: '3',
-            format: 'json',
-            fast_k_period: '14',
-            slow_dma_type: 'SMA',
-            slow_kma_type: 'SMA',
-            slow_k_period: '1'
-        },
-        headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
-        }
-    };
-
     // Calculates the percent change of the stock over the time period and return  
     // it rounded to the nearest hundreth place
     const calculatePercentChange = (response) => {
@@ -421,30 +158,6 @@ const StockHub = ({ user }) => {
     const handleSubmit = e => {
         e.preventDefault();
         addStockData();
-    }
-
-    // Edit the stock being modified for the new timeline of the graph
-    const handleTimeChange = (time, stock) => {
-        setSymbol(stock.symbol);
-        setCurrentStock(stock);
-        setTimeline(time);
-        // get favorite corresponding to the stock being modified if available
-        const favorite = findFavorite(stock.symbol);
-        setCurrentFavorite(favorite);
-    }
-
-    // When user changes timeline change state to reflect change
-    const handleStockChange = (time) => {
-        setStockChange(!stockChange);
-    }
-
-    // When user wants technical data set the variables
-    const handleTechnicalChange = (stock, type) => {
-        setCurrentStock(stock);
-        setSymbol(stock.symbol);
-        setTimeline(stock.timeline);
-        setTA(type);
-        setTechnicalChange(!technicalChange);
     }
 
     // Change symbol state to match with the input 
@@ -663,12 +376,9 @@ const StockHub = ({ user }) => {
                 </div>
                 {/* render the list of stocks and pass down important functions to change aspects of the stocks */}
                 <StockList
-                    handleTimeChange={handleTimeChange}
                     filterSymbols={filterSymbols}
-                    handleStockChange={handleStockChange}
                     user={user}
                     handleStockModal={handleStockModal}
-                    handleTechnicalChange={handleTechnicalChange}
                 />
             </div >
         );
@@ -682,12 +392,9 @@ const StockHub = ({ user }) => {
                     <Stock
                         stock={stockView}
                         key={stockView.id}
-                        handleTimeChange={handleTimeChange}
-                        handleStockChange={handleStockChange}
                         user={user}
                         handleStockModal={handleStockModal}
                         id="viewing-stock"
-                        handleTechnicalChange={handleTechnicalChange}
                     />
                     <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
                     {/* </div> */}
