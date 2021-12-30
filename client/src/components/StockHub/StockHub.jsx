@@ -11,7 +11,7 @@ const axios = require('axios').default;
 const StockHub = ({ user }) => {
     // context api to modify data across components
     const { stocks, addStock, clearStocks, editStock, findFavorite,
-        editFavorite, findSymbol, setNewStocks } = useContext(StockContext);
+        editFavorite, findSymbol, setNewStocks, addTAData } = useContext(StockContext);
     // symbol of the stock to be searched
     const [symbol, setSymbol] = useState('');
     // array of symbols to filter from the stock list
@@ -28,8 +28,6 @@ const StockHub = ({ user }) => {
     const [technicalChange, setTechnicalChange] = useState(false);
     // set the technical analysis to be displayed
     const [ta, setTA] = useState('');
-    // set the technical analysis to be displayed
-    const [taData, setTAData] = useState({});
     // the current stock to be modified
     const [currentStock, setCurrentStock] = useState({});
     // the current favorite to be modified
@@ -130,6 +128,147 @@ const StockHub = ({ user }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [updateStocks]);
+
+    // ref to not call function on first render
+    const firstRender = useRef(true);
+
+    useEffect(() => {
+        // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
+        const changeStockData = async () => {
+            setLoading(true);
+            try {
+                // fetch the data 
+                const response = await axios.request(options);
+                // handle error
+                if (response.data.status === "error") {
+                    setSymbol('');
+                    setLoading(false);
+                    console.log(response.data.message);
+                } else {
+                    // get the stock and calculate the percent change over the time period
+                    const percentChange = calculatePercentChange(response.data);
+                    // edit the stock being modified
+                    editStock(symbol, response.data, percentChange,
+                        timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
+                    if (currentFavorite !== undefined) {
+                        // edit the favorite in the sidebar to match the stock being modified
+                        editFavorite(symbol, response.data, percentChange,
+                            timeline, currentFavorite.id, UPDATE_FAVORITES, user);
+                    }
+                    // cleanup function
+                    setUpdateStocks(!updateStocks);
+                    setSymbol('');
+                    setLoading(false);
+                }
+                // handle error
+            } catch (error) {
+                console.error(error);
+                setSymbol('');
+                setLoading(false);
+            }
+        }
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        } else {
+            changeStockData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stockChange]);
+
+    useEffect(() => {
+        // Fetches the technical data
+        const addTechnicalAnalysis = async () => {
+            setLoading(true);
+            try {
+                // fetch the data
+                let dataOptions = {};
+                if (ta !== '') {
+                    switch (ta) {
+                        case 'SMA':
+                            dataOptions = SMA;
+                            break;
+                        case 'EMA':
+                            dataOptions = EMA;
+                            break;
+                        case 'BBANDS':
+                            dataOptions = BBANDS;
+                            break;
+                        case 'RSI':
+                            dataOptions = RSI;
+                            break;
+                        case 'STOCH':
+                            dataOptions = STOCH;
+                            break;
+                        case 'MACD':
+                            dataOptions = MACD;
+                            break;
+                        default:
+                            break;
+                    }
+                    const response = await axios.request(dataOptions);
+                    // debug
+                    console.log("TA DATA: ", response.data);
+                    // handle error
+                    if (response.data.status === "error") {
+                        setSymbol('');
+                        console.log(response.data.message);
+                        setLoading(false);
+                    } else {
+                        // TODO set data in context API
+                        addTAData(symbol, timeline, ta, response.data);
+                        // cleanup
+                        setSymbol('');
+                        setLoading(false);
+                    }
+                }
+                // handle error
+            } catch (error) {
+                console.error(error);
+                setSymbol('');
+                setLoading(false);
+            }
+        }
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        } else {
+            addTechnicalAnalysis();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [technicalChange]);
+
+    // Fetches the stock data with the symbol and displays is in a graph
+    const addStockData = async () => {
+        setLoading(true);
+        try {
+            // fetch the data
+            const response = await axios.request(options);
+            // handle error
+            if (response.data.status === "error") {
+                setSymbol('');
+                console.log(response.data.message);
+                setLoading(false);
+            } else {
+                // get the stock and calculate the percent change over the time period
+                const foundStock = findSymbol(symbol);
+                if (foundStock === undefined) {
+                    const percentChange = calculatePercentChange(response.data);
+                    // add the stock to the list and context API
+                    addStock(symbol, response.data, percentChange, timeline);
+                }
+                // cleanup
+                setUpdateStocks(!updateStocks);
+                setSymbol('');
+                setLoading(false);
+            }
+            // handle error
+        } catch (error) {
+            console.error(error);
+            setSymbol('');
+            setLoading(false);
+        }
+    }
 
     // Axios options for getting stock data from 12 Data API
     const options = {
@@ -264,149 +403,6 @@ const StockHub = ({ user }) => {
             'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
         }
     };
-
-    // ref to not call function on first render
-    const firstRender = useRef(true);
-
-    useEffect(() => {
-        // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
-        const changeStockData = async () => {
-            setLoading(true);
-            try {
-                // fetch the data 
-                const response = await axios.request(options);
-                // handle error
-                if (response.data.status === "error") {
-                    setSymbol('');
-                    setLoading(false);
-                    console.log(response.data.message);
-                } else {
-                    // get the stock and calculate the percent change over the time period
-                    const percentChange = calculatePercentChange(response.data);
-                    // edit the stock being modified
-                    editStock(symbol, response.data, percentChange,
-                        timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
-                    if (currentFavorite !== undefined) {
-                        // edit the favorite in the sidebar to match the stock being modified
-                        editFavorite(symbol, response.data, percentChange,
-                            timeline, currentFavorite.id, UPDATE_FAVORITES, user);
-                    }
-                    // cleanup function
-                    setUpdateStocks(!updateStocks);
-                    setSymbol('');
-                    setLoading(false);
-                }
-                // handle error
-            } catch (error) {
-                console.error(error);
-                setSymbol('');
-                setLoading(false);
-            }
-        }
-        if (firstRender.current) {
-            firstRender.current = false;
-            return;
-        } else {
-            changeStockData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stockChange]);
-
-    useEffect(() => {
-        // Fetches the technical data
-        const addTechnicalAnalysis = async () => {
-            setLoading(true);
-            try {
-                // fetch the data
-                if (ta !== '') {
-                    let dataOptions = {};
-                    switch (ta) {
-                        case 'SMA':
-                            dataOptions = SMA;
-                            break;
-                        case 'EMA':
-                            dataOptions = EMA;
-                            break;
-                        case 'BBANDS':
-                            dataOptions = BBANDS;
-                            break;
-                        case 'RSI':
-                            dataOptions = RSI;
-                            break;
-                        case 'STOCH':
-                            dataOptions = STOCH;
-                            break;
-                        case 'MACD':
-                            dataOptions = MACD;
-                            break;
-                        default:
-                            break;
-                    }
-                    // TODO fix symbol
-                    console.log("symbol", symbol);
-                    const response = await axios.request(dataOptions);
-                    // debug
-                    console.log("TA DATA: ", response.data);
-                    // handle error
-                    if (response.data.status === "error") {
-                        setSymbol('');
-                        console.log(response.data.message);
-                        setLoading(false);
-                    } else {
-                        // TODO pass data down to stock component 
-                        setTAData(response.data);
-                        // cleanup
-                        setSymbol('');
-                        setLoading(false);
-                    }
-                }
-                // handle error
-            } catch (error) {
-                console.error(error);
-                setSymbol('');
-                setLoading(false);
-            }
-        }
-        if (firstRender.current) {
-            firstRender.current = false;
-            return;
-        } else {
-            addTechnicalAnalysis();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [technicalChange]);
-
-    // Fetches the stock data with the symbol and displays is in a graph
-    const addStockData = async () => {
-        setLoading(true);
-        try {
-            // fetch the data
-            const response = await axios.request(options);
-            // handle error
-            if (response.data.status === "error") {
-                setSymbol('');
-                console.log(response.data.message);
-                setLoading(false);
-            } else {
-                // get the stock and calculate the percent change over the time period
-                const foundStock = findSymbol(symbol);
-                if (foundStock === undefined) {
-                    const percentChange = calculatePercentChange(response.data);
-                    // add the stock to the list and context API
-                    addStock(symbol, response.data, percentChange, timeline);
-                }
-                // cleanup
-                setUpdateStocks(!updateStocks);
-                setSymbol('');
-                setLoading(false);
-            }
-            // handle error
-        } catch (error) {
-            console.error(error);
-            setSymbol('');
-            setLoading(false);
-        }
-    }
 
     // Calculates the percent change of the stock over the time period and return  
     // it rounded to the nearest hundreth place

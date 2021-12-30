@@ -1,6 +1,7 @@
 import './Stock.css';
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Line } from "react-chartjs-2";
+import { StockContext } from "../../context/StockContext";
 import useDimensions from "react-cool-dimensions";
 import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
 import StockButtons from './StockButtons';
@@ -8,6 +9,8 @@ import StockButtons from './StockButtons';
 // Component to display the individual stock
 function Stock({ stock, handleTimeChange, handleStockChange, user,
     handleStockModal, handleTechnicalChange }) {
+    // context api to modify data across components
+    const { findTAData } = useContext(StockContext);
     // State to track which chart to display (simple or technical)
     const [simpleChart, setSimpleChart] = useState(true);
     // loading state to have components wait for data to load
@@ -168,7 +171,23 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
 
     // Calculate the Simple Moving Average over a period of time
     const calculateSMA = () => {
+        const foundTAData = findTAData(stock.symbol, "SMA");
+        console.log("foundTAData: ", foundTAData);
+        if (foundTAData) {
+            // TODO display data to chart
+            // TODO  test update stock data before displaying
+            // prices of the stock for the graph
+            const smaValues = [];
+            // 30 dates and prices for the graph
+            let taIndex = foundTAData.data.values.length - 1;
 
+            // Loop through each date and price for the stock and add it to the arrays
+            for (let i = 0; i < foundTAData.data.values.length; i++) {
+                smaValues[taIndex] = foundTAData.data.values[i].close;
+                taIndex--;
+            }
+
+        }
     }
 
     // Calculate the Exponential Moving Average over a period of time
@@ -194,6 +213,46 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
     // Calculate the Relative Strength Index over a period of time
     const calculateRSI = () => {
 
+    }
+
+    // function to handle the technical change
+    const handleTADisplay = (type) => {
+        setLoading(true);
+        switch (type) {
+            case "EMA":
+                handleTechnicalChange(stock, type);
+                handleUpdate(stock.timeline);
+                calculateEMA();
+                break;
+            case "SMA":
+                handleTechnicalChange(stock, type);
+                handleUpdate(stock.timeline);
+                calculateSMA();
+                break;
+            case "RSI":
+                handleTechnicalChange(stock, type);
+                handleUpdate(stock.timeline);
+                calculateRSI();
+                break;
+            case "BBANDS":
+                handleTechnicalChange(stock, type);
+                handleUpdate(stock.timeline);
+                calculateBBANDS();
+                break;
+            case "STOCH":
+                handleTechnicalChange(stock, type);
+                handleUpdate(stock.timeline);
+                calculateSTOCH();
+                break;
+            case "MACD":
+                handleTechnicalChange(stock, type);
+                handleUpdate(stock.timeline);
+                calculateMACD();
+                break;
+            default:
+                break;
+        }
+        setLoading(false);
     }
 
     // When the user changes the timeframe of the stock, update the graph
@@ -232,13 +291,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         stock={stock}
                         user={user}
                         handleStockModal={handleStockModal}
-                        calculateSMA={calculateSMA}
-                        calculateEMA={calculateEMA}
-                        calculateBBANDS={calculateBBANDS}
-                        calculateMACD={calculateMACD}
-                        calculateSTOCH={calculateSTOCH}
-                        calculateRSI={calculateRSI}
-                        handleTechnicalChange={handleTechnicalChange}
+                        handleTADisplay={handleTADisplay}
                     />
                 </div >
             );
@@ -256,13 +309,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         stock={stock}
                         user={user}
                         handleStockModal={handleStockModal}
-                        calculateSMA={calculateSMA}
-                        calculateEMA={calculateEMA}
-                        calculateBBANDS={calculateBBANDS}
-                        calculateMACD={calculateMACD}
-                        calculateSTOCH={calculateSTOCH}
-                        calculateRSI={calculateRSI}
-                        handleTechnicalChange={handleTechnicalChange}
+                        handleTADisplay={handleTADisplay}
                     />
                 </div >
             );
@@ -283,13 +330,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         stock={stock}
                         user={user}
                         handleStockModal={handleStockModal}
-                        calculateSMA={calculateSMA}
-                        calculateEMA={calculateEMA}
-                        calculateBBANDS={calculateBBANDS}
-                        calculateMACD={calculateMACD}
-                        calculateSTOCH={calculateSTOCH}
-                        calculateRSI={calculateRSI}
-                        handleTechnicalChange={handleTechnicalChange}
+                        handleTADisplay={handleTADisplay}
                     />
                 </div >
             );
@@ -307,13 +348,7 @@ function Stock({ stock, handleTimeChange, handleStockChange, user,
                         stock={stock}
                         user={user}
                         handleStockModal={handleStockModal}
-                        calculateSMA={calculateSMA}
-                        calculateEMA={calculateEMA}
-                        calculateBBANDS={calculateBBANDS}
-                        calculateMACD={calculateMACD}
-                        calculateSTOCH={calculateSTOCH}
-                        calculateRSI={calculateRSI}
-                        handleTechnicalChange={handleTechnicalChange}
+                        handleTADisplay={handleTADisplay}
                     />
                 </div >
             );

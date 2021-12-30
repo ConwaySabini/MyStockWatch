@@ -6,7 +6,7 @@ import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 //Component to render the buttons and handle changes to data
 function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user, handleUpdate, handleStockModal,
-    calculateEMA, calculateSMA, calculateRSI, calculateBBANDS, calculateSTOCH, calculateMACD, handleTechnicalChange }) {
+    handleTADisplay }) {
     // stock context api shared data across components
     const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
     // State to track which list to add the stock to
@@ -60,39 +60,7 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
         setLoading(false);
     }
 
-    // function to handle the technical change
-    const handleTADisplay = (type) => {
-        setLoading(true);
-        switch (type) {
-            case "EMA":
-                handleTechnicalChange(stock, type);
-                calculateEMA();
-                break;
-            case "SMA":
-                handleTechnicalChange(stock, type);
-                calculateSMA();
-                break;
-            case "RSI":
-                handleTechnicalChange(stock, type);
-                calculateRSI();
-                break;
-            case "BBANDS":
-                handleTechnicalChange(stock, type);
-                calculateBBANDS();
-                break;
-            case "STOCH":
-                handleTechnicalChange(stock, type);
-                calculateSTOCH();
-                break;
-            case "MACD":
-                handleTechnicalChange(stock, type);
-                calculateMACD();
-                break;
-            default:
-                break;
-        }
-        setLoading(false);
-    }
+
 
     return (
         <div className="stock-buttons">

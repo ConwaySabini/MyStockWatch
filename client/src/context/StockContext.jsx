@@ -57,7 +57,7 @@ const StockContextProvider = props => {
 
     // find taData
     const findTAData = (symbol, type) => {
-        return taData.find = (data => data.symbol === symbol && data.type === type);
+        return taData.find(data => data.symbol === symbol && data.type === type);
     }
 
     // Add favorites
@@ -343,6 +343,8 @@ const StockContextProvider = props => {
                 removeStockFromList,
                 taData,
                 addTAData,
+                findTAData,
+                removeTAData,
             }}
         >
             {props.children}
