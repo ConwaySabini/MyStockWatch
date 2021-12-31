@@ -1,5 +1,5 @@
 import './Stock.css';
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { StockContext } from "../../context/StockContext";
 import useDimensions from "react-cool-dimensions";
@@ -9,10 +9,9 @@ const axios = require('axios').default;
 
 // Component to display the individual stock
 function Stock({ stock, user,
-    handleStockModal }) {
+    handleStockModal, handleStockChange, handleTimeChange }) {
     // context api to modify data across components
-    const { findTAData, addTAData, stocks, editStock, findFavorite,
-        editFavorite, } = useContext(StockContext);
+    const { findTAData, addTAData } = useContext(StockContext);
 
     // State to track which chart to display (simple or technical)
     const [simpleChart, setSimpleChart] = useState(true);
@@ -22,12 +21,6 @@ function Stock({ stock, user,
     const [ta, setTA] = useState('');
     // when the technical analysis is changed of a stock this state is changed to reflect that change
     const [technicalChange, setTechnicalChange] = useState(false);
-    // flag for updating the stocks on the database
-    const [updateStocks, setUpdateStocks] = useState(false);
-    // when the timeline is changed of a stock this state is changed to reflect that change
-    const [stockChange, setStockChange] = useState(false);
-    // timeframe of the stock to graph
-    const [timeline, setTimeline] = useState('1day');
 
     // state to display SMA
     const [sma, setSMA] = useState(false);
@@ -42,13 +35,6 @@ function Stock({ stock, user,
     // state to display Stochastic Oscillator
     const [stoch, setStoch] = useState(false);
 
-    // server url to update favorites
-    const UPDATE_FAVORITES = process.env.REACT_APP_UPDATE_FAVORITES;
-    // server url to update lists
-    const UPDATE_LISTS = process.env.REACT_APP_UPDATE_LISTS;
-    // server url to update stocks
-    const UPDATE_STOCKS = process.env.REACT_APP_UPDATE_STOCKS;
-
     // Observe the size of the Stock Card for responsive design
     const { observe, width, height } = useDimensions({
         // breakpoints to change the size of the graph
@@ -61,17 +47,6 @@ function Stock({ stock, user,
             observe(); // To re-start observing the current target element
         },
     });
-
-    // Axios options for getting stock data from 12 Data API
-    const options = {
-        method: 'GET',
-        url: process.env.REACT_APP_RAPIDAPI_TIME_URL,
-        params: { interval: `${timeline}`, symbol: stock.symbol, format: 'json', outputsize: '30' },
-        headers: {
-            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
-            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
-        }
-    };
 
     // Moving Average Convergence Divergence Extended(MACDEXT) 
     // gives greater control over MACD input parameters. MACDEXT has an unstable period ~ 100.
@@ -197,74 +172,6 @@ function Stock({ stock, user,
     };
 
     useEffect(() => {
-        if (user !== undefined) {
-            // update the stock data for the user
-            const updateStockData = async () => {
-                setLoading(true);
-                try {
-                    // update the stock data 
-                    await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
-                    setLoading(false);
-                    // handle error
-                } catch (error) {
-                    console.error(error);
-                    setLoading(false);
-                }
-            }
-            updateStockData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateStocks]);
-
-    // ref to not call function on first render
-    const firstRender = useRef(true);
-
-    useEffect(() => {
-        // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
-        const changeStockData = async () => {
-            setLoading(true);
-            try {
-                // fetch the data 
-                console.log("making request for update");
-                const response = await axios.request(options);
-                // handle error
-                if (response.data.status === "error") {
-                    setLoading(false);
-                    console.log(response.data.message);
-                } else {
-                    // get the stock and calculate the percent change over the time period
-                    const percentChange = calculatePercentChange(response.data);
-                    // edit the stock being modified
-                    editStock(stock.symbol, response.data, percentChange,
-                        timeline, stock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
-                    // get favorite corresponding to the stock being modified if available
-                    const currentFavorite = findFavorite(stock.symbol);
-                    if (currentFavorite !== undefined) {
-                        // edit the favorite in the sidebar to match the stock being modified
-                        editFavorite(stock.symbol, response.data, percentChange,
-                            timeline, currentFavorite.id, UPDATE_FAVORITES, user);
-                    }
-                    // cleanup function
-                    setUpdateStocks(!updateStocks);
-                    setLoading(false);
-                }
-                // handle error
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
-            }
-        }
-
-        if (firstRender.current) {
-            firstRender.current = false;
-            return;
-        } else {
-            changeStockData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stockChange]);
-
-    useEffect(() => {
         // Fetches the technical data
         const addTechnicalAnalysis = async () => {
             setLoading(true);
@@ -304,6 +211,7 @@ function Stock({ stock, user,
                         console.log(response.data.message);
                         setLoading(false);
                     } else {
+                        const before = findTAData(stock.symbol, stock.timeline)
                         // TODO make sure this data replaces old data is rendered in the stock
                         addTAData(stock.symbol, stock.timeline, ta, response.data);
                         // cleanup
@@ -333,24 +241,6 @@ function Stock({ stock, user,
     const handleTechnicalChange = (type) => {
         setTA(type);
         setTechnicalChange(!technicalChange);
-    }
-
-    // When user changes timeline change state to reflect change
-    const handleStockChange = (time) => {
-        setStockChange(!stockChange);
-    }
-
-    // Calculates the percent change of the stock over the time period and return  
-    // it rounded to the nearest hundreth place
-    const calculatePercentChange = (response) => {
-        let priceSize = response.values.length;
-        let endPrice = response.values[0].close;
-        let startPrice = response.values[priceSize - 1].close;
-        let difference = endPrice - startPrice;
-        let percentChange = (difference / startPrice) * 100;
-        let percentChangeRounded = percentChange.toFixed(2);
-        percentChange = parseFloat(percentChangeRounded);
-        return percentChange;
     }
 
     // Simple moving average indicator
@@ -446,16 +336,9 @@ function Stock({ stock, user,
     }
 
     // When the user changes the timeframe of the stock, update the graph
-    const handleTime = (time) => {
-        setLoading(true);
-        setTimeline(time);
-        handleStockChange();
-        setLoading(false);
-    }
-
     const handleUpdate = (time) => {
         setLoading(true);
-        setTimeline(time);
+        handleTimeChange(time, stock);
         handleStockChange();
         setLoading(false);
     }
@@ -645,7 +528,6 @@ function Stock({ stock, user,
                     <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
                     <Line data={ChartData} options={graphOptions} />
                     <StockButtons
-                        handleTime={handleTime}
                         handleChart={handleChart}
                         handleUpdate={handleUpdate}
                         loading={loading}
@@ -663,7 +545,6 @@ function Stock({ stock, user,
                     <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
                     <TechnicalGraph stock={stock} width={width} height={height} />
                     <StockButtons
-                        handleTime={handleTime}
                         handleChart={handleChart}
                         handleUpdate={handleUpdate}
                         loading={loading}
@@ -684,7 +565,6 @@ function Stock({ stock, user,
                     <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
                     <Line data={redData} options={graphOptions} />
                     <StockButtons
-                        handleTime={handleTime}
                         handleChart={handleChart}
                         handleUpdate={handleUpdate}
                         loading={loading}
@@ -702,7 +582,6 @@ function Stock({ stock, user,
                     <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
                     <TechnicalGraph stock={stock} width={width} height={height} />
                     <StockButtons
-                        handleTime={handleTime}
                         handleChart={handleChart}
                         hanelUpdate={handleUpdate}
                         loading={loading}

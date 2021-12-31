@@ -10,7 +10,8 @@ const axios = require('axios').default;
 // Component to display all stocks and the forms to add/edit stocks
 const StockHub = ({ user }) => {
     // context api to modify data across components
-    const { stocks, addStock, clearStocks, findSymbol, setNewStocks } = useContext(StockContext);
+    const { stocks, addStock, clearStocks, findSymbol, setNewStocks,
+        editFavorite, findFavorite, editStock } = useContext(StockContext);
     // symbol of the stock to be searched
     const [symbol, setSymbol] = useState('');
     // array of symbols to filter from the stock list
@@ -33,6 +34,12 @@ const StockHub = ({ user }) => {
     const [showHero, setShowHero] = useState(true);
     // flag for updating the stocks on the database
     const [updateStocks, setUpdateStocks] = useState(false);
+    // when the timeline is changed of a stock this state is changed to reflect that change
+    const [stockChange, setStockChange] = useState(false);
+    // the current stock to be modified
+    const [currentStock, setCurrentStock] = useState({});
+    // the current favorite to be modified
+    const [currentFavorite, setCurrentFavorite] = useState({});
 
     // server url to update favorites
     const UPDATE_FAVORITES = process.env.REACT_APP_UPDATE_FAVORITES;
@@ -130,6 +137,73 @@ const StockHub = ({ user }) => {
         }
     }
 
+    useEffect(() => {
+        if (user !== undefined) {
+            // update the stock data for the user
+            const updateStockData = async () => {
+                setLoading(true);
+                try {
+                    // update the stock data 
+                    await axios.put(UPDATE_STOCKS, { userId: user, stocks: stocks });
+                    setLoading(false);
+                    // handle error
+                } catch (error) {
+                    console.error(error);
+                    setLoading(false);
+                }
+            }
+            updateStockData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [updateStocks]);
+
+    // ref to not call function on first render
+    const firstRender = useRef(true);
+
+    useEffect(() => {
+        // When the user changes the timeline for a stock the new data is fetched and displayed to the graph
+        const changeStockData = async () => {
+            setLoading(true);
+            try {
+                // fetch the data 
+                const response = await axios.request(options);
+                // handle error
+                if (response.data.status === "error") {
+                    setSymbol('');
+                    setLoading(false);
+                    console.log(response.data.message);
+                } else {
+                    // get the stock and calculate the percent change over the time period
+                    const percentChange = calculatePercentChange(response.data);
+                    // edit the stock being modified
+                    editStock(currentStock.symbol, response.data, percentChange,
+                        timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
+                    if (currentFavorite !== undefined) {
+                        // edit the favorite in the sidebar to match the stock being modified
+                        editFavorite(currentFavorite.symbol, response.data, percentChange,
+                            timeline, currentFavorite.id, UPDATE_FAVORITES, user);
+                    }
+                    // cleanup function
+                    setUpdateStocks(!updateStocks);
+                    setSymbol('');
+                    setLoading(false);
+                }
+                // handle error
+            } catch (error) {
+                console.error(error);
+                setSymbol('');
+                setLoading(false);
+            }
+        }
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        } else {
+            changeStockData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stockChange]);
+
     // Axios options for getting stock data from 12 Data API
     const options = {
         method: 'GET',
@@ -152,6 +226,21 @@ const StockHub = ({ user }) => {
         let percentChangeRounded = percentChange.toFixed(2);
         percentChange = parseFloat(percentChangeRounded);
         return percentChange;
+    }
+
+    // When user changes timeline change state to reflect change
+    const handleStockChange = (time) => {
+        setStockChange(!stockChange);
+    }
+
+    // Edit the stock being modified for the new timeline of the graph
+    const handleTimeChange = (time, stock) => {
+        setSymbol(stock.symbol);
+        setCurrentStock(stock);
+        setTimeline(time);
+        // get favorite corresponding to the stock being modified if available
+        const favorite = findFavorite(stock.symbol);
+        setCurrentFavorite(favorite);
     }
 
     // Add the stock data for the current symbol in input bar
@@ -379,6 +468,8 @@ const StockHub = ({ user }) => {
                     filterSymbols={filterSymbols}
                     user={user}
                     handleStockModal={handleStockModal}
+                    handleStockChange={handleStockChange}
+                    handleTimeChange={handleTimeChange}
                 />
             </div >
         );
@@ -394,6 +485,8 @@ const StockHub = ({ user }) => {
                         key={stockView.id}
                         user={user}
                         handleStockModal={handleStockModal}
+                        handleStockChange={handleStockChange}
+                        handleTimeChange={handleTimeChange}
                         id="viewing-stock"
                     />
                     <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>

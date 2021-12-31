@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 //Component to render the buttons and handle changes to data
-function StockButtons({ handleChart, loading, handleTime, stock, setLoading, user, handleUpdate, handleStockModal,
+function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpdate, handleStockModal,
     handleTADisplay }) {
     // stock context api shared data across components
     const { removeStock, addFavorite, findFavorite, addStockToList, lists, removeStockFromList } = useContext(StockContext);
@@ -127,15 +127,15 @@ function StockButtons({ handleChart, loading, handleTime, stock, setLoading, use
                 <FontAwesomeIcon id="trash" icon={faTrashAlt} />
             </button>
             <br />
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1min')}>30Min</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('5min')}>2.5H</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('15min')}>7.5H</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('30min')}>15H</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1h')}>~1D</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('2h')}>~1W</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1day')}>1M</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1week')}>6M+</button>
-            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTime('1month')}>2.5Y</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1min')}>30Min</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('5min')}>2.5H</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('15min')}>7.5H</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('30min')}>15H</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1h')}>~1D</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('2h')}>~1W</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1day')}>1M</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1week')}>6M+</button>
+            <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1month')}>2.5Y</button>
             <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate(stock.timeline)}>Update</button>
             <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleStockModal(stock.symbol)}>View</button>
             <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("SMA")}>SMA</button>
