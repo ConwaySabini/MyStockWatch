@@ -42,22 +42,44 @@ const StockContextProvider = props => {
         const foundData = findTAData(symbol, type);
         // if data already exists, delete it first
         if (foundData !== undefined) {
-            removeTAData(symbol, type);
+            let newTAData = taData.filter(function (techData) {
+                if (techData.symbol.toUpperCase() !== symbol.toUpperCase() && techData.type.toUpperCase() !== type.toUpperCase())
+                    return true;
+                return false;
+            });
+            newTAData = [...newTAData, { symbol, timeline, type, data, id: nanoid() }];
+            setTAData(newTAData);
         }
-        // create new data
-        const newTAData = [...taData, { symbol, timeline, type, data, id: nanoid() }];
-        setTAData(newTAData);
+        else {
+            // create new data
+            const newTAData = [...taData, { symbol, timeline, type, data, id: nanoid() }];
+            setTAData(newTAData);
+        }
     }
 
     // remove taData from the state
     const removeTAData = (symbol, type) => {
-        const newTAData = taData.filter(data => data.symbol !== symbol && data.type !== type);
+        let newTAData = taData.filter(function (data) {
+            if (data.symbol.toUpperCase() !== symbol.toUpperCase() && data.type.toUpperCase() !== type.toUpperCase())
+                return true;
+            return false;
+        });
         setTAData(newTAData);
     }
 
     // find taData
     const findTAData = (symbol, type) => {
-        return taData.find(data => data.symbol === symbol && data.type === type);
+        return taData.find(function (data) {
+            if (data.symbol.toUpperCase() === symbol.toUpperCase() && data.type.toUpperCase() === type.toUpperCase())
+                return true;
+            return false;
+        });
+    }
+
+    // Clear TA Data
+    const clearTAData = () => {
+        // update context
+        setTAData([]);
     }
 
     // Add favorites
@@ -102,7 +124,6 @@ const StockContextProvider = props => {
             // update context
             setLists(newLists);
         }
-
     }
 
     // Find List
@@ -345,6 +366,7 @@ const StockContextProvider = props => {
                 addTAData,
                 findTAData,
                 removeTAData,
+                clearTAData,
             }}
         >
             {props.children}
