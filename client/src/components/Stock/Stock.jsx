@@ -260,30 +260,48 @@ function Stock({ stock, user,
                 if (!emaValues.length) {
                     setTechnicalChange(!technicalChange);
                 }
+                else {
+                    clearEMA();
+                }
                 break;
             case "SMA":
                 if (!smaValues.length) {
                     setTechnicalChange(!technicalChange);
+                }
+                else {
+                    clearSMA();
                 }
                 break;
             case "RSI":
                 if (!rsiValues.length) {
                     setTechnicalChange(!technicalChange);
                 }
+                else {
+                    clearRSI();
+                }
                 break;
             case "BBANDS":
                 if (!bbandsValues.length) {
                     setTechnicalChange(!technicalChange);
+                }
+                else {
+                    clearBBANDS();
                 }
                 break;
             case "STOCH":
                 if (!stochValues.length) {
                     setTechnicalChange(!technicalChange);
                 }
+                else {
+                    clearSTOCH();
+                }
                 break;
             case "MACD":
                 if (!macdValues.length) {
                     setTechnicalChange(!technicalChange);
+                }
+                else {
+                    clearMACD();
                 }
                 break;
             default:
@@ -308,34 +326,84 @@ function Stock({ stock, user,
                 smaValues[taIndex] = foundTAData.values[i].sma;
                 taIndex--;
             }
-            console.log("smaValues: ", smaValues);
             setSMAValues(smaValues);
         }
     }
 
     // Calculate the Exponential Moving Average over a period of time
-    const calculateEMA = () => {
-
+    const calculateEMA = (data) => {
+        const foundTAData = data;
+        if (foundTAData) {
+            // TODO when user updates time on stock, either remove the technical data, or update it
+            // 30 dates and prices for the graph
+            let taIndex = foundTAData.values.length - 1;
+            // Loop through each date and price for the stock and add it to the arrays
+            for (let i = 0; i < foundTAData.values.length; i++) {
+                emaValues[taIndex] = foundTAData.values[i].ema;
+                taIndex--;
+            }
+            setEMAValues(emaValues);
+        }
     }
 
     // Calculate the Bollinger Bands over a period of time
-    const calculateBBANDS = () => {
+    const calculateBBANDS = (data) => {
 
     }
 
     // Calculate the MACD over a period of time
-    const calculateMACD = () => {
+    const calculateMACD = (data) => {
 
     }
 
     // Calculate the Stochastic Oscillator over a period of time
-    const calculateSTOCH = () => {
+    const calculateSTOCH = (data) => {
 
     }
 
     // Calculate the Relative Strength Index over a period of time
-    const calculateRSI = () => {
+    const calculateRSI = (data) => {
 
+    }
+
+    // clear SMA from chart
+    const clearSMA = () => {
+        setSMAValues([]);
+    }
+
+    // clear EMA from chart
+    const clearEMA = () => {
+        setEMAValues([]);
+    }
+
+    // clear BBANDS from chart
+    const clearBBANDS = () => {
+        setBBANDSValues([]);
+    }
+
+    // clear MACD from chart
+    const clearMACD = () => {
+        setMACDValues([]);
+    }
+
+    // clear STOCH from chart
+    const clearSTOCH = () => {
+        setSTOCHValues([]);
+    }
+
+    // clear RSI from chart
+    const clearRSI = () => {
+        setRSIValues([]);
+    }
+
+    // clear technical analysis from chart
+    const clearTechnicalAnalysis = () => {
+        setSMAValues([]);
+        setEMAValues([]);
+        setBBANDSValues([]);
+        setMACDValues([]);
+        setSTOCHValues([]);
+        setRSIValues([]);
     }
 
     // function to handle the technical change
@@ -428,85 +496,33 @@ function Stock({ stock, user,
     const ChartData = (canvas) => {
         // Create gradients to make the graph pretty
         const ctx = canvas.getContext("2d");
-
         const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
-        gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
-        gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
-
         const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
-        gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
-        gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
-
         const gradientStrokeSMA = ctx.createLinearGradient(700, 0, 300, 0);
-        gradientStrokeSMA.addColorStop(1, "rgba(195, 30, 88, 1)");
-        gradientStrokeSMA.addColorStop(0, "rgba(158, 28, 152, 1)");
+        // green graph
+        if (stock.percentChange >= 0) {
+            gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+            gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
 
-        const result = {
-            labels: labels,
-            datasets: [
-                {
-                    id: 1,
-                    label: stock.symbol,
-                    data: prices,
-                    fill: true,
-                    backgroundColor: gradientFill,
-                    borderColor: gradientStroke,
-                    pointBorderColor: gradientStroke,
-                    pointBackgroundColor: gradientStroke,
-                    pointHoverBackgroundColor: gradientStroke,
-                    pointHoverBorderColor: gradientStroke,
-                    pointBorderWidth: 5,
-                    pointHoverRadius: 5,
-                    pointHoverBorderWidth: 1,
-                    pointRadius: 3,
-                    borderWidth: 4,
-                },
-            ],
-        };
 
-        if (smaValues.length) {
-            const data = {
-                id: 2,
-                label: "SMA",
-                data: smaValues,
-                fill: false,
-                backgroundColor: gradientFill,
-                borderColor: gradientStrokeSMA,
-                pointBorderColor: gradientStrokeSMA,
-                pointBackgroundColor: gradientStrokeSMA,
-                pointHoverBackgroundColor: gradientStrokeSMA,
-                pointHoverBorderColor: gradientStrokeSMA,
-                pointBorderWidth: 5,
-                pointHoverRadius: 5,
-                pointHoverBorderWidth: 1,
-                pointRadius: 3,
-                borderWidth: 4,
-            };
-            result.datasets.push(data);
+            gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+            gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+
+            gradientStrokeSMA.addColorStop(1, "rgba(195, 30, 88, 1)");
+            gradientStrokeSMA.addColorStop(0, "rgba(158, 28, 152, 1)");
         }
+        // red graph
+        else {
+            gradientStroke.addColorStop(1, "rgba(141, 23, 174, 0.6)");
+            gradientStroke.addColorStop(0, "rgba(200, 39, 72, 0.6)");
 
-        // return the data for the graph
-        return {
-            ...result,
-        };
-    };
+            gradientFill.addColorStop(1, "rgba(141, 23, 174, 0.6)");
+            gradientFill.addColorStop(0, "rgba(200, 39, 72, 0.6)");
 
-    // data for the red graph
-    const redData = (canvas) => {
-        // Create gradients to make the graph pretty
-        const ctx = canvas.getContext("2d");
-
-        const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
-        gradientStroke.addColorStop(1, "rgba(141, 23, 174, 0.6)");
-        gradientStroke.addColorStop(0, "rgba(200, 39, 72, 0.6)");
-
-        const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
-        gradientFill.addColorStop(1, "rgba(141, 23, 174, 0.6)");
-        gradientFill.addColorStop(0, "rgba(200, 39, 72, 0.6)");
-
-        const gradientStrokeSMA = ctx.createLinearGradient(700, 0, 300, 0);
-        gradientStrokeSMA.addColorStop(1, "rgba(34, 230, 58, 1)");
-        gradientStrokeSMA.addColorStop(0, "rgba(34, 167, 230, 1)");
+            gradientStrokeSMA.addColorStop(1, "rgba(34, 230, 58, 1)");
+            gradientStrokeSMA.addColorStop(0, "rgba(34, 167, 230, 1)");
+        }
 
         const result = {
             labels: labels,
@@ -514,6 +530,7 @@ function Stock({ stock, user,
         };
 
         if (smaValues.length) {
+            console.log("smaValues ", smaValues);
             const data = {
                 id: 2,
                 label: "SMA",
@@ -533,9 +550,114 @@ function Stock({ stock, user,
             };
             result.datasets.push(data);
         }
+        if (emaValues.length) {
+            console.log("emaValues ", emaValues);
+            const data = {
+                id: 3,
+                label: "EMA",
+                data: emaValues,
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeSMA,
+                pointBorderColor: gradientStrokeSMA,
+                pointBackgroundColor: gradientStrokeSMA,
+                pointHoverBackgroundColor: gradientStrokeSMA,
+                pointHoverBorderColor: gradientStrokeSMA,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            result.datasets.push(data);
+        }
+        if (rsiValues.length) {
+            console.log("rsiValues ", rsiValues);
+            const data = {
+                id: 4,
+                label: "RSI",
+                data: rsiValues,
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeSMA,
+                pointBorderColor: gradientStrokeSMA,
+                pointBackgroundColor: gradientStrokeSMA,
+                pointHoverBackgroundColor: gradientStrokeSMA,
+                pointHoverBorderColor: gradientStrokeSMA,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            result.datasets.push(data);
+        }
+        if (macdValues.length) {
+            console.log("macdValues ", macdValues);
+            const data = {
+                id: 5,
+                label: "MACD",
+                data: macdValues,
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeSMA,
+                pointBorderColor: gradientStrokeSMA,
+                pointBackgroundColor: gradientStrokeSMA,
+                pointHoverBackgroundColor: gradientStrokeSMA,
+                pointHoverBorderColor: gradientStrokeSMA,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            result.datasets.push(data);
+        }
+        if (stochValues.length) {
+            console.log("stochValues ", stochValues);
+            const data = {
+                id: 6,
+                label: "STOCH",
+                data: stochValues,
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeSMA,
+                pointBorderColor: gradientStrokeSMA,
+                pointBackgroundColor: gradientStrokeSMA,
+                pointHoverBackgroundColor: gradientStrokeSMA,
+                pointHoverBorderColor: gradientStrokeSMA,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            result.datasets.push(data);
+        }
+        if (bbandsValues.length) {
+            console.log("bbandsValues ", bbandsValues);
+            const data = {
+                id: 7,
+                label: "BBANDS",
+                data: bbandsValues,
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeSMA,
+                pointBorderColor: gradientStrokeSMA,
+                pointBackgroundColor: gradientStrokeSMA,
+                pointHoverBackgroundColor: gradientStrokeSMA,
+                pointHoverBorderColor: gradientStrokeSMA,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            result.datasets.push(data);
+        }
 
+        // push the graph
         result.datasets.push({
-
             id: 1,
             label: stock.symbol,
             data: prices,
@@ -559,80 +681,44 @@ function Stock({ stock, user,
         };
     };
 
-    if (stock.percentChange >= 0) {
-        // Return the graph
-        if (simpleChart) {
-            return (
-                <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
-                    <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
-                    <Line data={ChartData} options={graphOptions} />
-                    <StockButtons
-                        handleChart={handleChart}
-                        handleUpdate={handleUpdate}
-                        loading={loading}
-                        setLoading={setLoading}
-                        stock={stock}
-                        user={user}
-                        handleStockModal={handleStockModal}
-                        handleTADisplay={handleTADisplay}
-                    />
-                </div >
-            );
-        } else {
-            return (
-                <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
-                    <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
-                    <TechnicalGraph stock={stock} width={width} height={height} />
-                    <StockButtons
-                        handleChart={handleChart}
-                        handleUpdate={handleUpdate}
-                        loading={loading}
-                        setLoading={setLoading}
-                        stock={stock}
-                        user={user}
-                        handleStockModal={handleStockModal}
-                        handleTADisplay={handleTADisplay}
-                    />
-                </div >
-            );
-        }
+    // display the stock component
+    // Return the graph
+    if (simpleChart) {
+        return (
+            <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
+                <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
+                <Line data={ChartData} options={graphOptions} />
+                <StockButtons
+                    handleChart={handleChart}
+                    handleUpdate={handleUpdate}
+                    loading={loading}
+                    setLoading={setLoading}
+                    stock={stock}
+                    user={user}
+                    handleStockModal={handleStockModal}
+                    handleTADisplay={handleTADisplay}
+                    clearTechnicalAnalysis={clearTechnicalAnalysis}
+                />
+            </div >
+        );
     } else {
-        // Return the graph
-        if (simpleChart) {
-            return (
-                <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
-                    <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
-                    <Line data={redData} options={graphOptions} />
-                    <StockButtons
-                        handleChart={handleChart}
-                        handleUpdate={handleUpdate}
-                        loading={loading}
-                        setLoading={setLoading}
-                        stock={stock}
-                        user={user}
-                        handleStockModal={handleStockModal}
-                        handleTADisplay={handleTADisplay}
-                    />
-                </div >
-            );
-        } else {
-            return (
-                <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
-                    <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
-                    <TechnicalGraph stock={stock} width={width} height={height} />
-                    <StockButtons
-                        handleChart={handleChart}
-                        hanelUpdate={handleUpdate}
-                        loading={loading}
-                        setLoading={setLoading}
-                        stock={stock}
-                        user={user}
-                        handleStockModal={handleStockModal}
-                        handleTADisplay={handleTADisplay}
-                    />
-                </div >
-            );
-        }
+        return (
+            <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
+                <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
+                <TechnicalGraph stock={stock} width={width} height={height} />
+                <StockButtons
+                    handleChart={handleChart}
+                    handleUpdate={handleUpdate}
+                    loading={loading}
+                    setLoading={setLoading}
+                    stock={stock}
+                    user={user}
+                    handleStockModal={handleStockModal}
+                    handleTADisplay={handleTADisplay}
+                    clearTechnicalAnalysis={clearTechnicalAnalysis}
+                />
+            </div >
+        );
     }
 }
 
