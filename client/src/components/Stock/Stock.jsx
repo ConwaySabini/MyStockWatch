@@ -430,6 +430,7 @@ function Stock({ stock, user,
     // When the user changes the timeframe of the stock, update the graph
     const handleUpdate = (time) => {
         setLoading(true);
+        clearTechnicalAnalysis();
         handleTimeChange(time, stock);
         handleStockChange();
         setLoading(false);
