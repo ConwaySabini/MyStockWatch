@@ -316,44 +316,58 @@ function Stock({ stock, user,
 
     // Calculate the Simple Moving Average over a period of time
     const calculateSMA = (data) => {
-        const foundTAData = data;
-        if (foundTAData) {
-            // TODO when user updates time on stock, either remove the technical data, or update it
-            // 30 dates and prices for the graph
-            let taIndex = foundTAData.values.length - 1;
-            // Loop through each date and price for the stock and add it to the arrays
-            for (let i = 0; i < foundTAData.values.length; i++) {
-                smaValues[taIndex] = foundTAData.values[i].sma;
-                taIndex--;
-            }
+        // TODO when user updates time on stock, either remove the technical data, or update it
+        // 30 dates and prices for the graph
+        let taIndex = data.values.length - 1;
+        // Loop through each date and price for the stock and add it to the arrays
+        for (let i = 0; i < data.values.length; i++) {
+            smaValues[taIndex] = data.values[i].sma;
+            taIndex--;
+
             setSMAValues(smaValues);
         }
     }
 
     // Calculate the Exponential Moving Average over a period of time
     const calculateEMA = (data) => {
-        const foundTAData = data;
-        if (foundTAData) {
-            // TODO when user updates time on stock, either remove the technical data, or update it
-            // 30 dates and prices for the graph
-            let taIndex = foundTAData.values.length - 1;
-            // Loop through each date and price for the stock and add it to the arrays
-            for (let i = 0; i < foundTAData.values.length; i++) {
-                emaValues[taIndex] = foundTAData.values[i].ema;
-                taIndex--;
-            }
-            setEMAValues(emaValues);
+        // 30 dates and prices for the graph
+        let taIndex = data.values.length - 1;
+        // Loop through each date and price for the stock and add it to the arrays
+        for (let i = 0; i < data.values.length; i++) {
+            emaValues[taIndex] = data.values[i].ema;
+            taIndex--;
         }
+        setEMAValues(emaValues);
     }
 
     // Calculate the Bollinger Bands over a period of time
     const calculateBBANDS = (data) => {
-
+        let values = [];
+        values.push([]);
+        values.push([]);
+        values.push([]);
+        // 30 dates and prices for the graph
+        let taIndex = data.values.length - 1;
+        // Loop through each date and price for the stock and add it to the arrays
+        for (let i = 0; i < data.values.length; i++) {
+            values[0][taIndex] = data.values[i].lower_band;
+            values[1][taIndex] = data.values[i].middle_band;
+            values[2][taIndex] = data.values[i].upper_band;
+            taIndex--;
+        }
+        setBBANDSValues(values);
     }
 
     // Calculate the MACD over a period of time
     const calculateMACD = (data) => {
-
+        // 30 dates and prices for the graph
+        let taIndex = data.values.length - 1;
+        // Loop through each date and price for the stock and add it to the arrays
+        for (let i = 0; i < data.values.length; i++) {
+            macdValues[taIndex] = data.values[i].ema;
+            taIndex--;
+        }
+        setMACDValues(macdValues);
     }
 
     // Calculate the Stochastic Oscillator over a period of time
@@ -499,6 +513,7 @@ function Stock({ stock, user,
         const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
         const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
         const gradientStrokeSMA = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientStrokeBBANDS = ctx.createLinearGradient(700, 0, 300, 0);
         // green graph
         if (stock.percentChange >= 0) {
             gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
@@ -508,9 +523,11 @@ function Stock({ stock, user,
             gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
             gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
 
-
             gradientStrokeSMA.addColorStop(1, "rgba(195, 30, 88, 1)");
             gradientStrokeSMA.addColorStop(0, "rgba(158, 28, 152, 1)");
+
+            gradientStrokeBBANDS.addColorStop(1, "rgba(46, 237, 27, 1)");
+            gradientStrokeBBANDS.addColorStop(0, "rgba(109, 202, 100, 1)");
         }
         // red graph
         else {
@@ -530,7 +547,6 @@ function Stock({ stock, user,
         };
 
         if (smaValues.length) {
-            console.log("smaValues ", smaValues);
             const data = {
                 id: 2,
                 label: "SMA",
@@ -635,25 +651,60 @@ function Stock({ stock, user,
             result.datasets.push(data);
         }
         if (bbandsValues.length) {
-            console.log("bbandsValues ", bbandsValues);
-            const data = {
+            const lower = {
                 id: 7,
-                label: "BBANDS",
-                data: bbandsValues,
+                label: "lower_bands",
+                data: bbandsValues[0],
                 fill: false,
                 backgroundColor: gradientFill,
-                borderColor: gradientStrokeSMA,
-                pointBorderColor: gradientStrokeSMA,
-                pointBackgroundColor: gradientStrokeSMA,
-                pointHoverBackgroundColor: gradientStrokeSMA,
-                pointHoverBorderColor: gradientStrokeSMA,
+                borderColor: gradientStrokeBBANDS,
+                pointBorderColor: gradientStrokeBBANDS,
+                pointBackgroundColor: gradientStrokeBBANDS,
+                pointHoverBackgroundColor: gradientStrokeBBANDS,
+                pointHoverBorderColor: gradientStrokeBBANDS,
                 pointBorderWidth: 5,
                 pointHoverRadius: 5,
                 pointHoverBorderWidth: 1,
                 pointRadius: 3,
                 borderWidth: 4,
             };
-            result.datasets.push(data);
+            const middle = {
+                id: 8,
+                label: "middle_bands",
+                data: bbandsValues[1],
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeBBANDS,
+                pointBorderColor: gradientStrokeBBANDS,
+                pointBackgroundColor: gradientStrokeBBANDS,
+                pointHoverBackgroundColor: gradientStrokeBBANDS,
+                pointHoverBorderColor: gradientStrokeBBANDS,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            const upper = {
+                id: 9,
+                label: "upper_bands",
+                data: bbandsValues[2],
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStrokeBBANDS,
+                pointBorderColor: gradientStrokeBBANDS,
+                pointBackgroundColor: gradientStrokeBBANDS,
+                pointHoverBackgroundColor: gradientStrokeBBANDS,
+                pointHoverBorderColor: gradientStrokeBBANDS,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            result.datasets.push(lower);
+            result.datasets.push(middle);
+            result.datasets.push(upper);
         }
 
         // push the graph
