@@ -11,7 +11,7 @@ const axios = require('axios').default;
 function Stock({ stock, user,
     handleStockModal, handleStockChange, handleTimeChange }) {
     // context api to modify data across components
-    const { findTAData, addTAData } = useContext(StockContext);
+    const { addTAData } = useContext(StockContext);
 
     // State to track which chart to display (simple or technical)
     const [simpleChart, setSimpleChart] = useState(true);
@@ -66,8 +66,8 @@ function Stock({ stock, user,
             signal_ma_type: 'SMA'
         },
         headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
 
@@ -85,8 +85,8 @@ function Stock({ stock, user,
             time_period: '9'
         },
         headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
 
@@ -103,8 +103,8 @@ function Stock({ stock, user,
             series_type: 'close'
         },
         headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
 
@@ -124,8 +124,8 @@ function Stock({ stock, user,
             sd: '2'
         },
         headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
 
@@ -144,8 +144,8 @@ function Stock({ stock, user,
             format: 'json'
         },
         headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
 
@@ -165,8 +165,8 @@ function Stock({ stock, user,
             slow_k_period: '1'
         },
         headers: {
-            'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-            'x-rapidapi-key': '4543d16204msh97b0f60c7a436c0p18cc93jsnccd821077011'
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
 
@@ -539,6 +539,9 @@ function Stock({ stock, user,
 
             gradientStrokeSMA.addColorStop(1, "rgba(34, 230, 58, 1)");
             gradientStrokeSMA.addColorStop(0, "rgba(34, 167, 230, 1)");
+
+            gradientStrokeBBANDS.addColorStop(1, "rgba(46, 237, 27, 1)");
+            gradientStrokeBBANDS.addColorStop(0, "rgba(109, 202, 100, 1)");
         }
 
         const result = {
