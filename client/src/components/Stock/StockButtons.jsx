@@ -137,7 +137,6 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
             <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1week')}>6M+</button>
             <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate('1month')}>2.5Y</button>
             <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleUpdate(stock.timeline)}>Update</button>
-            <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleStockModal(stock.symbol)}>View</button>
             <br></br>
             <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("SMA")}>SMA</button>
             <button class="button is-link ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleTADisplay("EMA")}>EMA</button>
@@ -151,6 +150,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
                 onClick={() => clearTechnicalAnalysis()}>
                 Clear TA
             </button>
+            <button class="button is-primary ml-3 pr-4 pl-4 mt-4 mb-2" onClick={() => handleStockModal(stock.symbol)}>View</button>
         </div >
     );
 }

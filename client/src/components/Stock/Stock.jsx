@@ -1,6 +1,6 @@
 import './Stock.css';
 import { useState, useContext, useEffect } from "react";
-import { Line, Bar, Chart } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { StockContext } from "../../context/StockContext";
 import useDimensions from "react-cool-dimensions";
 import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
@@ -12,7 +12,7 @@ const axios = require('axios').default;
 function Stock({ stock, user,
     handleStockModal, handleStockChange, handleTimeChange }) {
     // context api to modify data across components
-    const { addTAData } = useContext(StockContext);
+    const { addTAData, findTAData, removeTAData } = useContext(StockContext);
 
     // State to track which chart to display (simple or technical)
     const [simpleChart, setSimpleChart] = useState(true);
@@ -172,6 +172,38 @@ function Stock({ stock, user,
     };
 
     useEffect(() => {
+        if (!smaValues.length) {
+            const sma = findTAData(stock.symbol, 'SMA');
+            if (sma !== undefined) setSMAValues(sma.data);
+        }
+
+        if (!emaValues.length) {
+            const ema = findTAData(stock.symbol, 'EMA');
+            if (ema !== undefined) setEMAValues(ema.data);
+        }
+
+        if (!bbandsValues.length) {
+            const bbands = findTAData(stock.symbol, 'BBANDS');
+            if (bbands !== undefined) setBBANDSValues(bbands.data);
+        }
+
+        if (!rsiValues.length) {
+            const rsi = findTAData(stock.symbol, 'RSI');
+            if (rsi !== undefined) setRSIValues(rsi.data);
+        }
+
+        if (!macdValues.length) {
+            const macd = findTAData(stock.symbol, 'MACD');
+            if (macd !== undefined) setMACDValues(macd.data);
+        }
+
+        if (!stochValues.length) {
+            const stoch = findTAData(stock.symbol, 'STOCH');
+            if (stoch !== undefined) setSTOCHValues(stoch.data);
+        }
+    }, []);
+
+    useEffect(() => {
         // Fetches the technical data
         const addTechnicalAnalysis = async () => {
             try {
@@ -208,7 +240,6 @@ function Stock({ stock, user,
                         setTA('');
                         console.log(response.data.message);
                     } else {
-                        addTAData(stock.symbol, stock.timeline, ta, response.data);
                         switch (ta) {
                             case "EMA":
                                 //handleUpdate(stock.timeline);
@@ -324,9 +355,9 @@ function Stock({ stock, user,
         for (let i = 0; i < data.values.length; i++) {
             values[taIndex] = data.values[i].sma;
             taIndex--;
-
-            setSMAValues(values);
         }
+        setSMAValues(values);
+        addTAData(stock.symbol, stock.timeline, "SMA", values);
     }
 
     // Calculate the Exponential Moving Average over a period of time
@@ -340,6 +371,7 @@ function Stock({ stock, user,
             taIndex--;
         }
         setEMAValues(values);
+        addTAData(stock.symbol, stock.timeline, "EMA", values);
     }
 
     // Calculate the Bollinger Bands over a period of time
@@ -358,6 +390,7 @@ function Stock({ stock, user,
             taIndex--;
         }
         setBBANDSValues(values);
+        addTAData(stock.symbol, stock.timeline, "BBANDS", values);
     }
 
     // Calculate the MACD over a period of time
@@ -376,6 +409,7 @@ function Stock({ stock, user,
             taIndex--;
         }
         setMACDValues(values);
+        addTAData(stock.symbol, stock.timeline, "MACD", values);
     }
 
     // Calculate the Stochastic Oscillator over a period of time
@@ -385,7 +419,16 @@ function Stock({ stock, user,
 
     // Calculate the Relative Strength Index over a period of time
     const calculateRSI = (data) => {
-
+        let values = [];
+        // 30 dates and prices for the graph
+        let taIndex = data.values.length - 1;
+        // Loop through each date and price for the stock and add it to the arrays
+        for (let i = 0; i < data.values.length; i++) {
+            values[taIndex] = data.values[i].rsi;
+            taIndex--;
+        }
+        setRSIValues(values);
+        addTAData(stock.symbol, stock.timeline, "RSI", values);
     }
 
     // clear SMA from chart
@@ -420,12 +463,30 @@ function Stock({ stock, user,
 
     // clear technical analysis from chart
     const clearTechnicalAnalysis = () => {
-        setSMAValues([]);
-        setEMAValues([]);
-        setBBANDSValues([]);
-        setMACDValues([]);
-        setSTOCHValues([]);
-        setRSIValues([]);
+        if (smaValues.length) {
+            removeTAData(stock.symbol, "SMA");
+            setSMAValues([]);
+        }
+        if (emaValues.length) {
+            removeTAData(stock.symbol, "EMA");
+            setEMAValues([]);
+        }
+        if (bbandsValues.length) {
+            removeTAData(stock.symbol, "BBANDS");
+            setBBANDSValues([]);
+        }
+        if (macdValues.length) {
+            removeTAData(stock.symbol, "MACD");
+            setMACDValues([]);
+        }
+        if (stochValues.length) {
+            removeTAData(stock.symbol, "STOCH");
+            setSTOCHValues([]);
+        }
+        if (rsiValues.length) {
+            removeTAData(stock.symbol, "RSI");
+            setRSIValues([]);
+        }
     }
 
     // function to handle the technical change
@@ -592,8 +653,8 @@ function Stock({ stock, user,
             gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
             gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
 
-            gradientStrokeSMA.addColorStop(1, "rgba(195, 30, 88, 1)");
-            gradientStrokeSMA.addColorStop(0, "rgba(158, 28, 152, 1)");
+            gradientStrokeSMA.addColorStop(1, "rgba(157, 43, 213, 1)");
+            gradientStrokeSMA.addColorStop(0, "rgba(187, 71, 243, 1)");
 
             gradientStrokeEMA.addColorStop(1, "rgba(233, 20, 20, 1)");
             gradientStrokeEMA.addColorStop(0, "rgba(156, 17, 17, 1)");

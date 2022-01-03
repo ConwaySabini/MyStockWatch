@@ -71,8 +71,8 @@ const StockContextProvider = props => {
     const findTAData = (symbol, type) => {
         return taData.find(function (data) {
             if (data.symbol.toUpperCase() === symbol.toUpperCase() && data.type.toUpperCase() === type.toUpperCase())
-                return true;
-            return false;
+                return data;
+            return undefined;
         });
     }
 
