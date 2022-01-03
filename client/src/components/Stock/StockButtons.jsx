@@ -123,7 +123,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
             <button
                 className="delete-stock"
                 class="button is-danger ml-3 pr-2 pl-5 mt-4 mb-2"
-                onClick={() => handleRemove(stock.id)}>
+                onClick={() => handleRemove()}>
                 <FontAwesomeIcon id="trash" icon={faTrashAlt} />
             </button>
             <br />
@@ -151,7 +151,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
                 onClick={() => clearTechnicalAnalysis()}>
                 Clear TA
             </button>
-        </div>
+        </div >
     );
 }
 

@@ -1,11 +1,12 @@
 import './Stock.css';
 import { useState, useContext, useEffect } from "react";
-import { Line } from "react-chartjs-2";
+import { Line, Bar, Chart } from "react-chartjs-2";
 import { StockContext } from "../../context/StockContext";
 import useDimensions from "react-cool-dimensions";
 import TechnicalGraph from '../TechnicalGraph/TechnicalGraph';
 import StockButtons from './StockButtons';
 const axios = require('axios').default;
+
 
 // Component to display the individual stock
 function Stock({ stock, user,
@@ -316,28 +317,29 @@ function Stock({ stock, user,
 
     // Calculate the Simple Moving Average over a period of time
     const calculateSMA = (data) => {
-        // TODO when user updates time on stock, either remove the technical data, or update it
+        let values = [];
         // 30 dates and prices for the graph
         let taIndex = data.values.length - 1;
         // Loop through each date and price for the stock and add it to the arrays
         for (let i = 0; i < data.values.length; i++) {
-            smaValues[taIndex] = data.values[i].sma;
+            values[taIndex] = data.values[i].sma;
             taIndex--;
 
-            setSMAValues(smaValues);
+            setSMAValues(values);
         }
     }
 
     // Calculate the Exponential Moving Average over a period of time
     const calculateEMA = (data) => {
+        let values = [];
         // 30 dates and prices for the graph
         let taIndex = data.values.length - 1;
         // Loop through each date and price for the stock and add it to the arrays
         for (let i = 0; i < data.values.length; i++) {
-            emaValues[taIndex] = data.values[i].ema;
+            values[taIndex] = data.values[i].ema;
             taIndex--;
         }
-        setEMAValues(emaValues);
+        setEMAValues(values);
     }
 
     // Calculate the Bollinger Bands over a period of time
@@ -360,14 +362,20 @@ function Stock({ stock, user,
 
     // Calculate the MACD over a period of time
     const calculateMACD = (data) => {
+        let values = [];
+        values.push([]);
+        values.push([]);
+        values.push([]);
         // 30 dates and prices for the graph
         let taIndex = data.values.length - 1;
         // Loop through each date and price for the stock and add it to the arrays
         for (let i = 0; i < data.values.length; i++) {
-            macdValues[taIndex] = data.values[i].ema;
+            values[0][taIndex] = data.values[i].macd;
+            values[1][taIndex] = data.values[i].macd_signal;
+            values[2][taIndex] = data.values[i].macd_hist;
             taIndex--;
         }
-        setMACDValues(macdValues);
+        setMACDValues(values);
     }
 
     // Calculate the Stochastic Oscillator over a period of time
@@ -507,6 +515,66 @@ function Stock({ stock, user,
         },
     };
 
+    // options for the graph
+    const graphOptionsMACD = {
+        responsive: true,
+        title: {
+            display: true,
+            // position: "top",
+            text: "Moving Average Convergence Divergence",
+            fontSize: 18,
+            fontColor: "#111"
+        },
+        legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+                fontColor: "#333",
+                fontSize: 16
+            }
+        },
+    };
+
+    // options for the graph
+    const graphOptionsRSI = {
+        responsive: true,
+        title: {
+            display: true,
+            // position: "top",
+            text: "Relative Strength Index",
+            fontSize: 18,
+            fontColor: "#111"
+        },
+        legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+                fontColor: "#333",
+                fontSize: 16
+            }
+        },
+    };
+
+    // options for the graph
+    const graphOptionsSTOCH = {
+        responsive: true,
+        title: {
+            display: true,
+            // position: "top",
+            text: "Stochastic Oscillator",
+            fontSize: 18,
+            fontColor: "#111"
+        },
+        legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+                fontColor: "#333",
+                fontSize: 16
+            }
+        },
+    };
+
     // data for the graph
     const ChartData = (canvas) => {
         // Create gradients to make the graph pretty
@@ -514,18 +582,21 @@ function Stock({ stock, user,
         const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
         const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
         const gradientStrokeSMA = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientStrokeEMA = ctx.createLinearGradient(700, 0, 300, 0);
         const gradientStrokeBBANDS = ctx.createLinearGradient(700, 0, 300, 0);
         // green graph
         if (stock.percentChange >= 0) {
             gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
             gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
 
-
             gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
             gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
 
             gradientStrokeSMA.addColorStop(1, "rgba(195, 30, 88, 1)");
             gradientStrokeSMA.addColorStop(0, "rgba(158, 28, 152, 1)");
+
+            gradientStrokeEMA.addColorStop(1, "rgba(233, 20, 20, 1)");
+            gradientStrokeEMA.addColorStop(0, "rgba(156, 17, 17, 1)");
 
             gradientStrokeBBANDS.addColorStop(1, "rgba(46, 237, 27, 1)");
             gradientStrokeBBANDS.addColorStop(0, "rgba(109, 202, 100, 1)");
@@ -578,11 +649,11 @@ function Stock({ stock, user,
                 data: emaValues,
                 fill: false,
                 backgroundColor: gradientFill,
-                borderColor: gradientStrokeSMA,
-                pointBorderColor: gradientStrokeSMA,
-                pointBackgroundColor: gradientStrokeSMA,
-                pointHoverBackgroundColor: gradientStrokeSMA,
-                pointHoverBorderColor: gradientStrokeSMA,
+                borderColor: gradientStrokeEMA,
+                pointBorderColor: gradientStrokeEMA,
+                pointBackgroundColor: gradientStrokeEMA,
+                pointHoverBackgroundColor: gradientStrokeEMA,
+                pointHoverBorderColor: gradientStrokeEMA,
                 pointBorderWidth: 5,
                 pointHoverRadius: 5,
                 pointHoverBorderWidth: 1,
@@ -591,69 +662,7 @@ function Stock({ stock, user,
             };
             result.datasets.push(data);
         }
-        if (rsiValues.length) {
-            console.log("rsiValues ", rsiValues);
-            const data = {
-                id: 4,
-                label: "RSI",
-                data: rsiValues,
-                fill: false,
-                backgroundColor: gradientFill,
-                borderColor: gradientStrokeSMA,
-                pointBorderColor: gradientStrokeSMA,
-                pointBackgroundColor: gradientStrokeSMA,
-                pointHoverBackgroundColor: gradientStrokeSMA,
-                pointHoverBorderColor: gradientStrokeSMA,
-                pointBorderWidth: 5,
-                pointHoverRadius: 5,
-                pointHoverBorderWidth: 1,
-                pointRadius: 3,
-                borderWidth: 4,
-            };
-            result.datasets.push(data);
-        }
-        if (macdValues.length) {
-            console.log("macdValues ", macdValues);
-            const data = {
-                id: 5,
-                label: "MACD",
-                data: macdValues,
-                fill: false,
-                backgroundColor: gradientFill,
-                borderColor: gradientStrokeSMA,
-                pointBorderColor: gradientStrokeSMA,
-                pointBackgroundColor: gradientStrokeSMA,
-                pointHoverBackgroundColor: gradientStrokeSMA,
-                pointHoverBorderColor: gradientStrokeSMA,
-                pointBorderWidth: 5,
-                pointHoverRadius: 5,
-                pointHoverBorderWidth: 1,
-                pointRadius: 3,
-                borderWidth: 4,
-            };
-            result.datasets.push(data);
-        }
-        if (stochValues.length) {
-            console.log("stochValues ", stochValues);
-            const data = {
-                id: 6,
-                label: "STOCH",
-                data: stochValues,
-                fill: false,
-                backgroundColor: gradientFill,
-                borderColor: gradientStrokeSMA,
-                pointBorderColor: gradientStrokeSMA,
-                pointBackgroundColor: gradientStrokeSMA,
-                pointHoverBackgroundColor: gradientStrokeSMA,
-                pointHoverBorderColor: gradientStrokeSMA,
-                pointBorderWidth: 5,
-                pointHoverRadius: 5,
-                pointHoverBorderWidth: 1,
-                pointRadius: 3,
-                borderWidth: 4,
-            };
-            result.datasets.push(data);
-        }
+
         if (bbandsValues.length) {
             const lower = {
                 id: 7,
@@ -736,6 +745,144 @@ function Stock({ stock, user,
         };
     };
 
+    // data for the graph
+    const macdData = (canvas) => {
+        const macd = {
+            labels: labels,
+            datasets: [],
+        }
+
+        // Create gradients to make the graph pretty
+        const ctx = canvas.getContext("2d");
+        const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientSignal = ctx.createLinearGradient(700, 0, 300, 0);
+        gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+        gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+        gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+        gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+        gradientSignal.addColorStop(1, "rgba(195, 30, 88, 1)");
+        gradientSignal.addColorStop(0, "rgba(158, 28, 152, 1)");
+
+        if (macdValues.length) {
+            console.log("macdValues ", macdValues);
+            const macdLine = {
+                id: 1,
+                type: 'line',
+                label: "MACD",
+                data: macdValues[0],
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStroke,
+                pointBorderColor: gradientStroke,
+                pointBackgroundColor: gradientStroke,
+                pointHoverBackgroundColor: gradientStroke,
+                pointHoverBorderColor: gradientStroke,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            const macdSignal = {
+                id: 2,
+                type: 'line',
+                label: "MACD Signal",
+                data: macdValues[1],
+                fill: false,
+                backgroundColor: gradientSignal,
+                borderColor: gradientSignal,
+                pointBorderColor: gradientSignal,
+                pointBackgroundColor: gradientSignal,
+                pointHoverBackgroundColor: gradientSignal,
+                pointHoverBorderColor: gradientSignal,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            const macdHistogram = {
+                id: 3,
+                type: 'bar',
+                label: "Histogram",
+                data: macdValues[2],
+                fill: true,
+                backgroundColor: gradientFill,
+                borderColor: gradientStroke,
+                pointBorderColor: gradientStroke,
+                pointBackgroundColor: gradientStroke,
+                pointHoverBackgroundColor: gradientStroke,
+                pointHoverBorderColor: gradientStroke,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            macd.datasets.push(macdHistogram);
+            macd.datasets.push(macdLine);
+            macd.datasets.push(macdSignal);
+        }
+
+        // return the data for the graph
+        return {
+            ...macd,
+        };
+    };
+
+    // data for the graph
+    const rsiData = (canvas) => {
+        // if (rsiValues.length) {
+        //     console.log("rsiValues ", rsiValues);
+        //     const data = {
+        //         id: 4,
+        //         label: "RSI",
+        //         data: rsiValues,
+        //         fill: false,
+        //         backgroundColor: gradientFill,
+        //         borderColor: gradientStroke,
+        //         pointBorderColor: gradientStroke,
+        //         pointBackgroundColor: gradientStroke,
+        //         pointHoverBackgroundColor: gradientStroke,
+        //         pointHoverBorderColor: gradientStroke,
+        //         pointBorderWidth: 5,
+        //         pointHoverRadius: 5,
+        //         pointHoverBorderWidth: 1,
+        //         pointRadius: 3,
+        //         borderWidth: 4,
+        //     };
+        //     macd.datasets.push(data);
+        // }
+    };
+
+    // data for the graph
+    const stochData = (canvas) => {
+        // if (stochValues.length) {
+        //     console.log("stochValues ", stochValues);
+        //     const data = {
+        //         id: 6,
+        //         label: "STOCH",
+        //         data: stochValues,
+        //         fill: false,
+        //         backgroundColor: gradientFill,
+        //         borderColor: gradientStroke,
+        //         pointBorderColor: gradientStroke,
+        //         pointBackgroundColor: gradientStroke,
+        //         pointHoverBackgroundColor: gradientStroke,
+        //         pointHoverBorderColor: gradientStroke,
+        //         pointBorderWidth: 5,
+        //         pointHoverRadius: 5,
+        //         pointHoverBorderWidth: 1,
+        //         pointRadius: 3,
+        //         borderWidth: 4,
+        //     };
+        //     macd.datasets.push(data);
+        // }
+    };
+
     // display the stock component
     // Return the graph
     if (simpleChart) {
@@ -743,6 +890,13 @@ function Stock({ stock, user,
             <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
                 <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
                 <Line data={ChartData} options={graphOptions} />
+                {
+                    macdValues.length ? (
+                        <Line data={macdData} options={graphOptionsMACD} />
+                    ) : (
+                        <div className="macd" />
+                    )
+                }
                 <StockButtons
                     handleChart={handleChart}
                     handleUpdate={handleUpdate}
