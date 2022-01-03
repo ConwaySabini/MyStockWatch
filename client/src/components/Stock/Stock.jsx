@@ -414,7 +414,19 @@ function Stock({ stock, user,
 
     // Calculate the Stochastic Oscillator over a period of time
     const calculateSTOCH = (data) => {
-
+        let values = [];
+        values.push([]);
+        values.push([]);
+        // 30 dates and prices for the graph
+        let taIndex = data.values.length - 1;
+        // Loop through each date and price for the stock and add it to the arrays
+        for (let i = 0; i < data.values.length; i++) {
+            values[0][taIndex] = data.values[i].slow_k;
+            values[1][taIndex] = data.values[i].slow_d;
+            taIndex--;
+        }
+        setSTOCHValues(values);
+        addTAData(stock.symbol, stock.timeline, "STOCH", values);
     }
 
     // Calculate the Relative Strength Index over a period of time
@@ -828,7 +840,6 @@ function Stock({ stock, user,
         gradientSignal.addColorStop(0, "rgba(158, 28, 152, 1)");
 
         if (macdValues.length) {
-            console.log("macdValues ", macdValues);
             const macdLine = {
                 id: 1,
                 type: 'line',
@@ -896,52 +907,114 @@ function Stock({ stock, user,
 
     // data for the graph
     const rsiData = (canvas) => {
-        // if (rsiValues.length) {
-        //     console.log("rsiValues ", rsiValues);
-        //     const data = {
-        //         id: 4,
-        //         label: "RSI",
-        //         data: rsiValues,
-        //         fill: false,
-        //         backgroundColor: gradientFill,
-        //         borderColor: gradientStroke,
-        //         pointBorderColor: gradientStroke,
-        //         pointBackgroundColor: gradientStroke,
-        //         pointHoverBackgroundColor: gradientStroke,
-        //         pointHoverBorderColor: gradientStroke,
-        //         pointBorderWidth: 5,
-        //         pointHoverRadius: 5,
-        //         pointHoverBorderWidth: 1,
-        //         pointRadius: 3,
-        //         borderWidth: 4,
-        //     };
-        //     macd.datasets.push(data);
-        // }
+        const rsi = {
+            labels: labels,
+            datasets: [],
+        }
+
+        // Create gradients to make the graph pretty
+        const ctx = canvas.getContext("2d");
+        const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientSignal = ctx.createLinearGradient(700, 0, 300, 0);
+        gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+        gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+        gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+        gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+        if (rsiValues.length) {
+            const data = {
+                id: 4,
+                label: "RSI",
+                data: rsiValues,
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStroke,
+                pointBorderColor: gradientStroke,
+                pointBackgroundColor: gradientStroke,
+                pointHoverBackgroundColor: gradientStroke,
+                pointHoverBorderColor: gradientStroke,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            rsi.datasets.push(data);
+        }
+
+        // return the data for the graph
+        return {
+            ...rsi,
+        };
     };
 
     // data for the graph
     const stochData = (canvas) => {
-        // if (stochValues.length) {
-        //     console.log("stochValues ", stochValues);
-        //     const data = {
-        //         id: 6,
-        //         label: "STOCH",
-        //         data: stochValues,
-        //         fill: false,
-        //         backgroundColor: gradientFill,
-        //         borderColor: gradientStroke,
-        //         pointBorderColor: gradientStroke,
-        //         pointBackgroundColor: gradientStroke,
-        //         pointHoverBackgroundColor: gradientStroke,
-        //         pointHoverBorderColor: gradientStroke,
-        //         pointBorderWidth: 5,
-        //         pointHoverRadius: 5,
-        //         pointHoverBorderWidth: 1,
-        //         pointRadius: 3,
-        //         borderWidth: 4,
-        //     };
-        //     macd.datasets.push(data);
-        // }
+        const stoch = {
+            labels: labels,
+            datasets: [],
+        }
+
+        // Create gradients to make the graph pretty
+        const ctx = canvas.getContext("2d");
+        const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
+        const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
+        const graidentSlowD = ctx.createLinearGradient(700, 0, 300, 0);
+        gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+        gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+        gradientFill.addColorStop(1, "rgba(72, 95, 199, 0.6)");
+        gradientFill.addColorStop(0, "rgba(0, 209, 178, 0.6)");
+
+        graidentSlowD.addColorStop(1, "rgba(195, 30, 88, 1)");
+        graidentSlowD.addColorStop(0, "rgba(158, 28, 152, 1)");
+
+        if (stochValues.length) {
+            const slow_k = {
+                id: 6,
+                label: "slow_k",
+                data: stochValues[0],
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: gradientStroke,
+                pointBorderColor: gradientStroke,
+                pointBackgroundColor: gradientStroke,
+                pointHoverBackgroundColor: gradientStroke,
+                pointHoverBorderColor: gradientStroke,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            const slow_d = {
+                id: 6,
+                label: "slow_d",
+                data: stochValues[1],
+                fill: false,
+                backgroundColor: gradientFill,
+                borderColor: graidentSlowD,
+                pointBorderColor: graidentSlowD,
+                pointBackgroundColor: graidentSlowD,
+                pointHoverBackgroundColor: graidentSlowD,
+                pointHoverBorderColor: graidentSlowD,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 1,
+                pointRadius: 3,
+                borderWidth: 4,
+            };
+            stoch.datasets.push(slow_k);
+            stoch.datasets.push(slow_d);
+        }
+
+        // return the data for the graph
+        return {
+            ...stoch,
+        };
+
     };
 
     // display the stock component
@@ -955,7 +1028,21 @@ function Stock({ stock, user,
                     macdValues.length ? (
                         <Line data={macdData} options={graphOptionsMACD} />
                     ) : (
-                        <div className="macd" />
+                        null
+                    )
+                }
+                {
+                    rsiValues.length ? (
+                        <Line data={rsiData} options={graphOptionsRSI} />
+                    ) : (
+                        null
+                    )
+                }
+                {
+                    stochValues.length ? (
+                        <Line data={stochData} options={graphOptionsSTOCH} />
+                    ) : (
+                        null
                     )
                 }
                 <StockButtons
@@ -976,6 +1063,27 @@ function Stock({ stock, user,
             <div ref={observe} className="StockCard mt-6 pl-4 pr-4 pb-4 pt-4" id="StockChart">
                 <h3 id="stock-heading">{stock.symbol}: {mainTimeline}</h3>
                 <TechnicalGraph stock={stock} width={width} height={height} />
+                {
+                    macdValues.length ? (
+                        <Line data={macdData} options={graphOptionsMACD} />
+                    ) : (
+                        null
+                    )
+                }
+                {
+                    rsiValues.length ? (
+                        <Line data={rsiData} options={graphOptionsRSI} />
+                    ) : (
+                        null
+                    )
+                }
+                {
+                    stochValues.length ? (
+                        <Line data={stochData} options={graphOptionsSTOCH} />
+                    ) : (
+                        null
+                    )
+                }
                 <StockButtons
                     handleChart={handleChart}
                     handleUpdate={handleUpdate}
