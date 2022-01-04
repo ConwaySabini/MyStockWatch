@@ -7,7 +7,6 @@ import cors from "cors";
 // mongo connection
 import "./config/mongo.js";
 // routes
-import indexRouter from "./routes/index.js";
 import userRouter from "./routes/user.js";
 import stockRouter from "./routes/stocks.js";
 import favoritesRouter from "./routes/favorites.js";
@@ -31,15 +30,15 @@ const corsDomains = process.env.CORS_DOMAINS || "";
 const whitelist = corsDomains.split(",").map(d => d.trim());
 
 const corsOptions = {
-  // origin: function (origin, callback) {
-  //   if (!origin || whitelist.indexOf(origin) !== -1) {
-  //     callback(null, true);
-  //   } else {
-  //     callback(new Error("Not allowed by CORS"));
-  //   }
-  // },
-  origin: whitelist,
-  credentials: true
+    // origin: function (origin, callback) {
+    //   if (!origin || whitelist.indexOf(origin) !== -1) {
+    //     callback(null, true);
+    //   } else {
+    //     callback(new Error("Not allowed by CORS"));
+    //   }
+    // },
+    origin: whitelist,
+    credentials: true
 }
 
 const app = express();
@@ -59,10 +58,10 @@ app.use("/lists", listsRouter);
 
 /** catch 404 and forward to error handler */
 app.use('*', (req, res) => {
-  return res.status(404).json({
-    success: false,
-    message: 'API endpoint doesnt exist'
-  })
+    return res.status(404).json({
+        success: false,
+        message: 'API endpoint doesnt exist'
+    })
 });
 
 // Get the information from the api 
@@ -79,7 +78,7 @@ const server = http.createServer(app);
 server.listen(port);
 /** Event listener for HTTP server "listening" event. */
 server.on("listening", () => {
-  console.log(`Listening on port:: http://localhost:${port}/`);
+    console.log(`Listening on port:: http://localhost:${port}/`);
 });
 
 // const fetchGithub = require('./fetch/fetch-github')
