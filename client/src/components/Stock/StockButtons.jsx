@@ -92,15 +92,15 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
                             {lists.length ? (
                                 <div className="list">
                                     <ul>
-                                        {lists.map(list => {
+                                        {lists.map(listCurr => {
                                             return (
                                                 <li>
                                                     <button
                                                         class="button is-link mt-2"
                                                         id="dropdown-buton"
-                                                        onClick={() => handleListChange(list.name)}
+                                                        onClick={() => handleListChange(listCurr.name)}
                                                         disabled={loading}>
-                                                        {list.name}
+                                                        {listCurr.name}
                                                     </button>
                                                 </li>
                                             )
