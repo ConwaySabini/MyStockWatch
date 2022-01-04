@@ -201,6 +201,7 @@ function Stock({ stock, user,
             const stoch = findTAData(stock.symbol, 'STOCH');
             if (stoch !== undefined) setSTOCHValues(stoch.data);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -916,7 +917,6 @@ function Stock({ stock, user,
         const ctx = canvas.getContext("2d");
         const gradientStroke = ctx.createLinearGradient(700, 0, 300, 0);
         const gradientFill = ctx.createLinearGradient(700, 0, 300, 0);
-        const gradientSignal = ctx.createLinearGradient(700, 0, 300, 0);
         gradientStroke.addColorStop(1, "rgba(72, 95, 199, 0.6)");
         gradientStroke.addColorStop(0, "rgba(0, 209, 178, 0.6)");
 
