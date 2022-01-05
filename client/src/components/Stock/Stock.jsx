@@ -243,27 +243,27 @@ function Stock({ stock, user,
                     } else {
                         switch (ta) {
                             case "EMA":
-                                //handleUpdate(stock.timeline);
+                                handleUpdate(stock.timeline);
                                 calculateEMA(response.data);
                                 break;
                             case "SMA":
-                                //handleUpdate(stock.timeline);
+                                handleUpdate(stock.timeline);
                                 calculateSMA(response.data);
                                 break;
                             case "RSI":
-                                //handleUpdate(stock.timeline);
+                                handleUpdate(stock.timeline);
                                 calculateRSI(response.data);
                                 break;
                             case "BBANDS":
-                                //handleUpdate(stock.timeline);
+                                handleUpdate(stock.timeline);
                                 calculateBBANDS(response.data);
                                 break;
                             case "STOCH":
-                                //handleUpdate(stock.timeline);
+                                handleUpdate(stock.timeline);
                                 calculateSTOCH(response.data);
                                 break;
                             case "MACD":
-                                //handleUpdate(stock.timeline);
+                                handleUpdate(stock.timeline);
                                 calculateMACD(response.data);
                                 break;
                             default:
