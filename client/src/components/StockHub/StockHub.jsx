@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { StockContext } from "../../context/StockContext";
 import StockList from '../StockList/StockList';
+import StockForm from '../StockForm/StockForm';
 import './StockHub.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import Stock from '../Stock/Stock';
 const axios = require('axios').default;
 
@@ -18,12 +17,12 @@ const StockHub = ({ user }) => {
     const [filterSymbols, setFilterSymbols] = useState([]);
     // contains the current symbols from the filter bar
     const [filterSymbol, setFilterSymbol] = useState('');
-    // when the page is loading some actions are disabled
-    const [loading, setLoading] = useState(false);
     // timeframe of the stock to graph
     const [timeline, setTimeline] = useState('1day');
     // when sorting the stocks decide which direction to sort
     const [descending, setDescending] = useState(true);
+    // when the page is loading some actions are disabled
+    const [loading, setLoading] = useState(false);
     // modal for confirming events
     const [modal, setModal] = useState(false);
     // modal for viewing stock
@@ -105,38 +104,6 @@ const StockHub = ({ user }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Fetches the stock data with the symbol and displays is in a graph
-    const addStockData = async () => {
-        setLoading(true);
-        try {
-            // fetch the data
-            const response = await axios.request(options);
-            // handle error
-            if (response.data.status === "error") {
-                setSymbol('');
-                console.log(response.data.message);
-                setLoading(false);
-            } else {
-                // get the stock and calculate the percent change over the time period
-                const foundStock = findSymbol(symbol);
-                if (foundStock === undefined) {
-                    const percentChange = calculatePercentChange(response.data);
-                    // add the stock to the list and context API
-                    addStock(symbol, response.data, percentChange, timeline);
-                }
-                // cleanup
-                setUpdateStocks(!updateStocks);
-                setSymbol('');
-                setLoading(false);
-            }
-            // handle error
-        } catch (error) {
-            console.error(error);
-            setSymbol('');
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
         if (user !== undefined) {
             // update the stock data for the user
@@ -203,6 +170,39 @@ const StockHub = ({ user }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stockChange]);
+
+    // Fetches the stock data with the symbol and displays is in a graph
+    const addStockData = async () => {
+        setLoading(true);
+        try {
+            // fetch the data
+            const response = await axios.request(options);
+            // handle error
+            if (response.data.status === "error") {
+                setSymbol('');
+                console.log(response.data.message);
+                setLoading(false);
+            } else {
+                // get the stock and calculate the percent change over the time period
+                const foundStock = findSymbol(symbol);
+                if (foundStock === undefined) {
+                    const percentChange = calculatePercentChange(response.data);
+                    // add the stock to the list and context API
+                    addStock(symbol, response.data, percentChange, timeline);
+                }
+                // cleanup
+                setUpdateStocks(!updateStocks);
+                setSymbol('');
+                setLoading(false);
+            }
+            // handle error
+        } catch (error) {
+            console.error(error);
+            setSymbol('');
+            setLoading(false);
+        }
+    }
+
 
     // Axios options for getting stock data from 12 Data API
     const options = {
@@ -353,117 +353,24 @@ const StockHub = ({ user }) => {
     if (!modal && !stockModal) {
         return (
             <div class="StockForm">
-                {showHero ? (
-                    <div>
-                        <a onClick={() => toggleHero()} href="#instructions">
-                            <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
-                        </a>
-                        {/* Title and information about the dashboard */}
-                        <section class="hero is-link" id="hero-dash">
-                            <div class="hero-body" >
-                                <p class="title" id="hero-color">
-                                    Welcome to MyStockWatch
-                                </p>
-                                <p class="subtitle" id="hero-color">
-                                    Enter the symbol and click the <strong id="hero-color">Add Stock button or Enter</strong>, to add the stock.
-                                </p>
-                                <h2 class="subtitle" id="hero-color">
-                                    Enter a symbol or multiple symbols separated by a comma or space to filter the stocks. Then hit the
-                                    <strong id="hero-color"> Filter button or Enter</strong>, to filter the stocks.
-                                </h2>
-                                <h2 class="subtitle" id="hero-color">
-                                    Use the dropdown menu and select an option then press the
-                                    <strong id="hero-color"> Sort button</strong>, to sort the stocks by change in price.
-                                </h2>
-                            </div>
-                        </section>
-
-                    </div>) :
-                    (
-                        <a onClick={() => toggleHero()} href="#instructions">
-                            <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
-                        </a>
-                    )
-                }
-                <div class="block" />
-                {/* Forms and buttons to interact with the dashboard */}
-                <div className="button-and-forms ml-6">
-                    <div class="columns">
-                        <div class="column is-4">
-                            <button class="button is-link ml-2" onClick={handleSubmit} disabled={loading}>Add Stock</button>
-                            <button class="button is-danger ml-5" onClick={confirmClear} disabled={loading}>
-                                Clear All Stocks
-                            </button>
-
-                            <form onSubmit={handleSubmit}>
-                                <div className="stock-form" id="stock-search">
-                                    <input
-                                        id="StockInput"
-                                        type="text"
-                                        placeholder="Enter Symbol..."
-                                        value={symbol}
-                                        onChange={handleChange}
-                                        required
-                                        class="input is-rounded is-link mt-4"
-                                        disabled={loading}
-                                    />
-                                </div>
-                            </form>
-                        </div>
-                        <div class="column is-3">
-                            <button class="button is-link ml-2" onClick={handleFilter} disabled={loading}>Filter</button>
-                            <button class="button is-danger ml-5" onClick={clearFilters} disabled={loading}>
-                                Clear All Filters
-                            </button>
-                            <form onSubmit={handleFilter}>
-                                <input
-                                    id="FilterInput"
-                                    type="text"
-                                    placeholder="Enter Symbol to Filter"
-                                    value={filterSymbol}
-                                    onChange={handleFilterChange}
-                                    required
-                                    class="input is-rounded is-link mt-4"
-                                    disabled={loading}
-                                />
-                            </form>
-                        </div>
-                        <div class="column is-4">
-                            <button class="button is-link ml-4 mr-4" onClick={handleSort} disabled={loading}>Sort</button>
-                            <div class="dropdown is-hoverable ml-4">
-                                <div class="dropdown-trigger">
-                                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" disabled={loading} id="form-button">
-                                        <span>Ascending/Descending</span>
-                                        <span class="icon is-small">
-                                            <FontAwesomeIcon icon={faAngleDown} />
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="dropdown-menu" id="sort-dropdown" role="menu">
-                                    <div class="dropdown-content" id="sort-dropdown">
-                                        <div class="dropdown-item">
-                                            <button
-                                                class="button is-link"
-                                                id="dropdown-buton"
-                                                onClick={setDescendingFalse}
-                                                disabled={loading}>
-                                                Ascending
-                                            </button>
-                                            <button
-                                                class="button is-link mt-4"
-                                                id="dropdown-buton"
-                                                onClick={setDescendingTrue}
-                                                disabled={loading}>
-                                                Descending
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* render the list of stocks and pass down important functions to change aspects of the stocks */}
+                <StockForm
+                    showHero={showHero}
+                    toggleHero={toggleHero}
+                    handleSubmit={handleSubmit}
+                    loading={loading}
+                    confirmClear={confirmClear}
+                    symbol={symbol}
+                    handleChange={handleChange}
+                    handleFilter={handleFilter}
+                    filterSymbol={filterSymbol}
+                    handleFilterChange={handleFilterChange}
+                    clearFilters={clearFilters}
+                    handleSort={handleSort}
+                    setDescendingTrue={setDescendingTrue}
+                    setDescendingFalse={setDescendingFalse}
+                />
+                {/* render the list of stocks and pass down important 
+                functions to change aspects of the stocks */}
                 <StockList
                     filterSymbols={filterSymbols}
                     user={user}
@@ -513,4 +420,4 @@ const StockHub = ({ user }) => {
     }
 }
 
-export default StockHub
+export default StockHub;
