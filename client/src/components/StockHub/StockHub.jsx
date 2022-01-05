@@ -9,18 +9,9 @@ const axios = require('axios').default;
 // Component to display all stocks and the forms to add/edit stocks
 const StockHub = ({ user }) => {
     // context api to modify data across components
-    const { stocks, addStock, clearStocks, findSymbol, setNewStocks,
+    const { stocks, clearStocks, findSymbol, setNewStocks,
         editFavorite, findFavorite, editStock } = useContext(StockContext);
-    // symbol of the stock to be searched
-    const [symbol, setSymbol] = useState('');
-    // array of symbols to filter from the stock list
-    const [filterSymbols, setFilterSymbols] = useState([]);
-    // contains the current symbols from the filter bar
-    const [filterSymbol, setFilterSymbol] = useState('');
-    // timeframe of the stock to graph
-    const [timeline, setTimeline] = useState('1day');
-    // when sorting the stocks decide which direction to sort
-    const [descending, setDescending] = useState(true);
+
     // when the page is loading some actions are disabled
     const [loading, setLoading] = useState(false);
     // modal for confirming events
@@ -29,8 +20,13 @@ const StockHub = ({ user }) => {
     const [stockModal, setStockModal] = useState(false);
     // stock to display for stock modal
     const [stockView, setStock] = useState(null);
-    // flag for displaying the instructions
-    const [showHero, setShowHero] = useState(true);
+    // array of symbols to filter from the stock list
+    const [filterSymbolsHub, setFilterSymbolsHub] = useState([]);
+    // symbol of the stock to be searched
+    const [symbolHub, setSymbolHub] = useState('');
+    // timeframe of the stock to graph
+    const [timelineHub, setTimelineHub] = useState('1day');
+
     // flag for updating the stocks on the database
     const [updateStocks, setUpdateStocks] = useState(false);
     // when the timeline is changed of a stock this state is changed to reflect that change
@@ -77,7 +73,6 @@ const StockHub = ({ user }) => {
                     if (newStocks.length > 0) {
                         setNewStocks(newStocks);
                     }
-                    //console.log("newStocks", newStocks);
                     // cleanup function
                     setLoading(false);
                 }
@@ -136,7 +131,7 @@ const StockHub = ({ user }) => {
                 const response = await axios.request(options);
                 // handle error
                 if (response.data.status === "error") {
-                    setSymbol('');
+                    setSymbolHub('');
                     setLoading(false);
                     console.log(response.data.message);
                 } else {
@@ -144,21 +139,21 @@ const StockHub = ({ user }) => {
                     const percentChange = calculatePercentChange(response.data);
                     // edit the stock being modified
                     editStock(currentStock.symbol, response.data, percentChange,
-                        timeline, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
+                        timelineHub, currentStock.id, UPDATE_STOCKS, UPDATE_LISTS, user);
                     if (currentFavorite !== undefined) {
                         // edit the favorite in the sidebar to match the stock being modified
                         editFavorite(currentFavorite.symbol, response.data, percentChange,
-                            timeline, currentFavorite.id, UPDATE_FAVORITES, user);
+                            timelineHub, currentFavorite.id, UPDATE_FAVORITES, user);
                     }
                     // cleanup function
                     setUpdateStocks(!updateStocks);
-                    setSymbol('');
+                    setSymbolHub('');
                     setLoading(false);
                 }
                 // handle error
             } catch (error) {
                 console.error(error);
-                setSymbol('');
+                setSymbolHub('');
                 setLoading(false);
             }
         }
@@ -171,44 +166,11 @@ const StockHub = ({ user }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stockChange]);
 
-    // Fetches the stock data with the symbol and displays is in a graph
-    const addStockData = async () => {
-        setLoading(true);
-        try {
-            // fetch the data
-            const response = await axios.request(options);
-            // handle error
-            if (response.data.status === "error") {
-                setSymbol('');
-                console.log(response.data.message);
-                setLoading(false);
-            } else {
-                // get the stock and calculate the percent change over the time period
-                const foundStock = findSymbol(symbol);
-                if (foundStock === undefined) {
-                    const percentChange = calculatePercentChange(response.data);
-                    // add the stock to the list and context API
-                    addStock(symbol, response.data, percentChange, timeline);
-                }
-                // cleanup
-                setUpdateStocks(!updateStocks);
-                setSymbol('');
-                setLoading(false);
-            }
-            // handle error
-        } catch (error) {
-            console.error(error);
-            setSymbol('');
-            setLoading(false);
-        }
-    }
-
-
     // Axios options for getting stock data from 12 Data API
     const options = {
         method: 'GET',
         url: process.env.REACT_APP_RAPIDAPI_TIME_URL,
-        params: { interval: `${timeline}`, symbol: `${symbol}`, format: 'json', outputsize: '30' },
+        params: { interval: `${timelineHub}`, symbol: `${symbolHub}`, format: 'json', outputsize: '30' },
         headers: {
             'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
             'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
@@ -235,69 +197,12 @@ const StockHub = ({ user }) => {
 
     // Edit the stock being modified for the new timeline of the graph
     const handleTimeChange = (time, stock) => {
-        setSymbol(stock.symbol);
+        setSymbolHub(stock.symbol);
         setCurrentStock(stock);
-        setTimeline(time);
+        setTimelineHub(time);
         // get favorite corresponding to the stock being modified if available
         const favorite = findFavorite(stock.symbol);
         setCurrentFavorite(favorite);
-    }
-
-    // Add the stock data for the current symbol in input bar
-    const handleSubmit = e => {
-        e.preventDefault();
-        addStockData();
-    }
-
-    // Change symbol state to match with the input 
-    const handleChange = (e) => {
-        e.preventDefault();
-        setSymbol(e.target.value);
-    }
-
-    // Set the symbol of the stock/s to filter
-    const handleFilterChange = (e) => {
-        e.preventDefault();
-        setFilterSymbol(e.target.value);
-    }
-
-    // Set the new stocks after filtering them
-    const handleFilter = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        let splitSymbols = []
-        // filter the symbols if there is a comma
-        if (filterSymbol.includes(',')) {
-            const noWhiteSpace = filterSymbol.replace(/\s+/g, '')
-            splitSymbols = noWhiteSpace.split(',');
-            // filter the symbols if there is only spaces
-        } else {
-            splitSymbols = filterSymbol.split(' ');
-        }
-        // Set the filter list with the newest filtered stocks
-        setFilterSymbols([...filterSymbols, ...splitSymbols]);
-        setLoading(false);
-        setFilterSymbol('');
-    }
-
-    // Sort the list of stocks in ascending/descending order
-    const handleSort = () => {
-        let sortedStocks = [];
-
-        let index = 0;
-        for (let stock of stocks) {
-            sortedStocks[index] = stock;
-            index++;
-        }
-        // sort them in descending order
-        if (descending) {
-            sortedStocks.sort((a, b) => b.percentChange - a.percentChange);
-            // sort them in ascending order
-        } else {
-            sortedStocks.sort((a, b) => a.percentChange - b.percentChange);
-        }
-        // set the new list of stocks
-        setNewStocks(sortedStocks);
     }
 
     // clear the list of stocks on the screen
@@ -306,21 +211,6 @@ const StockHub = ({ user }) => {
         clearStocks(UPDATE_STOCKS, UPDATE_LISTS, UPDATE_FAVORITES, user);
         setModal(false);
         setUpdateStocks(!updateStocks);
-    }
-
-    // Clear all current filters that are applied
-    const clearFilters = e => {
-        setFilterSymbols([]);
-    }
-
-    // Set the sorting order to ascending
-    const setDescendingFalse = () => {
-        setDescending(false);
-    }
-
-    // Set the sorting order to descending
-    const setDescendingTrue = () => {
-        setDescending(true);
     }
 
     const handleStockModal = (stockSymbol) => {
@@ -345,34 +235,21 @@ const StockHub = ({ user }) => {
         setModal(false);
     }
 
-    // function to hide the instructions
-    const toggleHero = () => {
-        setShowHero(!showHero);
-    }
-
     if (!modal && !stockModal) {
         return (
             <div class="StockForm">
                 <StockForm
-                    showHero={showHero}
-                    toggleHero={toggleHero}
-                    handleSubmit={handleSubmit}
-                    loading={loading}
+                    updateStocks={updateStocks}
+                    setUpdateStocks={setUpdateStocks}
                     confirmClear={confirmClear}
-                    symbol={symbol}
-                    handleChange={handleChange}
-                    handleFilter={handleFilter}
-                    filterSymbol={filterSymbol}
-                    handleFilterChange={handleFilterChange}
-                    clearFilters={clearFilters}
-                    handleSort={handleSort}
-                    setDescendingTrue={setDescendingTrue}
-                    setDescendingFalse={setDescendingFalse}
+                    calculatePercentChange={calculatePercentChange}
+                    setFilterSymbolsHub={setFilterSymbolsHub}
+                    loadingHub={loading}
                 />
                 {/* render the list of stocks and pass down important 
                 functions to change aspects of the stocks */}
                 <StockList
-                    filterSymbols={filterSymbols}
+                    filterSymbols={filterSymbolsHub}
                     user={user}
                     handleStockModal={handleStockModal}
                     handleStockChange={handleStockChange}
