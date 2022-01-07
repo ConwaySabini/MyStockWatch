@@ -1,4 +1,5 @@
-MyStockWatch https://my-stock-watch.netlify.app/
+MyStockWatch
+  Link: https://my-stock-watch.netlify.app/
 
   Designed and developed a full-stack web app where you can create an account, add and remove stocks, 
   analyze stocks with different time frames and using various technical analysis indicators, 
