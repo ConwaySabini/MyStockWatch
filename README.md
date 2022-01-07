@@ -15,5 +15,6 @@ About:
   To run this code locally, you can clone the repo and run npm install or yarn install to get all of the dependencies.
   Then change the directory to the client and run npm install or yarn install again to get all of the client dependencies.
   You will need to create your own environment variables in a file with a mongoDB database in order for the API calls to 
-  the financial data and back-end to work. In the base directory, run docker-compose build to create the deployment image.
+  the financial data and back-end to work. Twelve Data and Bing News are the financial APIs being used.
+  In the base directory, run docker-compose build to create the deployment image.
   Then run docker-compose up to run the image which will contain both the front end and the back end in a single docker image.
