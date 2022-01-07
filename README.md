@@ -1,5 +1,9 @@
 MyStockWatch: https://my-stock-watch.netlify.app/
 
+  Just create an account and follow the instructions to begin using the stock tracker application.
+
+About:
+
   Designed and developed a full-stack web app where you can create an account, add and remove stocks, 
   analyze stocks with different time frames and using various technical analysis indicators, 
   keep a list of favorites, create custom lists, check financial news and stock specific news, and more. 
