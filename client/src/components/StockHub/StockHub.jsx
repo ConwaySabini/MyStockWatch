@@ -276,7 +276,7 @@ const StockHub = ({ user }) => {
                     <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
                     {/* </div> */}
                 </div>
-                <button class="modal-close is-large" aria-label="close"></button>
+                <button class="modal-close is-large" onClick={clearStockModal} aria-label="close"></button>
             </div>
         );
     } else {
