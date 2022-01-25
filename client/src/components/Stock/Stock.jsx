@@ -235,7 +235,6 @@ function Stock({ stock, user,
                     }
                     const response = await axios.request(dataOptions);
                     // debug
-                    console.log("TA DATA: ", response.data);
                     // handle error
                     if (response.data.status === "error") {
                         setTA('');
@@ -716,7 +715,6 @@ function Stock({ stock, user,
             result.datasets.push(data);
         }
         if (emaValues.length) {
-            console.log("emaValues ", emaValues);
             const data = {
                 id: 3,
                 label: "EMA",

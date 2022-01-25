@@ -26,6 +26,8 @@ const StockHub = ({ user }) => {
     const [symbolHub, setSymbolHub] = useState('');
     // timeframe of the stock to graph
     const [timelineHub, setTimelineHub] = useState('1day');
+    // symbols and names for stock autocomplete
+    const [names, setNames] = useState([]);
 
     // flag for updating the stocks on the database
     const [updateStocks, setUpdateStocks] = useState(false);
@@ -95,7 +97,33 @@ const StockHub = ({ user }) => {
                 setLoading(false);
             }
         }
+
+        // get list of stocks for autocomplete search
+        const getStockList = async () => {
+            setLoading(true);
+            try {
+                // get the stock name data
+                const allStocks = await axios.request(listOptions);
+                localStorage.setItem('allStocks', allStocks.data.data);
+                setNames(allStocks.data);
+                // handle error
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        }
+        // get the user data from the server
         fetchDataFromServer();
+
+        localStorage.removeItem('allStocks');
+        // get symbols and names for autocomplete search
+        const stockNames = localStorage.getItem('allStocks');
+        if (stockNames === null || stockNames === undefined) {
+            getStockList();
+        } else {
+            setNames(stockNames);
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -177,6 +205,17 @@ const StockHub = ({ user }) => {
         }
     };
 
+    // options for getting the list of stock symbols with matching names
+    const listOptions = {
+        method: 'GET',
+        url: process.env.REACT_APP_RAPIDAPI_STOCK_URL,
+        params: { format: 'json', exchange: 'NASDAQ' },
+        headers: {
+            'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
+            'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
+        }
+    };
+
     // Calculates the percent change of the stock over the time period and return  
     // it rounded to the nearest hundreth place
     const calculatePercentChange = (response) => {
@@ -245,6 +284,7 @@ const StockHub = ({ user }) => {
                     calculatePercentChange={calculatePercentChange}
                     setFilterSymbolsHub={setFilterSymbolsHub}
                     loadingHub={loading}
+                    names={names}
                 />
                 {/* render the list of stocks and pass down important 
                 functions to change aspects of the stocks */}

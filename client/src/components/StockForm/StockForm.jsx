@@ -7,7 +7,7 @@ const axios = require('axios').default;
 
 const StockForm = ({ confirmClear,
     calculatePercentChange, updateStocks,
-    setUpdateStocks, setFilterSymbolsHub, loadingHub }) => {
+    setUpdateStocks, setFilterSymbolsHub, loadingHub, names }) => {
 
     // context api to modify data across components
     const { stocks, addStock, findSymbol, setNewStocks } = useContext(StockContext);
@@ -24,6 +24,8 @@ const StockForm = ({ confirmClear,
     const [descending, setDescending] = useState(true);
     // flag for displaying the instructions
     const [showHero, setShowHero] = useState(true);
+    // autocomplete suggestions
+    const [autocomplete, setAutocomplete] = useState([]);
 
     // Axios options for getting stock data from 12 Data API
     const options = {
@@ -67,6 +69,33 @@ const StockForm = ({ confirmClear,
             setLoading(false);
         }
     }
+
+    // function to match the name of the company to the symbol
+    const matchName = (name, keyword) => {
+        const size = keyword.length;
+        name = name.toLowerCase().substring(0, size);
+        // return true if match and false if not
+        if (name === keyword && size !== 0)
+            return true;
+        else
+            return false;
+    };
+
+    // Comparing each value in the array against the keyword
+    const onSearch = value => {
+        console.log("names", names);
+        const results = [];
+        // add matched values to the autocomplete array
+        for (const item of names.data) {
+            if (item.name !== undefined) {
+                if (matchName(item.name, value)) {
+                    results.push(item);
+                }
+            }
+        }
+        console.log("results", results);
+        setAutocomplete(results);
+    };
 
     // function to hide the instructions
     const toggleHero = () => {
@@ -119,6 +148,13 @@ const StockForm = ({ confirmClear,
     const handleChange = (e) => {
         e.preventDefault();
         setSymbol(e.target.value);
+        onSearch(e.target.value);
+    }
+
+    // Use the autocomplete to change the search
+    const updateSearch = (text) => {
+        setSymbol(text);
+        setAutocomplete([]);
     }
 
     // Add the stock data for the current symbol in input bar
@@ -146,6 +182,39 @@ const StockForm = ({ confirmClear,
         // set the new list of stocks
         setNewStocks(sortedStocks);
     }
+
+    //render the results of the autocomplete
+    const SearchPreview = ({ name, type, index, symbol }) => {
+        return (
+            <div
+                id="search-preview"
+                class="card"
+                onClick={() => updateSearch(symbol)}
+                className={`search-preview ${index === 0 ? "start" : ""}`
+                }>
+                <div class="card-content">
+                    <div class="content">
+                        {name} ({symbol})
+                        <br />
+                        {type}
+                        <br />
+                    </div>
+                </div>
+            </div >
+        );
+    };
+
+    const renderResults = autocomplete.map(({ type, name, symbol }, index) => {
+        return (
+            <SearchPreview
+                key={index}
+                index={index}
+                type={type}
+                name={name}
+                symbol={symbol}
+            />
+        );
+    });
 
     return (
         <div>
@@ -204,6 +273,7 @@ const StockForm = ({ confirmClear,
                                     class="input is-rounded is-link mt-4"
                                     disabled={loading || loadingHub}
                                 />
+                                <div className="search-results">{renderResults}</div>
                             </div>
                         </form>
                     </div>
@@ -262,6 +332,6 @@ const StockForm = ({ confirmClear,
             </div>
         </div>
     );
-}
+};
 
 export default StockForm;

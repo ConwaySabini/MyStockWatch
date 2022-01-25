@@ -35,3 +35,7 @@
     height: 100%;
     width: 100%;
 }
+
+#search-preview:hover {
+    background-color: #979ba7;
+}

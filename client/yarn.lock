@@ -4391,6 +4391,11 @@
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.0.9.tgz"
   "version" "3.0.9"
 
+"csv-reader@^1.0.8":
+  "integrity" "sha512-EK03OmXoet2dljwfJoY7/M6C+DmsthQgObpXfO6yCQ2HKNVSBd9uQ3TDzlfbfDhSn8mgmnPR2oEUftip3VihTw=="
+  "resolved" "https://registry.npmjs.org/csv-reader/-/csv-reader-1.0.8.tgz"
+  "version" "1.0.8"
+
 "cyclist@^1.0.1":
   "integrity" "sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk="
   "resolved" "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"
