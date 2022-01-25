@@ -105,7 +105,11 @@ const StockHub = ({ user }) => {
                 // get the stock name data
                 const allStocks = await axios.request(listOptions);
                 localStorage.setItem('allStocks', allStocks.data.data);
-                setNames(allStocks.data);
+                //console.log("allStocks", allStocks.data.data);
+                for (let i = 0; i < allStocks.data.data.length; i++) {
+                    allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
+                }
+                setNames(allStocks.data.data);
                 // handle error
             } catch (error) {
                 console.error(error);
@@ -115,7 +119,8 @@ const StockHub = ({ user }) => {
         // get the user data from the server
         fetchDataFromServer();
 
-        localStorage.removeItem('allStocks');
+
+        //localStorage.removeItem('allStocks');
         // get symbols and names for autocomplete search
         const stockNames = localStorage.getItem('allStocks');
         if (stockNames === null || stockNames === undefined) {
@@ -209,7 +214,7 @@ const StockHub = ({ user }) => {
     const listOptions = {
         method: 'GET',
         url: process.env.REACT_APP_RAPIDAPI_STOCK_URL,
-        params: { format: 'json', exchange: 'NASDAQ' },
+        params: { format: 'json' },
         headers: {
             'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
             'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
@@ -273,68 +278,71 @@ const StockHub = ({ user }) => {
     const clearModal = () => {
         setModal(false);
     }
-
-    if (!modal && !stockModal) {
-        return (
-            <div class="StockForm">
-                <StockForm
-                    updateStocks={updateStocks}
-                    setUpdateStocks={setUpdateStocks}
-                    confirmClear={confirmClear}
-                    calculatePercentChange={calculatePercentChange}
-                    setFilterSymbolsHub={setFilterSymbolsHub}
-                    loadingHub={loading}
-                    names={names}
-                />
-                {/* render the list of stocks and pass down important 
+    if (names.length > 0) {
+        if (!modal && !stockModal) {
+            return (
+                <div class="StockForm">
+                    <StockForm
+                        updateStocks={updateStocks}
+                        setUpdateStocks={setUpdateStocks}
+                        confirmClear={confirmClear}
+                        calculatePercentChange={calculatePercentChange}
+                        setFilterSymbolsHub={setFilterSymbolsHub}
+                        loadingHub={loading}
+                        names={names}
+                    />
+                    {/* render the list of stocks and pass down important 
                 functions to change aspects of the stocks */}
-                <StockList
-                    filterSymbols={filterSymbolsHub}
-                    user={user}
-                    handleStockModal={handleStockModal}
-                    handleStockChange={handleStockChange}
-                    handleTimeChange={handleTimeChange}
-                />
-            </div >
-        );
-    } else if (stockModal) {
-        return (
-            <div class="modal is-active">
-                <div class="modal-background"> </div>
-                <div class="modal-content" id="stock-modal">
-                    {/* <!-- Any other Bulma elements you want --> */}
-                    {/* <div class="section" id="stock-modal-section"> */}
-                    <Stock
-                        stock={stockView}
-                        key={stockView.id}
+                    <StockList
+                        filterSymbols={filterSymbolsHub}
                         user={user}
                         handleStockModal={handleStockModal}
                         handleStockChange={handleStockChange}
                         handleTimeChange={handleTimeChange}
-                        id="viewing-stock"
                     />
-                    <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
-                    {/* </div> */}
-                </div>
-                <button class="modal-close is-large" onClick={clearStockModal} aria-label="close"></button>
-            </div>
-        );
-    } else {
-        return (
-            <div class="modal is-active">
-                <div class="modal-background"> </div>
-                <div class="modal-content">
-                    {/* <!-- Any other Bulma elements you want --> */}
-                    <div class="section" id="modal-section">
-                        <h3 id="modal-heading">Are you sure you want to clear all stocks?</h3>
-                        <button class="button is-danger mt-4" onClick={clear}>Clear All Stocks</button>
-                        <button class="button is-primary mt-4 ml-4" onClick={clearModal}>Cancel</button>
+                </div >
+            );
+        } else if (stockModal) {
+            return (
+                <div class="modal is-active">
+                    <div class="modal-background"> </div>
+                    <div class="modal-content" id="stock-modal">
+                        {/* <!-- Any other Bulma elements you want --> */}
+                        {/* <div class="section" id="stock-modal-section"> */}
+                        <Stock
+                            stock={stockView}
+                            key={stockView.id}
+                            user={user}
+                            handleStockModal={handleStockModal}
+                            handleStockChange={handleStockChange}
+                            handleTimeChange={handleTimeChange}
+                            id="viewing-stock"
+                        />
+                        <button class="button is-primary mt-4 ml-6" onClick={clearStockModal}>Exit</button>
+                        {/* </div> */}
                     </div>
+                    <button class="modal-close is-large" onClick={clearStockModal} aria-label="close"></button>
                 </div>
-                <button class="modal-close is-large" aria-label="close"></button>
-            </div>
-        );
+            );
+        } else {
+            return (
+                <div class="modal is-active">
+                    <div class="modal-background"> </div>
+                    <div class="modal-content">
+                        {/* <!-- Any other Bulma elements you want --> */}
+                        <div class="section" id="modal-section">
+                            <h3 id="modal-heading">Are you sure you want to clear all stocks?</h3>
+                            <button class="button is-danger mt-4" onClick={clear}>Clear All Stocks</button>
+                            <button class="button is-primary mt-4 ml-4" onClick={clearModal}>Cancel</button>
+                        </div>
+                    </div>
+                    <button class="modal-close is-large" aria-label="close"></button>
+                </div>
+            );
+        }
     }
+    else
+        return null;
 }
 
 export default StockHub;

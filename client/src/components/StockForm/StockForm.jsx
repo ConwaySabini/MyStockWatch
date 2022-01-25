@@ -73,7 +73,7 @@ const StockForm = ({ confirmClear,
     // function to match the name of the company to the symbol
     const matchName = (name, keyword) => {
         const size = keyword.length;
-        name = name.toLowerCase().substring(0, size);
+        name = name.substring(0, size);
         // return true if match and false if not
         if (name === keyword && size !== 0)
             return true;
@@ -83,10 +83,9 @@ const StockForm = ({ confirmClear,
 
     // Comparing each value in the array against the keyword
     const onSearch = value => {
-        console.log("names", names);
         const results = [];
         // add matched values to the autocomplete array
-        for (const item of names.data) {
+        for (const item of names) {
             if (item.name !== undefined) {
                 if (matchName(item.name, value)) {
                     results.push(item);
@@ -95,6 +94,11 @@ const StockForm = ({ confirmClear,
         }
         console.log("results", results);
         setAutocomplete(results);
+    };
+
+    const cancelSearch = () => {
+        setSymbol('');
+        setAutocomplete([]);
     };
 
     // function to hide the instructions
@@ -184,7 +188,7 @@ const StockForm = ({ confirmClear,
     }
 
     //render the results of the autocomplete
-    const SearchPreview = ({ name, type, index, symbol }) => {
+    const SearchPreview = ({ name, type, index, symbol, exchange }) => {
         return (
             <div
                 id="search-preview"
@@ -194,17 +198,14 @@ const StockForm = ({ confirmClear,
                 }>
                 <div class="card-content">
                     <div class="content">
-                        {name} ({symbol})
-                        <br />
-                        {type}
-                        <br />
+                        {name} ({symbol}) ({exchange})
                     </div>
                 </div>
             </div >
         );
     };
 
-    const renderResults = autocomplete.map(({ type, name, symbol }, index) => {
+    const renderResults = autocomplete.map(({ type, name, symbol, exchange }, index) => {
         return (
             <SearchPreview
                 key={index}
@@ -212,6 +213,7 @@ const StockForm = ({ confirmClear,
                 type={type}
                 name={name}
                 symbol={symbol}
+                exchange={exchange}
             />
         );
     });
@@ -273,6 +275,11 @@ const StockForm = ({ confirmClear,
                                     class="input is-rounded is-link mt-4"
                                     disabled={loading || loadingHub}
                                 />
+                                {/* <button
+                                    onClick={() => cancelSearch()}
+                                    className={`cancel-btn ${symbol.length > 0 ? "active" : "inactive"}`}>
+                                    x
+                                </button> */}
                                 <div className="search-results">{renderResults}</div>
                             </div>
                         </form>
