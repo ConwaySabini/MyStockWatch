@@ -11,6 +11,7 @@ import userRouter from "./routes/user.js";
 import stockRouter from "./routes/stocks.js";
 import favoritesRouter from "./routes/favorites.js";
 import listsRouter from "./routes/lists.js";
+import autocompleteRouter from "./routes/autocomplete.js";
 // Redis configuration
 // const redis = require("redis"),
 //   client = redis.createClient();/ // client middleware for redis
@@ -55,6 +56,7 @@ app.use("/users", userRouter);
 app.use("/stocks", stockRouter);
 app.use("/favorites", favoritesRouter);
 app.use("/lists", listsRouter);
+app.use("/autocomplete", autocompleteRouter);
 
 /** catch 404 and forward to error handler */
 app.use('*', (req, res) => {
@@ -63,13 +65,6 @@ app.use('*', (req, res) => {
         message: 'API endpoint doesnt exist'
     })
 });
-
-// Get the information from the api 
-// app.get('/api/jobs', async (req, res) => {
-//   const jobs = await getAsync('github');
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   return res.send(jobs);
-// });
 
 /** Create HTTP server. */
 const server = http.createServer(app);
@@ -80,6 +75,13 @@ server.listen(port);
 server.on("listening", () => {
     console.log(`Listening on port:: http://localhost:${port}/`);
 });
+
+// Get the information from the api 
+// app.get('/api/jobs', async (req, res) => {
+//   const jobs = await getAsync('github');
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   return res.send(jobs);
+// });
 
 // const fetchGithub = require('./fetch/fetch-github')
 

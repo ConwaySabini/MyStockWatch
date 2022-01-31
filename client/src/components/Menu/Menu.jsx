@@ -274,7 +274,7 @@ function Menu({ user }) {
                             renderGainers ? (
                                 <p class="menu-label">
                                     <strong id="menu-label">Gainers</strong>
-                                    <a onClick={() => hideList("gainers")}>
+                                    <a onClick={() => hideList("gainers")} href="#gainers">
                                         <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
                                     </a>
                                     <p id="gainers">
@@ -296,7 +296,7 @@ function Menu({ user }) {
                             ) : (
                                 <p class="menu-label">
                                     <strong id="menu-label">Gainers</strong>
-                                    <a onClick={() => showList("gainers")}>
+                                    <a onClick={() => showList("gainers")} href="#gainers">
                                         <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                                     </a>
                                 </p>
@@ -306,7 +306,7 @@ function Menu({ user }) {
                             renderLosers ? (
                                 <p class="menu-label">
                                     <strong id="menu-label">Losers</strong>
-                                    <a onClick={() => hideList("losers")}>
+                                    <a onClick={() => hideList("losers")} href="#losers">
                                         <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
                                     </a>
                                     <p id="losers">
@@ -328,7 +328,7 @@ function Menu({ user }) {
                             ) : (
                                 <p class="menu-label">
                                     <strong id="menu-label">Losers</strong>
-                                    <a onClick={() => showList("losers")}>
+                                    <a onClick={() => showList("losers")} href="#losers">
                                         <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                                     </a>
                                 </p>
@@ -338,7 +338,7 @@ function Menu({ user }) {
                             renderFavorites ? (
                                 <p class="menu-label">
                                     <strong id="menu-label">Favorites</strong>
-                                    <a onClick={() => hideList("favorites")}>
+                                    <a onClick={() => hideList("favorites")} href="#favorites">
                                         <FontAwesomeIcon id="angle-down-menu" icon={faAngleDown} size="2x" />
                                     </a>
                                     <p id="favorites">
@@ -360,7 +360,7 @@ function Menu({ user }) {
                             ) : (
                                 <p class="menu-label">
                                     <strong id="menu-label">Favorites</strong>
-                                    <a onClick={() => showList("favorites")}>
+                                    <a onClick={() => showList("favorites")} href="#favorites">
                                         <FontAwesomeIcon id="angle-down-menu" icon={faAngleUp} size="2x" />
                                     </a>
                                 </p>

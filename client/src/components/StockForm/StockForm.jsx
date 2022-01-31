@@ -70,6 +70,8 @@ const StockForm = ({ confirmClear,
         }
     }
 
+    console.log("names", names);
+
     // function to match the name of the company to the symbol
     const matchName = (name, keyword) => {
         const size = keyword.length;
@@ -96,10 +98,10 @@ const StockForm = ({ confirmClear,
         setAutocomplete(results);
     };
 
-    const cancelSearch = () => {
-        setSymbol('');
-        setAutocomplete([]);
-    };
+    // const cancelSearch = () => {
+    //     setSymbol('');
+    //     setAutocomplete([]);
+    // };
 
     // function to hide the instructions
     const toggleHero = () => {

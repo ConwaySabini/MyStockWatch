@@ -104,11 +104,12 @@ const StockHub = ({ user }) => {
             try {
                 // get the stock name data
                 const allStocks = await axios.request(listOptions);
-                localStorage.setItem('allStocks', allStocks.data.data);
                 //console.log("allStocks", allStocks.data.data);
                 for (let i = 0; i < allStocks.data.data.length; i++) {
                     allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
                 }
+                // TODO create Trie and store in database and get data from there
+                //localStorage.setItem('allStocks', JSON.stringify(allStocks.data.data));
                 setNames(allStocks.data.data);
                 // handle error
             } catch (error) {
@@ -116,13 +117,14 @@ const StockHub = ({ user }) => {
                 setLoading(false);
             }
         }
+        // get autocomplete data from the server
         // get the user data from the server
         fetchDataFromServer();
 
 
-        //localStorage.removeItem('allStocks');
+        localStorage.removeItem('allStocks');
         // get symbols and names for autocomplete search
-        const stockNames = localStorage.getItem('allStocks');
+        const stockNames = JSON.parse(localStorage.getItem('allStocks'));
         if (stockNames === null || stockNames === undefined) {
             getStockList();
         } else {
