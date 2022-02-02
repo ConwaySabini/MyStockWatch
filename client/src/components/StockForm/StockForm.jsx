@@ -7,7 +7,7 @@ const axios = require('axios').default;
 
 const StockForm = ({ confirmClear,
     calculatePercentChange, updateStocks,
-    setUpdateStocks, setFilterSymbolsHub, loadingHub, names }) => {
+    setUpdateStocks, setFilterSymbolsHub, loadingHub, trie }) => {
 
     // context api to modify data across components
     const { stocks, addStock, findSymbol, setNewStocks } = useContext(StockContext);
@@ -70,32 +70,38 @@ const StockForm = ({ confirmClear,
         }
     }
 
-    console.log("names", names);
+    //console.log("names", names);
+    //console.log("trie", trie);
 
     // function to match the name of the company to the symbol
-    const matchName = (name, keyword) => {
-        const size = keyword.length;
-        name = name.substring(0, size);
-        // return true if match and false if not
-        if (name === keyword && size !== 0)
-            return true;
-        else
-            return false;
-    };
+    // const matchName = (name, keyword) => {
+    //     const size = keyword.length;
+    //     name = name.substring(0, size);
+    //     // return true if match and false if not
+    //     if (name === keyword && size !== 0)
+    //         return true;
+    //     else
+    //         return false;
+    // };
 
     // Comparing each value in the array against the keyword
     const onSearch = value => {
-        const results = [];
-        // add matched values to the autocomplete array
-        for (const item of names) {
-            if (item.name !== undefined) {
-                if (matchName(item.name, value)) {
-                    results.push(item);
-                }
-            }
+        console.log("search Value", value);
+        if (value !== " " && value !== "") {
+            const results = trie.find(value);
+            setAutocomplete(results);
+        } else {
+            setAutocomplete([]);
         }
-        console.log("results", results);
-        setAutocomplete(results);
+        // add matched values to the autocomplete array
+        // for (const item of names) {
+        //     if (item.name !== undefined) {
+        //         if (matchName(item.name, value)) {
+        //             results.push(item);
+        //         }
+        //     }
+        // }
+        // console.log("results", results); 
     };
 
     // const cancelSearch = () => {

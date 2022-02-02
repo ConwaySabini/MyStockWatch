@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const validator = require('validator'); // models
 
 
-// Export User Controller
+// Export Favorite Controller
 var _default = {
   // Finds favorites by their id and returns the favorites on success
   onGetFavoritesById: async (req, res) => {

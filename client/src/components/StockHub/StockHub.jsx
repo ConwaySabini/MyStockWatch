@@ -27,7 +27,9 @@ const StockHub = ({ user }) => {
     // timeframe of the stock to graph
     const [timelineHub, setTimelineHub] = useState('1day');
     // symbols and names for stock autocomplete
-    const [names, setNames] = useState([]);
+    // const [names, setNames] = useState([]);
+    // symbols and names for stock autocomplete
+    const [trie, setTrie] = useState({});
 
     // flag for updating the stocks on the database
     const [updateStocks, setUpdateStocks] = useState(false);
@@ -48,6 +50,166 @@ const StockHub = ({ user }) => {
     const SERVER = process.env.REACT_APP_GET_USER_STOCKS + user;
     // server url to create stocks
     const CREATE_STOCKS = process.env.REACT_APP_CREATE_STOCKS;
+
+    // TrieNode to hold the letter and children
+    function TrieNode(letter) {
+        // letter is the key
+        this.letter = letter;
+        // parent node reference
+        this.parent = null;
+        // list of children nodes
+        this.children = {};
+        // object being stored in the node
+        this.data = null;
+        // if word is true then this is the end of the current word
+        this.word = false;
+
+    }
+
+    // iterates through the parents to get the word.
+    // time complexity: O(k), k = word length
+    TrieNode.prototype.getWord = function () {
+        let output = [];
+        let node = this;
+
+        while (node !== null) {
+            output.unshift(node.letter);
+            node = node.parent;
+        }
+
+        return output.join('');
+    };
+
+
+    // Instantiate the trie with root node
+    function Trie() {
+        this.root = new TrieNode(null);
+    }
+
+    // Inserts a word in the trie
+    Trie.prototype.insert = function (object) {
+        let node = this.root;
+
+        // go through every character
+        for (let i = 0; i < object.name.length; i++) {
+            // check if character exists
+            if (!node.children[object.name[i]]) {
+                // create new letter in trie if it does not exist
+                node.children[object.name[i]] = new TrieNode(object.name[i]);
+
+                // we also assign the parent to the child node.
+                node.children[object.name[i]].parent = node;
+            }
+
+            // proceed to the next depth in the trie.
+            node = node.children[object.name[i]];
+
+            // finally, we check to see if it's the last word.
+            if (i === object.name.length - 1) {
+                // set the object data
+                node.data = object;
+                // if it is, we set the end flag to true.
+                node.word = true;
+            }
+        }
+    };
+
+    // check if it contains a whole word.
+    // time complexity: O(k), k = word length
+    Trie.prototype.contains = function (word) {
+        let node = this.root;
+
+        // for every character in the word
+        for (let i = 0; i < word.length; i++) {
+            // check to see if character node exists in children.
+            if (node.children[word[i]]) {
+                // if it exists, proceed to the next depth of the trie.
+                node = node.children[word[i]];
+            } else {
+                // doesn't exist, return false since it's not a valid word.
+                return false;
+            }
+        }
+
+        // we finished going through all the words, but is it a whole word?
+        return node.word;
+    };
+
+    // returns every word with given prefix
+    // time complexity: O(p + n), p = prefix length, n = number of child paths
+    Trie.prototype.find = function (prefix) {
+        let node = this.root;
+        let output = [];
+
+        // for every character in the prefix
+        for (let i = 0; i < prefix.length; i++) {
+            // make sure prefix actually has words
+            if (node.children[prefix[i]]) {
+                node = node.children[prefix[i]];
+            } else {
+                // there's none. just return it.
+                return output;
+            }
+        }
+
+        // recursively find all words in the node
+        findAllWords(node, output);
+
+        return output;
+    };
+
+    // recursive function to find all words in the given node.
+    function findAllWords(node, arr) {
+        // base case, if node is at a word, push to output
+        if (node.word) {
+            // arr.unshift(node.getWord());
+            arr.unshift(node.data);
+        }
+
+        // iterate through each children, call recursive findAllWords
+        for (let child in node.children) {
+            findAllWords(node.children[child], arr);
+        }
+    }
+
+    // removes a word from the trie
+    Trie.prototype.remove = function (word) {
+        let root = this.root;
+
+        if (!word) return;
+
+        // recursively finds and removes a word
+        const removeWord = (node, currWord) => {
+
+            // check if current node contains the word
+            if (node.word && node.getWord() === currWord) {
+
+                // check and see if node has children
+                let hasChildren = Object.keys(node.children).length > 0;
+
+                // if has children we only want to un-flag the end node that marks end of a word.
+                // this way we do not remove words that contain/include supplied word
+                if (hasChildren) {
+                    node.word = false;
+                } else {
+                    // remove word by getting parent and setting children to empty dictionary
+                    node.parent.children = {};
+                }
+
+                return true;
+            }
+
+            // recursively remove word from all children
+            for (let key in node.children) {
+                removeWord(node.children[key], currWord)
+            }
+
+            return false
+        };
+
+        // call remove word on root node
+        removeWord(root, word);
+    };
 
     // Fetch the stock data from the server and render the stocks
     // If there is no stock data for this user, create new data
@@ -104,13 +266,17 @@ const StockHub = ({ user }) => {
             try {
                 // get the stock name data
                 const allStocks = await axios.request(listOptions);
+                const newTrie = new Trie();
                 //console.log("allStocks", allStocks.data.data);
                 for (let i = 0; i < allStocks.data.data.length; i++) {
                     allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
+                    newTrie.insert(allStocks.data.data[i]);
                 }
                 // TODO create Trie and store in database and get data from there
                 //localStorage.setItem('allStocks', JSON.stringify(allStocks.data.data));
-                setNames(allStocks.data.data);
+                setTrie(newTrie);
+                console.log("trieHub", newTrie.root);
+                //setNames(allStocks.data.data);
                 // handle error
             } catch (error) {
                 console.error(error);
@@ -122,14 +288,20 @@ const StockHub = ({ user }) => {
         fetchDataFromServer();
 
 
-        localStorage.removeItem('allStocks');
+        //localStorage.removeItem('allStocks');
         // get symbols and names for autocomplete search
-        const stockNames = JSON.parse(localStorage.getItem('allStocks'));
-        if (stockNames === null || stockNames === undefined) {
+        //TODO stop from rebuilding every change in the render
+        console.log("trie before function", trie.root);
+        if (trie === undefined || trie.root === undefined) {
             getStockList();
-        } else {
-            setNames(stockNames);
         }
+
+        // const stockNames = JSON.parse(localStorage.getItem('allStocks'));
+        // if (stockNames === null || stockNames === undefined) {
+        //     getStockList();
+        // } else {
+        //     setNames(stockNames);
+        // }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -280,7 +452,9 @@ const StockHub = ({ user }) => {
     const clearModal = () => {
         setModal(false);
     }
-    if (names.length > 0) {
+
+    // TODO render the hub before Trie loads?
+    if (trie !== undefined && Object.keys(trie).length !== 0) {
         if (!modal && !stockModal) {
             return (
                 <div class="StockForm">
@@ -291,7 +465,7 @@ const StockHub = ({ user }) => {
                         calculatePercentChange={calculatePercentChange}
                         setFilterSymbolsHub={setFilterSymbolsHub}
                         loadingHub={loading}
-                        names={names}
+                        trie={trie}
                     />
                     {/* render the list of stocks and pass down important 
                 functions to change aspects of the stocks */}

@@ -18,6 +18,8 @@ var _favorites = _interopRequireDefault(require("./routes/favorites.js"));
 
 var _lists = _interopRequireDefault(require("./routes/lists.js"));
 
+var _autocomplete = _interopRequireDefault(require("./routes/autocomplete.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
@@ -64,6 +66,7 @@ app.use("/users", _user.default);
 app.use("/stocks", _stocks.default);
 app.use("/favorites", _favorites.default);
 app.use("/lists", _lists.default);
+app.use("/autocomplete", _autocomplete.default);
 /** catch 404 and forward to error handler */
 
 app.use('*', (req, res) => {
@@ -71,13 +74,7 @@ app.use('*', (req, res) => {
     success: false,
     message: 'API endpoint doesnt exist'
   });
-}); // Get the information from the api 
-// app.get('/api/jobs', async (req, res) => {
-//   const jobs = await getAsync('github');
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   return res.send(jobs);
-// });
-
+});
 /** Create HTTP server. */
 
 const server = _http.default.createServer(app);
@@ -89,7 +86,13 @@ server.listen(port);
 
 server.on("listening", () => {
   console.log(`Listening on port:: http://localhost:${port}/`);
-}); // const fetchGithub = require('./fetch/fetch-github')
+}); // Get the information from the api 
+// app.get('/api/jobs', async (req, res) => {
+//   const jobs = await getAsync('github');
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   return res.send(jobs);
+// });
+// const fetchGithub = require('./fetch/fetch-github')
 // const Cron = require('cron').CronJob;
 // // sends request every minute
 // new Cron('* * * * *', fetchGithub, null, true, 'America/Los_Angeles');

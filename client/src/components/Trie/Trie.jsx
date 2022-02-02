@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StockContext } from "../../context/StockContext";
 
-// Component to display all stocks and the forms to add/edit stocks
+// Component to hold autocomlete stock suggestions
 const Trie = () => {
     // TrieNode to hold the letter and children
     function TrieNode(letter) {
