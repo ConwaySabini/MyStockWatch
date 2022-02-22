@@ -8,5 +8,6 @@ const router = express.Router();
 router
     .get('/', autocomplete.onGetAutocomplete)
     .put('/', autocomplete.onCreateAutocomplete)
+    .delete('/:id', autocomplete.onDeleteAutocomplete);
 
 export default router;

@@ -13,6 +13,12 @@ export const GlobalStyles = createGlobalStyle`
     transition: all 0.25s linear;
   }
 
+  #about-title {
+    background-color: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.25s linear;
+  }
+
   #NewsSection {
     background-color: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};

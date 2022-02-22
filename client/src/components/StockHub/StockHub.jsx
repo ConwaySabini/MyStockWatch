@@ -50,36 +50,22 @@ const StockHub = ({ user }) => {
     const SERVER = process.env.REACT_APP_GET_USER_STOCKS + user;
     // server url to create stocks
     const CREATE_STOCKS = process.env.REACT_APP_CREATE_STOCKS;
+    // server url to create trie
+    // const CREATE_TRIE = process.env.REACT_APP_CREATE_TRIE;
+    // // server url to get trie
+    // const GET_TRIE = process.env.REACT_APP_GET_TRIE;
 
     // TrieNode to hold the letter and children
     function TrieNode(letter) {
         // letter is the key
         this.letter = letter;
-        // parent node reference
-        this.parent = null;
         // list of children nodes
         this.children = {};
         // object being stored in the node
         this.data = null;
         // if word is true then this is the end of the current word
         this.word = false;
-
     }
-
-    // iterates through the parents to get the word.
-    // time complexity: O(k), k = word length
-    TrieNode.prototype.getWord = function () {
-        let output = [];
-        let node = this;
-
-        while (node !== null) {
-            output.unshift(node.letter);
-            node = node.parent;
-        }
-
-        return output.join('');
-    };
-
 
     // Instantiate the trie with root node
     function Trie() {
@@ -96,9 +82,6 @@ const StockHub = ({ user }) => {
             if (!node.children[object.name[i]]) {
                 // create new letter in trie if it does not exist
                 node.children[object.name[i]] = new TrieNode(object.name[i]);
-
-                // we also assign the parent to the child node.
-                node.children[object.name[i]].parent = node;
             }
 
             // proceed to the next depth in the trie.
@@ -162,7 +145,6 @@ const StockHub = ({ user }) => {
     function findAllWords(node, arr) {
         // base case, if node is at a word, push to output
         if (node.word) {
-            // arr.unshift(node.getWord());
             arr.unshift(node.data);
         }
 
@@ -171,45 +153,6 @@ const StockHub = ({ user }) => {
             findAllWords(node.children[child], arr);
         }
     }
-
-    // removes a word from the trie
-    Trie.prototype.remove = function (word) {
-        let root = this.root;
-
-        if (!word) return;
-
-        // recursively finds and removes a word
-        const removeWord = (node, currWord) => {
-
-            // check if current node contains the word
-            if (node.word && node.getWord() === currWord) {
-
-                // check and see if node has children
-                let hasChildren = Object.keys(node.children).length > 0;
-
-                // if has children we only want to un-flag the end node that marks end of a word.
-                // this way we do not remove words that contain/include supplied word
-                if (hasChildren) {
-                    node.word = false;
-                } else {
-                    // remove word by getting parent and setting children to empty dictionary
-                    node.parent.children = {};
-                }
-
-                return true;
-            }
-
-            // recursively remove word from all children
-            for (let key in node.children) {
-                removeWord(node.children[key], currWord)
-            }
-
-            return false
-        };
-
-        // call remove word on root node
-        removeWord(root, word);
-    };
 
     // Fetch the stock data from the server and render the stocks
     // If there is no stock data for this user, create new data
@@ -260,49 +203,76 @@ const StockHub = ({ user }) => {
             }
         }
 
-        // get list of stocks for autocomplete search
-        const getStockList = async () => {
+        // create list of stocks for autocomplete search
+        const createStockList = async () => {
             setLoading(true);
             try {
                 // get the stock name data
                 const allStocks = await axios.request(listOptions);
                 const newTrie = new Trie();
-                //console.log("allStocks", allStocks.data.data);
+                // create a trie for the stock names
                 for (let i = 0; i < allStocks.data.data.length; i++) {
                     allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
                     newTrie.insert(allStocks.data.data[i]);
                 }
-                // TODO create Trie and store in database and get data from there
-                //localStorage.setItem('allStocks', JSON.stringify(allStocks.data.data));
                 setTrie(newTrie);
-                console.log("trieHub", newTrie.root);
-                //setNames(allStocks.data.data);
+                // console.log("trieHub", newTrie);
+                // console.log("node", newTrie.root.children["a"]);
+                //TODO test
+                const stringTrie = JSON.stringify(newTrie);
+                // const response = await axios.put(CREATE_TRIE, { trie: stringTrie });
+                // console.log("Trie response", response);
+                localStorage.setItem('trie', stringTrie);
                 // handle error
             } catch (error) {
                 console.error(error);
                 setLoading(false);
             }
         }
-        // get autocomplete data from the server
+
+
+
+        // get list of stocks for autocomplete search
+        // const getStockList = async () => {
+        //     setLoading(true);
+        //     try {
+        //         // get the stock name data
+        //         const allStocks = await axios.get(GET_TRIE);
+        //         console.log("stocks retrieved", allStocks.data);
+        //         if (allStocks.data.status === "error") {
+        //             setLoading(false);
+        //             console.log(allStocks.data.message);
+        //         } else {
+        //             if (allStocks.data.autocomplete.length > 0)
+        //                 //TODO test
+        //                 setTrie(JSON.parse(allStocks.data.autocomplete.trie));
+        //             else
+        //                 createStockList();
+        //             setLoading(false);
+        //         }
+        //     } catch (error) {
+        //         console.error(error);
+        //         setLoading(false);
+        //     }
+        // }
+
         // get the user data from the server
         fetchDataFromServer();
 
 
-        //localStorage.removeItem('allStocks');
+        // localStorage.removeItem('trie');
         // get symbols and names for autocomplete search
-        //TODO stop from rebuilding every change in the render
-        console.log("trie before function", trie.root);
+        // console.log("trie before function", trie.root);
         if (trie === undefined || trie.root === undefined) {
-            getStockList();
+            const foundTrie = JSON.parse(localStorage.getItem('trie')) || {};
+
+            if (Object.keys(foundTrie).length > 0) {
+                setTrie(foundTrie);
+            } else {
+                // get autocomplete data from the server
+                createStockList();
+            }
         }
-
-        // const stockNames = JSON.parse(localStorage.getItem('allStocks'));
-        // if (stockNames === null || stockNames === undefined) {
-        //     getStockList();
-        // } else {
-        //     setNames(stockNames);
-        // }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -388,12 +358,13 @@ const StockHub = ({ user }) => {
     const listOptions = {
         method: 'GET',
         url: process.env.REACT_APP_RAPIDAPI_STOCK_URL,
-        params: { format: 'json' },
+        params: { format: 'json', exchange: 'NASDAQ' },
         headers: {
             'x-rapidapi-host': process.env.REACT_APP_RAPIDAPI_HOST,
             'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY
         }
     };
+
 
     // Calculates the percent change of the stock over the time period and return  
     // it rounded to the nearest hundreth place
@@ -481,7 +452,17 @@ const StockHub = ({ user }) => {
         } else if (stockModal) {
             return (
                 <div class="modal is-active">
-                    <div class="modal-background"> </div>
+                    <div class="modal-background">
+                        {/* render the list of stocks and pass down important 
+                            functions to change aspects of the stocks */}
+                        <StockList
+                            filterSymbols={filterSymbolsHub}
+                            user={user}
+                            handleStockModal={handleStockModal}
+                            handleStockChange={handleStockChange}
+                            handleTimeChange={handleTimeChange}
+                        />
+                    </div>
                     <div class="modal-content" id="stock-modal">
                         {/* <!-- Any other Bulma elements you want --> */}
                         {/* <div class="section" id="stock-modal-section"> */}

@@ -5,7 +5,14 @@ var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
-require('dotenv').config(); // import environment variable for MongoDB connection
+require('dotenv').config();
+
+const path = require('path'); // console.log("dirname: ", __dirname);
+// dotenv.config({
+//     path: path.resolve(__dirname, `${process.env.NODE_ENV}.env`)
+// });
+// console.log(process.env.MONGODB_CONNECTION);
+// import environment variable for MongoDB connection
 
 
 const CONNECTION_URL = process.env.MONGODB_CONNECTION;

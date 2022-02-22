@@ -12,33 +12,50 @@ var _nanoid = require("nanoid");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // imports
-// Schema for each stock
-const nameSchema = new _mongoose.default.Schema({
-  country: String,
-  currency: String,
-  exchange: String,
-  name: String,
-  symbol: String,
-  type: String
-}); // Schema for the user model
-
-const autocompleteSchema = new _mongoose.default.Schema({
-  _id: {
-    type: String,
-    default: () => (0, _nanoid.nanoid)()
-  },
-  names: [nameSchema]
+// // Schema for each stock
+// const nameSchema = new mongoose.Schema(
+//     {
+//         country: String,
+//         currency: String,
+//         exchange: String,
+//         name: String,
+//         symbol: String,
+//         type: String,
+//     },
+// );
+// const childrenSchema = new mongoose.Schema(
+//     {
+//         letter: mongoose.Schema.Types.Mixed,
+//         children: {
+//             type: Map,
+//             of: mongoose.Schema.Types.Mixed,
+//         },
+//         data: mongoose.Schema.Types.Mixed,
+//         word: mongoose.Schema.Types.Mixed,
+//     },
+// );
+// Schema for the user model
+const autocompleteSchema = new _mongoose.default.Schema({// _id: {
+  //     type: String,
+  //     default: () => nanoid(),
+  // }
+  //trie: {}
 }, {
-  timestamps: true,
-  collection: "users"
+  strict: false
 }); // Creates the stock list for autocomplete
 
-autocompleteSchema.statics.createAutocomplete = async function (names) {
+autocompleteSchema.statics.createAutocomplete = async function (trie) {
   try {
     // create the names
-    return await this.create({
-      names
-    });
+    // const createdAutocomplete = mongoose.model("autocomplete", autocompleteSchema);
+    // const autocomplete = new createdAutocomplete({ trie: trie });
+    // autocomplete.save();
+    // return autocomplete;
+    const created = await this.create({
+      trie
+    }); //created.save();
+
+    return created;
   } catch (error) {
     throw error;
   }
@@ -48,6 +65,17 @@ autocompleteSchema.statics.createAutocomplete = async function (names) {
 autocompleteSchema.statics.getAutocomplete = async function () {
   try {
     return await this.find();
+  } catch (error) {
+    throw error;
+  }
+}; // Delete a trie with the given id and return the result
+
+
+autocompleteSchema.statics.deleteAutocomplete = async function (id) {
+  try {
+    return await this.deleteOne({
+      _id: id
+    });
   } catch (error) {
     throw error;
   }

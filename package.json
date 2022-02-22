@@ -8,8 +8,8 @@
         "prebuild": "npm run build:clean",
         "build": "babel ./server --out-dir ./dist --source-maps",
         "build:clean": "rm -rf dist",
-        "start": "npm run build && node ./dist/index.js",
-        "start:prod": "npm run build && nodemon --exec babel-node ./server",
+        "start": "set NODE_ENV=development && npm run build && nodemon ./dist/index.js",
+        "start:prod": "set NODE_ENV=production && npm run build && nodemon --exec babel-node ./server",
         "start-server": "node server/index.js"
     },
     "repository": {
@@ -31,13 +31,16 @@
         "axios": "^0.23.0",
         "bcrypt": "^5.0.1",
         "cors": "^2.8.5",
+        "cron": "^1.8.2",
         "dotenv": "^10.0.0",
         "express": "^4.17.1",
+        "googleapis": "^95.0.0",
         "mongoose": "^6.0.12",
         "morgan": "^1.10.0",
         "nanoid": "^3.1.29",
+        "nodemailer": "^6.7.2",
         "nodemon": "^2.0.15",
-        "uninstall": "^0.0.0",
+        "redis": "^4.0.3",
         "validator": "^13.7.0"
     },
     "devDependencies": {

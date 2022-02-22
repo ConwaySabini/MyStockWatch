@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const router = _express.default.Router(); // Routes for the autocomplete controller to handle
 
 
-router.get('/', _AutocompleteController.default.onGetAutocomplete).put('/', _AutocompleteController.default.onCreateAutocomplete);
+router.get('/', _AutocompleteController.default.onGetAutocomplete).put('/', _AutocompleteController.default.onCreateAutocomplete).delete('/:id', _AutocompleteController.default.onDeleteAutocomplete);
 var _default = router;
 exports.default = _default;
 //# sourceMappingURL=autocomplete.js.map

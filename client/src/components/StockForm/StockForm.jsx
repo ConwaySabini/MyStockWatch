@@ -86,7 +86,6 @@ const StockForm = ({ confirmClear,
 
     // Comparing each value in the array against the keyword
     const onSearch = value => {
-        console.log("search Value", value);
         if (value !== " " && value !== "") {
             const results = trie.find(value);
             setAutocomplete(results);

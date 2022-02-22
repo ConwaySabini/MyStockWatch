@@ -1,15 +1,15 @@
 #home-cta {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 #home-hero, #home-cta {
-  background: linear-gradient(52deg, #b8bfbe 45%, #00d1b2 90%);
+    background: linear-gradient(52deg, #b8bfbe 45%, #00d1b2 90%);
 }
 
 #home-cta {
-  height: 500px;
-  border-top: 10px solid #00d1b2;
+    height: 500px;
+    border-top: 10px solid #00d1b2;
 }
 
 /* footer {
@@ -18,73 +18,73 @@
 } */
 
 footer strong {
-  color: #00d1b2;
+    color: #00d1b2;
 }
 
 footer a {
-  color: #00d1b2;
+    color: #00d1b2;
 }
 
 #homeTitle {
-  color: white;
-  font-weight: 800;
-  font-size: 4rem;
-  font-family: 'Nunito Sans', sans-serif;
-  text-shadow: 1px 1px 1px #000, 3px 3px 5px rgb(0, 0, 3);
+    color: white;
+    font-weight: 800;
+    font-size: 4rem;
+    font-family: 'Nunito Sans', sans-serif;
+    text-shadow: 1px 1px 1px #000, 3px 3px 5px rgb(0, 0, 3);
 }
 
 #homeSubtitle {
-  color: white;
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 1px #000, 3px 3px 5px rgb(0, 0, 3);
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 1px #000, 3px 3px 5px rgb(0, 0, 3);
 }
 
 hr.content-divider {
-  max-width: 75px;
-  height: 5px;
+    max-width: 75px;
+    height: 5px;
 }
 
 #parallax-1 {
-  background: url("../../Images/bull.jpg");
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-top: 10px solid #00d1b2;
+    background: url("../../Images/bull.webp");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top: 10px solid #00d1b2;
 }
 
 #parallax-1 hr {
-  background: #00d1b2;
+    background: #00d1b2;
 }
 
 #parallax-2 {
-  background: url("../../Images/night.jpg");
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-top: 10px solid #485fc7;
+    background: url("../../Images/night.webp");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top: 10px solid #485fc7;
 }
 
 #parallax-2 hr {
-  background: #485fc7;
+    background: #485fc7;
 }
 
 #parallax-3 {
-  background: url("../../Images/laptop.jpg");
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-top: 10px solid #ffe08a;
+    background: url("../../Images/laptop.webp");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top: 10px solid #ffe08a;
 }
 
 #parallax-3 hr {
-  background: #ffe08a;
+    background: #ffe08a;
 }
 
 .label {
-  color: white;
+    color: white;
 }
 
 /* input {

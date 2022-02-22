@@ -60,6 +60,8 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
         setLoading(false);
     }
 
+    let i = 0;
+
 
 
     return (
@@ -94,7 +96,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
                                     <ul>
                                         {lists.map(listCurr => {
                                             return (
-                                                <li>
+                                                <li key={i++}>
                                                     <button
                                                         class="button is-link mt-2"
                                                         id="dropdown-buton"
