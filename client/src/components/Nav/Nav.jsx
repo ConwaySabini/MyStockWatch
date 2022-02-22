@@ -22,7 +22,6 @@ function Nav({ toggleTheme, theme }) {
                                         <a class="nav-title fa-2x" href="/dashboard#title">
                                             MyStockWatch
                                         </a>
-                                        {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}
                                     </a>
 
                                     <a
@@ -85,7 +84,6 @@ function Nav({ toggleTheme, theme }) {
                                         <a class="nav-title fa-2x" href="/dashboard#title">
                                             MyStockWatch
                                         </a>
-                                        {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" /> */}
                                     </a>
 
                                     <a

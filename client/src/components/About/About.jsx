@@ -2,12 +2,19 @@ import './About.css';
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import stock from '../../Images/stock1.png';
+import stockWeb from '../../Images/stock1.webp';
 import form from '../../Images/Form.png';
+import formWeb from '../../Images/Form.webp';
 import technical from '../../Images/technical.png';
+import technicalWeb from '../../Images/technical.webp';
 import time from '../../Images/time.png';
+import timeWeb from '../../Images/time.png';
 import lists from '../../Images/lists.png';
+import listsWeb from '../../Images/lists.png';
 import indicators from '../../Images/indicators.png';
+import indicatorsWeb from '../../Images/indicators.webp';
 import createList from '../../Images/create-list.png';
+import createListWeb from '../../Images/create-list.webp';
 
 // Component to display the news cards
 function About({ toggleTheme }) {
@@ -29,7 +36,12 @@ function About({ toggleTheme }) {
                     <h2 class="title" id="about-title">Form</h2>
                     <br />
                     <p id="about-title"> </p>
-                    <img src={form} alt="logo" id="about-picture" />
+                    {/* <img src={form} alt="logo" id="about-picture"/> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={formWeb} type="image/webp" />
+                        <source srcSet={form} type="image/jpeg" />
+                        <img src={form} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>Enter the symbol of the stock (amzn for Amazon, etc),
@@ -46,20 +58,35 @@ function About({ toggleTheme }) {
                     <h2 class="title" id="about-title">Stock Card</h2>
                     <br />
                     <p id="about-title"> </p>
-                    <img src={stock} alt="logo" id="about-picture" />
+                    {/* <img src={stock} alt="logo" id="about-picture" /> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={stockWeb} type="image/webp" />
+                        <source srcSet={stock} type="image/jpeg" />
+                        <img src={stock} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>The favorite button will add it to the favorites list and store it in either the gainers or losers.
                         The technical graph and simple graph buttons will swap between the two modes available.</p>
                     <br />
-                    <img src={technical} alt="logo" id="about-picture" />
+                    {/* <img src={technical} alt="logo" id="about-picture" /> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={technicalWeb} type="image/webp" />
+                        <source srcSet={technical} type="image/jpeg" />
+                        <img src={technical} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>The technical chart will display the volume and price change of a stock.
                     </p>
                     <br />
                     <br />
-                    <img src={time} alt="logo" id="about-picture" />
+                    {/* <img src={time} alt="logo" id="about-picture" /> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={timeWeb} type="image/webp" />
+                        <source srcSet={time} type="image/jpeg" />
+                        <img src={time} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>Click on any of the different timeline options to change the time frame of the stock.
@@ -67,7 +94,12 @@ function About({ toggleTheme }) {
                     </p>
                     <br />
                     <br />
-                    <img src={indicators} alt="logo" id="about-picture" />
+                    {/* <img src={indicators} alt="logo" id="about-picture" /> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={indicatorsWeb} type="image/webp" />
+                        <source srcSet={indicators} type="image/jpeg" />
+                        <img src={indicators} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>Click on any of the different indicators to get and display the corresponding technical indiator.
@@ -122,14 +154,24 @@ function About({ toggleTheme }) {
                     <h2 class="title" id="about-title">Lists</h2>
                     <br />
                     <p id="about-title"> </p>
-                    <img src={createList} alt="logo" id="about-picture" />
+                    {/* <img src={createList} alt="logo" id="about-picture" /> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={createListWeb} type="image/webp" />
+                        <source srcSet={createList} type="image/jpeg" />
+                        <img src={createList} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>On the right side of the screen, you can enter the name of the list
                         you want to create and click the plus button, or the enter key, to add the list to your profile.
                         The arrow can also be pressed to hide the entire right menu.</p>
                     <br />
-                    <img src={lists} alt="logo" id="about-picture" />
+                    {/* <img src={lists} alt="logo" id="about-picture" /> */}
+                    <picture alt="logo" id="about-picture">
+                        <source srcSet={listsWeb} type="image/webp" />
+                        <source srcSet={lists} type="image/jpeg" />
+                        <img src={lists} alt="Alt text" />
+                    </picture>
                     <br />
                     <br />
                     <p>View the favorites and custom lists on the right side of the screen.
