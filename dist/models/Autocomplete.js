@@ -54,8 +54,7 @@ autocompleteSchema.statics.createAutocomplete = async function (trie) {
     const created = await this.create({
       trie
     }); //created.save();
-
-    return created;
+    //return created;
   } catch (error) {
     throw error;
   }

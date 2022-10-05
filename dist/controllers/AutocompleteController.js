@@ -39,9 +39,9 @@ var _default = {
         trie
       } = req.body; //console.log("trie: ", trie);
       // create the autocomplete
+      //const string = JSON.stringify(trie);
 
-      const string = JSON.stringify(trie);
-      const createdAutocomplete = await _Autocomplete.default.createAutocomplete(string); //const autocomplete = new Autocomplete({ trie: string });
+      const createdAutocomplete = await _Autocomplete.default.createAutocomplete(trie); //const autocomplete = new Autocomplete({ trie: string });
       //await autocomplete.save();
       // return the autocomplete and success message
 
