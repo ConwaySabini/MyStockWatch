@@ -17,4 +17,4 @@ About:
   You will need to create your own environment variables in a file with a mongoDB database in order for the API calls to 
   the financial data and back-end to work. Twelve Data and Bing News are the financial APIs being used.
   In the base directory, run docker-compose build to create the deployment image.
-  Then run docker-compose up to run the image which will contain both the front end and the back end in a single docker image.
+  Then run docker-compose up -d to run the image which will contain both the front end and the back end in a single docker image.
