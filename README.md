@@ -1,6 +1,8 @@
 MyStockWatch: https://my-stock-watch.netlify.app/
 
 Architecture:
+
+
 ![image](https://user-images.githubusercontent.com/53063791/194419656-fe5d3aaa-103e-4074-a331-75c932927810.png)
 
 
