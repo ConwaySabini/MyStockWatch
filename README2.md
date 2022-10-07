@@ -16,6 +16,19 @@
 
 ### 🏠 [Homepage](https://github.com/ConwaySabini/MyStockWatch#readme)
 
+Architecture:
+
+
+![image](https://user-images.githubusercontent.com/53063791/194472711-b0909676-e376-4e81-a0e8-959c3c1b3e20.png)
+
+
+Dashboard:
+
+
+
+![image](https://user-images.githubusercontent.com/53063791/194472676-66281f63-96f0-4bca-baf4-6acc528662e8.png)
+
+
 ### ✨ [Demo](https://my-stock-watch.netlify.app/)
 
 ## Install
