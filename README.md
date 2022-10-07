@@ -65,6 +65,19 @@ npm run start
 npm run test
 ```
 
+## Features to add in the future
+
+> Complete subscriptions feature and schedule cron jobs to automatically update the stock data after a certain amount of time has passed for example daily.
+
+> Complete autocomplete function for stock adding
+
+> Optimize lighthouse score to improve the performance to 100 to obtain all 100s
+
+> Implement technical analysis of stock with trading strategies to inform the user when it might be a good time to buy or sell a stock
+
+> More technical analysis options available
+
+> UI design toggle to switch stock view to a grid
 ## Author
 
 👤 **Ethan Sabini**
@@ -86,4 +99,3 @@ Copyright © 2022 [Ethan Sabini](https://github.com/ConwaySabini).<br />
 This project is [Creative Commons Attribution--NonCommercial--NoDerivs 3.0 Unported License](https://github.com/ConwaySabini/MyStockWatch/blob/master/LICENSE) licensed.
 
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
