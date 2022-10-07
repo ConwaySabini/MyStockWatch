@@ -1,5 +1,18 @@
 MyStockWatch: https://my-stock-watch.netlify.app/
 
+Architecture:
+
+
+![image](https://user-images.githubusercontent.com/53063791/194419656-fe5d3aaa-103e-4074-a331-75c932927810.png)
+
+
+Dashboard:
+
+
+![image](https://user-images.githubusercontent.com/53063791/194419949-316760b3-34a5-49b1-a23e-be4e10e7735e.png)
+
+
+
   Just create an account and follow the instructions to begin using the stock tracker application.
 
 About:
