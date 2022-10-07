@@ -21,7 +21,7 @@
   I Designed the front end with Bulma, component based architecture, and react hooks. 
   The server and API was implemented with NodeJS, Express, and MongoDB for storing the users, stock data, etc.
   
-  To run this code locally, you can clone the repo and run npm install or yarn install to get all of the dependencies.
+  > To run this code locally, you can clone the repo and run npm install or yarn install to get all of the dependencies.
   Then change the directory to the client and run npm install or yarn install again to get all of the client dependencies.
   You will need to create your own environment variables in a file with a mongoDB database in order for the API calls to 
   the financial data and back-end to work. Twelve Data and Bing News are the financial APIs being used.
