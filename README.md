@@ -69,7 +69,7 @@ npm run test
 
 👤 **Ethan Sabini**
 
-* Website: [Ethan Sabini](https://my-stock-watch.netlify.app/)
+* Website: [Ethan Sabini](https://conwaysabini.github.io/portfolio/)
 * Github: [@ConwaySabini](https://github.com/ConwaySabini)
 
 ## 🤝 Contributing
