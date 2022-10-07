@@ -1,8 +1,15 @@
 {
-    "name": "stocks",
+    "name": "MyStockWatch",
     "version": "1.0.0",
-    "description": "",
+    "description": "A stock tracking platform which includes technical analysis, news, list management, accounts, user authentication, and more",
+    "author": "Ethan Sabini",
+    "license": "Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License",
     "main": "index.js",
+    "keywords": [],
+    "bugs": {
+        "url": "https://github.com/ConwaySabini/MyStockWatch/issues"
+    },
+    "homepage": "https://github.com/ConwaySabini/MyStockWatch#readme",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "prebuild": "npm run build:clean",
@@ -14,15 +21,8 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ConwaySabini/stonks.git"
+        "url": "git+https://github.com/ConwaySabini/MyStockWatch.git"
     },
-    "keywords": [],
-    "author": "",
-    "license": "Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License",
-    "bugs": {
-        "url": "https://github.com/ConwaySabini/stonks/issues"
-    },
-    "homepage": "https://github.com/ConwaySabini/stonks#readme",
     "dependencies": {
         "@babel/cli": "^7.16.0",
         "@babel/core": "^7.16.0",

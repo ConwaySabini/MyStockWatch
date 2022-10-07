@@ -25,7 +25,7 @@ import subscriptionRouter from "./routes/subscriptions.js";
 //TODO add to package.json in development
 //npm run build && nodemon --exec babel-node ./server
 
-//TODO remove comment if using .env file
+//TODO remove comment in developent
 // const envConfig = dotenv.config();
 // if (envConfig.error) {
 //   throw envConfig.error;
@@ -129,13 +129,3 @@ server.on("listening", () => {
 //analyzeStock(userId, symbol);
 // // sends request every minute
 // new Cron('* * * * *', analyzeStock, null, true, 'America/Los_Angeles');
-
-
-
-
-// Get the information from the api 
-// app.get('/api/jobs', async (req, res) => {
-//   const jobs = await getAsync('github');
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   return res.send(jobs);
-// });
