@@ -12,6 +12,8 @@
   </a>
 </p>
 
+Link: https://my-stock-watch.netlify.app/
+
 > A stock tracking platform which includes technical analysis, news, list management, accounts, user authentication, and more
 > MyStockWatch is a full-stack web app where you can create an account, add and remove stocks, 
   analyze stocks with different time frames and using various technical analysis indicators, 
@@ -67,7 +69,7 @@ npm run test
 
 👤 **Ethan Sabini**
 
-* Website: Ethan Sabini
+* Website: [Ethan Sabini](https://my-stock-watch.netlify.app/)
 * Github: [@ConwaySabini](https://github.com/ConwaySabini)
 
 ## 🤝 Contributing
