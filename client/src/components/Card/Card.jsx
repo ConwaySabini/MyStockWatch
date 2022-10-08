@@ -95,17 +95,17 @@ function Card({ article, type }) {
     if (type === "trending") {
         return (
             <div class="card" id="news-card">
-                <div class="card-content" id="news-content">
-                    <div class="media">
-                        <div class="media-left">
-                            <figure class="image is-4by3">
-                                <img src={thumbnail} alt="profile" />
-                            </figure>
-                        </div>
-                        <div class="media-content">
-                            <p class="title is-4" id="card-title">{name}</p>
-                        </div>
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-4by3">
+                            <img src={thumbnail} alt="profile" />
+                        </figure>
                     </div>
+                    <div class="media-content">
+                        <p class="title is-4" id="card-title">{name}</p>
+                    </div>
+                </div>
+                <div class="card-content" id="news-content">
                     <div class="content">
                         {organization}<br /><br />
                         {description}
