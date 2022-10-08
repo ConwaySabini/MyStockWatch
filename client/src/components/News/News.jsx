@@ -122,7 +122,38 @@ function News({ toggleTheme }) {
 
     if (loading) {
         return (
-            <div></div>
+            <div classname="News" id="NewsSection">
+                {/* Navigation */}
+                <header className="app-header">
+                    <Nav toggleTheme={toggleTheme} />
+                </header>
+                <div class="block"></div>
+
+                {/* Column Layout */}
+                <div class="columns is-mobile">
+                    <div class="column is-2">
+                    </div>
+                    <div class="column is-8">
+                        <div className="button-and-forms mt-4">
+                            <div class="columns">
+                                <div class="column is-6">
+                                </div>
+                                <div class="column is-6 mt-6">
+                                </div>
+                            </div>
+                        </div>
+                        {/* Layout to add stocks and individual cards for stocks */}
+                        <CardList key={news} news={news} type={type} />
+                    </div>
+                    <div class="column is-2" id="SideMenu">
+                    </div>
+                </div>
+
+                <div className="homeFooter">
+                    <Footer />
+                </div>
+
+            </div >
         );
     } else {
         return (
