@@ -219,7 +219,7 @@ const StockHub = ({ user }) => {
                 // console.log("trieHub", newTrie);
                 // console.log("node", newTrie.root.children["a"]);
                 //TODO test
-                console.log("newTrie", newTrie);
+                //console.log("newTrie", newTrie);
                 const stringTrie = JSON.stringify(newTrie);
                 // const response = await axios.put(CREATE_TRIE, { trie: stringTrie });
                 // console.log("Trie response", response);
@@ -260,13 +260,12 @@ const StockHub = ({ user }) => {
         // get the user data from the server
         fetchDataFromServer();
 
-
         // localStorage.removeItem('trie');
         // get symbols and names for autocomplete search
         // console.log("trie before function", trie.root);
         if (trie === undefined || trie.root === undefined) {
             const foundTrie = JSON.parse(localStorage.getItem('trie')) || {};
-            console.log("foundTrie", foundTrie);
+            //console.log("foundTrie", foundTrie);
             if (Object.keys(foundTrie).length > 0) {
                 setTrie(foundTrie);
             } else {

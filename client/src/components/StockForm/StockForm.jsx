@@ -85,23 +85,27 @@ const StockForm = ({ confirmClear,
     // };
 
     // Comparing each value in the array against the keyword
-    const onSearch = value => {
-        if (value !== " " && value !== "") {
-            const results = trie.find(value);
-            setAutocomplete(results);
-        } else {
-            setAutocomplete([]);
-        }
-        // add matched values to the autocomplete array
-        // for (const item of names) {
-        //     if (item.name !== undefined) {
-        //         if (matchName(item.name, value)) {
-        //             results.push(item);
-        //         }
-        //     }
-        // }
-        // console.log("results", results); 
-    };
+    // const onSearch = value => {
+    //     if (Object.keys(trie).length !== 0) {
+    //         console.log(trie);
+    //         if (value !== " " && value !== "") {
+    //             const results = trie.find(value);
+    //             setAutocomplete(results);
+    //         } else {
+    //             setAutocomplete([]);
+    //         }
+    //     }
+
+    //     // add matched values to the autocomplete array
+    //     // for (const item of names) {
+    //     //     if (item.name !== undefined) {
+    //     //         if (matchName(item.name, value)) {
+    //     //             results.push(item);
+    //     //         }
+    //     //     }
+    //     // }
+    //     // console.log("results", results); 
+    // };
 
     // const cancelSearch = () => {
     //     setSymbol('');
@@ -159,7 +163,7 @@ const StockForm = ({ confirmClear,
     const handleChange = (e) => {
         e.preventDefault();
         setSymbol(e.target.value);
-        onSearch(e.target.value);
+        // onSearch(e.target.value);
     }
 
     // Use the autocomplete to change the search

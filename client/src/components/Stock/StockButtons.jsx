@@ -25,7 +25,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
         const favorite = findFavorite(stock.symbol);
         // Add the favorite to the list if it is defined
         if (favorite === undefined) {
-            addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline, UPDATE_FAVORITES, user.sub);
+            addFavorite(stock.symbol, stock.data, stock.percentChange, stock.timeline, UPDATE_FAVORITES, user);
         }
         setLoading(false);
     }
@@ -39,7 +39,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
     const addToList = () => {
         setLoading(true);
         if (list !== "") {
-            addStockToList(list, stock.symbol, UPDATE_LISTS, user.sub);
+            addStockToList(list, stock.symbol, UPDATE_LISTS, user);
         }
         setLoading(false);
     }
@@ -48,7 +48,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
     const removeFromList = () => {
         setLoading(true);
         if (list !== "") {
-            removeStockFromList(list, stock.symbol, UPDATE_LISTS, user.sub);
+            removeStockFromList(list, stock.symbol, UPDATE_LISTS, user);
         }
         setLoading(false);
     }
@@ -56,7 +56,7 @@ function StockButtons({ handleChart, loading, stock, setLoading, user, handleUpd
     // function to remove the stock altogether
     const handleRemove = () => {
         setLoading(true);
-        removeStock(stock.id, UPDATE_STOCKS, UPDATE_FAVORITES, UPDATE_LISTS, user.sub);
+        removeStock(stock.id, UPDATE_STOCKS, UPDATE_FAVORITES, UPDATE_LISTS, user);
         setLoading(false);
     }
 
