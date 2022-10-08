@@ -204,32 +204,32 @@ const StockHub = ({ user }) => {
         }
 
         // create list of stocks for autocomplete search
-        const createStockList = async () => {
-            setLoading(true);
-            try {
-                // get the stock name data
-                const allStocks = await axios.request(listOptions);
-                const newTrie = new Trie();
-                // create a trie for the stock names
-                for (let i = 0; i < allStocks.data.data.length; i++) {
-                    allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
-                    newTrie.insert(allStocks.data.data[i]);
-                }
-                setTrie(newTrie);
-                // console.log("trieHub", newTrie);
-                // console.log("node", newTrie.root.children["a"]);
-                //TODO test
-                console.log("newTrie", newTrie);
-                const stringTrie = JSON.stringify(newTrie);
-                // const response = await axios.put(CREATE_TRIE, { trie: stringTrie });
-                // console.log("Trie response", response);
-                localStorage.setItem('trie', stringTrie);
-                // handle error
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
-            }
-        }
+        // const createStockList = async () => {
+        //     setLoading(true);
+        //     try {
+        //         // get the stock name data
+        //         const allStocks = await axios.request(listOptions);
+        //         const newTrie = new Trie();
+        //         // create a trie for the stock names
+        //         for (let i = 0; i < allStocks.data.data.length; i++) {
+        //             allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
+        //             newTrie.insert(allStocks.data.data[i]);
+        //         }
+        //         setTrie(newTrie);
+        //         // console.log("trieHub", newTrie);
+        //         // console.log("node", newTrie.root.children["a"]);
+        //         //TODO test
+        //         console.log("newTrie", newTrie);
+        //         const stringTrie = JSON.stringify(newTrie);
+        //         // const response = await axios.put(CREATE_TRIE, { trie: stringTrie });
+        //         // console.log("Trie response", response);
+        //         localStorage.setItem('trie', stringTrie);
+        //         // handle error
+        //     } catch (error) {
+        //         console.error(error);
+        //         setLoading(false);
+        //     }
+        // }
 
 
 
