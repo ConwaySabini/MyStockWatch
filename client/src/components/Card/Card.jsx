@@ -98,7 +98,7 @@ function Card({ article, type }) {
                 <div class="card-content" id="news-content">
                     <div class="media">
                         <div class="media-left">
-                            <figure class="image is-4by3">
+                            <figure class="image is-48x48">
                                 <img src={thumbnail} alt="profile" />
                             </figure>
                         </div>
@@ -142,16 +142,9 @@ function Card({ article, type }) {
                 <div class="card-content" id="news-content">
                     <div class="media">
                         <div class="media-left">
-                            <figure class="image is-48x48">
+                            <figure class="image image is-48x48">
                                 <img src={thumbnail} alt="profile" />
                             </figure>
-                        </div>
-                        <div class="media-content">
-                            <p class="title is-4" id="card-title">{name}</p>
-                        </div>
-                    </div>
-                    <div class="media">
-                        <div class="media-left">
                         </div>
                         <div class="media-content">
                             <p class="title is-4" id="card-title">{name}</p>
