@@ -76,7 +76,10 @@ function Card({ article, type }) {
         }
         if (article.links.self !== undefined) {
             link = article.links.self;
+        }
 
+        if (article.attributes.gettyImageUrl !== undefined && article.attributes.gettyImage !== null) {
+            thumbnail = article.attributes.gettyImageUrl;
         }
     }
 
@@ -141,6 +144,16 @@ function Card({ article, type }) {
     } else {
         return (
             <div class="card mt-6" id="news-card">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img src={thumbnail} alt="profile" />
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-4" id="card-title">{name}</p>
+                    </div>
+                </div>
                 <div class="card-content" id="news-content">
                     <div class="media">
                         <div class="media-left">
