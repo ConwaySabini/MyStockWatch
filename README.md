@@ -77,6 +77,8 @@ npm run test
 
 > More technical analysis options available
 
+> Implement caching of data with automatic cache refreshing after a certain amount of time
+
 > UI design toggle to switch stock view to a grid
 ## Author
 
