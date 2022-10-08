@@ -67,9 +67,9 @@ function News({ toggleTheme }) {
             if (response.data.status === "error") {
                 console.log(response.data.message);
             } else {
-                if (response.data.errors.length > 0) {
-                    return;
-                }
+                // if (response.data.errors.length > 0) {
+                //     return;
+                // }
                 let articles = [];
                 for (const article of response.data.data) {
                     articles.push(article);
