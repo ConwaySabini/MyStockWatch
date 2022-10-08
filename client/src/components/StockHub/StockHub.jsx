@@ -51,9 +51,9 @@ const StockHub = ({ user }) => {
     // server url to create stocks
     const CREATE_STOCKS = process.env.REACT_APP_CREATE_STOCKS;
     // server url to create trie
-    // const CREATE_TRIE = process.env.REACT_APP_CREATE_TRIE;
+    //const CREATE_TRIE = process.env.REACT_APP_CREATE_TRIE;
     // // server url to get trie
-    // const GET_TRIE = process.env.REACT_APP_GET_TRIE;
+    //const GET_TRIE = process.env.REACT_APP_GET_TRIE;
 
     // TrieNode to hold the letter and children
     function TrieNode(letter) {
@@ -204,32 +204,32 @@ const StockHub = ({ user }) => {
         }
 
         // create list of stocks for autocomplete search
-        // const createStockList = async () => {
-        //     setLoading(true);
-        //     try {
-        //         // get the stock name data
-        //         const allStocks = await axios.request(listOptions);
-        //         const newTrie = new Trie();
-        //         // create a trie for the stock names
-        //         for (let i = 0; i < allStocks.data.data.length; i++) {
-        //             allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
-        //             newTrie.insert(allStocks.data.data[i]);
-        //         }
-        //         setTrie(newTrie);
-        //         // console.log("trieHub", newTrie);
-        //         // console.log("node", newTrie.root.children["a"]);
-        //         //TODO test
-        //         console.log("newTrie", newTrie);
-        //         const stringTrie = JSON.stringify(newTrie);
-        //         // const response = await axios.put(CREATE_TRIE, { trie: stringTrie });
-        //         // console.log("Trie response", response);
-        //         localStorage.setItem('trie', stringTrie);
-        //         // handle error
-        //     } catch (error) {
-        //         console.error(error);
-        //         setLoading(false);
-        //     }
-        // }
+        const createStockList = async () => {
+            setLoading(true);
+            try {
+                // get the stock name data
+                const allStocks = await axios.request(listOptions);
+                const newTrie = new Trie();
+                // create a trie for the stock names
+                for (let i = 0; i < allStocks.data.data.length; i++) {
+                    allStocks.data.data[i].name = allStocks.data.data[i].name.toLowerCase();
+                    newTrie.insert(allStocks.data.data[i]);
+                }
+                setTrie(newTrie);
+                // console.log("trieHub", newTrie);
+                // console.log("node", newTrie.root.children["a"]);
+                //TODO test
+                console.log("newTrie", newTrie);
+                const stringTrie = JSON.stringify(newTrie);
+                // const response = await axios.put(CREATE_TRIE, { trie: stringTrie });
+                // console.log("Trie response", response);
+                localStorage.setItem('trie', stringTrie);
+                // handle error
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        }
 
 
 
@@ -264,16 +264,16 @@ const StockHub = ({ user }) => {
         // localStorage.removeItem('trie');
         // get symbols and names for autocomplete search
         // console.log("trie before function", trie.root);
-        // if (trie === undefined || trie.root === undefined) {
-        //      const foundTrie = JSON.parse(localStorage.getItem('trie')) || {};
-        //      console.log("foundTrie", foundTrie);
-        //     if (Object.keys(foundTrie).length > 0) {
-        //         setTrie(foundTrie);
-        //     } else {
-        //         // get autocomplete data from the server
-        //         createStockList();
-        //     }
-        // }
+        if (trie === undefined || trie.root === undefined) {
+            const foundTrie = JSON.parse(localStorage.getItem('trie')) || {};
+            console.log("foundTrie", foundTrie);
+            if (Object.keys(foundTrie).length > 0) {
+                setTrie(foundTrie);
+            } else {
+                // get autocomplete data from the server
+                createStockList();
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
