@@ -137,8 +137,41 @@ function News({ toggleTheme }) {
                         <div className="button-and-forms mt-4">
                             <div class="columns">
                                 <div class="column is-6">
+                                    <section class="hero is-link" id="hero-dash">
+                                        <div class="hero-body">
+                                            <p class="subtitle" id="hero-color">
+                                                Enter the symbol and click the <strong id="hero-color">Add News button or Enter</strong>, to get news pertaining to the stock.
+                                            </p>
+                                        </div>
+                                    </section>
                                 </div>
                                 <div class="column is-6 mt-6">
+                                    <button
+                                        class="button is-link"
+                                        onClick={handleSubmit}
+                                        disabled={loading}>
+                                        Add News
+                                    </button>
+                                    <button
+                                        class="button is-danger ml-5"
+                                        onClick={clear}
+                                        disabled={loading}>
+                                        Clear Filter
+                                    </button>
+                                    <form onSubmit={handleSubmit}>
+                                        <div className="stock-form" id="stock-search">
+                                            <input
+                                                id="StockInput"
+                                                type="text"
+                                                placeholder="Enter Symbol..."
+                                                value={symbol}
+                                                onChange={handleChange}
+                                                required
+                                                class="input is-rounded is-link mt-4"
+                                                disabled={loading}
+                                            />
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
