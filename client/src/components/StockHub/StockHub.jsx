@@ -264,16 +264,16 @@ const StockHub = ({ user }) => {
         // localStorage.removeItem('trie');
         // get symbols and names for autocomplete search
         // console.log("trie before function", trie.root);
-        if (trie === undefined || trie.root === undefined) {
-            const foundTrie = JSON.parse(localStorage.getItem('trie')) || {};
-            console.log("foundTrie", foundTrie);
-            if (Object.keys(foundTrie).length > 0) {
-                setTrie(foundTrie);
-            } else {
-                // get autocomplete data from the server
-                createStockList();
-            }
-        }
+        // if (trie === undefined || trie.root === undefined) {
+        //      const foundTrie = JSON.parse(localStorage.getItem('trie')) || {};
+        //      console.log("foundTrie", foundTrie);
+        //     if (Object.keys(foundTrie).length > 0) {
+        //         setTrie(foundTrie);
+        //     } else {
+        //         // get autocomplete data from the server
+        //         createStockList();
+        //     }
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
