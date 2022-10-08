@@ -103,7 +103,7 @@ function Card({ article, type }) {
                 <div class="card-content" id="news-content">
                     <div class="media">
                         <div class="media-left">
-                            <figure class="image is-48x48">
+                            <figure class="image is-4by3">
                                 <img src={thumbnail} alt="profile" />
                             </figure>
                         </div>
