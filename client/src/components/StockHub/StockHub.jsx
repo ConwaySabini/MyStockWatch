@@ -456,13 +456,13 @@ const StockHub = ({ user }) => {
                     <div class="modal-background">
                         {/* render the list of stocks and pass down important 
                             functions to change aspects of the stocks */}
-                        <StockList
+                        {/* <StockList
                             filterSymbols={filterSymbolsHub}
                             user={user}
                             handleStockModal={handleStockModal}
                             handleStockChange={handleStockChange}
                             handleTimeChange={handleTimeChange}
-                        />
+                        /> */}
                     </div>
                     <div class="modal-content" id="stock-modal">
                         {/* <!-- Any other Bulma elements you want --> */}
