@@ -142,8 +142,6 @@ function News({ toggleTheme }) {
                                 </div>
                             </div>
                         </div>
-                        {/* Layout to add stocks and individual cards for stocks */}
-                        <CardList key={news} news={news} type={type} />
                     </div>
                     <div class="column is-2" id="SideMenu">
                     </div>
