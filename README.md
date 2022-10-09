@@ -79,6 +79,8 @@ npm run test
 
 > Implement caching of data with automatic cache refreshing after a certain amount of time
 
+> Debouncing and Throttling API calls
+
 > UI design toggle to switch stock view to a grid
 ## Author
 
