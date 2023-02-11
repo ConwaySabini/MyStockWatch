@@ -1,7 +1,4 @@
 // imports
-const dotenv = require('dotenv');
-const path = require('path');
-const axios = require('axios').default;
 import cors from 'cors';
 import express from 'express';
 import http from 'http';

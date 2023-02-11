@@ -5,6 +5,7 @@
   "author": "Ethan Sabini",
   "license": "Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License",
   "main": "index.js",
+  "type": "module",
   "keywords": [],
   "bugs": {
     "url": "https://github.com/ConwaySabini/MyStockWatch/issues"
