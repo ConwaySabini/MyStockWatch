@@ -16,7 +16,7 @@
     "build": "babel ./server --out-dir ./dist --source-maps",
     "build:clean": "rm -rf dist",
     "start:dev": "set NODE_ENV=development && npm run build && nodemon ./dist/index.js",
-    "start": "set NODE_ENV=production && npm run build && node --exec babel-node ./server",
+    "start": "set NODE_ENV=production && npm run build && node ./server/index.js",
     "start-server": "node server/index.js"
   },
   "repository": {
