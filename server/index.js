@@ -17,7 +17,6 @@ import subscriptionRouter from './routes/subscriptions.js';
 // routes
 import userRouter from './routes/user.js';
 const CONNECTION_URL = process.env.MONGODB_CONNECTION;
-
 // Redis configuration
 // const redis = require("redis"),
 //   client = redis.createClient();/ // client middleware for redis
