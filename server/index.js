@@ -2,19 +2,21 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const axios = require('axios').default;
-import http from "http";
-import express from "express";
-import logger from "morgan";
-import cors from "cors";
+import cors from 'cors';
+import express from 'express';
+import http from 'http';
+import mongoose from 'mongoose';
+import logger from 'morgan';
+import autocompleteRouter from './routes/autocomplete.js';
+import favoritesRouter from './routes/favorites.js';
+import listsRouter from './routes/lists.js';
+import stockRouter from './routes/stocks.js';
+import subscriptionRouter from './routes/subscriptions.js';
 // mongo connection
-import "./config/mongo.js";
+//import "./config/mongo.js";
 // routes
-import userRouter from "./routes/user.js";
-import stockRouter from "./routes/stocks.js";
-import favoritesRouter from "./routes/favorites.js";
-import listsRouter from "./routes/lists.js";
-import autocompleteRouter from "./routes/autocomplete.js";
-import subscriptionRouter from "./routes/subscriptions.js";
+import userRouter from './routes/user.js';
+const CONNECTION_URL = process.env.MONGODB_CONNECTION;
 
 // Redis configuration
 // const redis = require("redis"),
@@ -37,56 +39,85 @@ import subscriptionRouter from "./routes/subscriptions.js";
 
 // console.log("cors domains", process.env.CORS_DOMAINS);
 
-const corsDomains = process.env.CORS_DOMAINS || "";
-const whitelist = corsDomains.split(",").map(d => d.trim());
+const corsDomains = process.env.CORS_DOMAINS || '';
+const whitelist = corsDomains.split(',').map((d) => d.trim());
 
 const corsOptions = {
-    // origin: function (origin, callback) {
-    //   if (!origin || whitelist.indexOf(origin) !== -1) {
-    //     callback(null, true);
-    //   } else {
-    //     callback(new Error("Not allowed by CORS"));
-    //   }
-    // },
-    origin: whitelist,
-    credentials: true
-}
+  // origin: function (origin, callback) {
+  //   if (!origin || whitelist.indexOf(origin) !== -1) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin: whitelist,
+  credentials: true,
+};
 
 const app = express();
 /** Get port from environment and store in Express. */
-const port = process.env.PORT || "3000";
-app.set("port", port);
+const port = process.env.PORT || '3000';
+app.set('port', port);
 
-app.use(logger("dev"));
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(logger('dev'));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 app.use(cors(corsOptions)); //{ origin: 'https://127.0.0.1:3000' }
 
-app.use("/users", userRouter);
-app.use("/stocks", stockRouter);
-app.use("/favorites", favoritesRouter);
-app.use("/lists", listsRouter);
-app.use("/autocomplete", autocompleteRouter);
-app.use("/subscriptions", subscriptionRouter);
+app.use('/users', userRouter);
+app.use('/stocks', stockRouter);
+app.use('/favorites', favoritesRouter);
+app.use('/lists', listsRouter);
+app.use('/autocomplete', autocompleteRouter);
+app.use('/subscriptions', subscriptionRouter);
 
 /** catch 404 and forward to error handler */
 app.use('*', (req, res) => {
-    return res.status(404).json({
-        success: false,
-        message: 'API endpoint doesnt exist'
-    })
+  return res.status(404).json({
+    success: false,
+    message: 'API endpoint doesnt exist',
+  });
 });
 
 /** Create HTTP server. */
 const server = http.createServer(app);
 
-/** Listen on provided port, on all network interfaces. */
-server.listen(port);
-/** Event listener for HTTP server "listening" event. */
-server.on("listening", () => {
-    console.log(`Listening on port:: http://localhost:${port}/`);
-});
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(CONNECTION_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
 
+//Connect to the database before listening
+connectDB().then(() => {
+  /** Listen on provided port, on all network interfaces. */
+  server.listen(port);
+  /** Event listener for HTTP server "listening" event. */
+  server.on('listening', () => {
+    console.log(`Listening on port:: http://localhost:${port}/`);
+  });
+
+  mongoose.connection.on('connected', () => {
+    console.log('Mongo is connected');
+  });
+  mongoose.connection.on('reconnected', () => {
+    console.log('Mongo is reconnected');
+  });
+  mongoose.connection.on('error', (error) => {
+    console.log('Error on mongo connection', error);
+    mongoose.disconnect();
+  });
+  mongoose.connection.on('disconnected', () => {
+    console.log('Mongo is disconnected');
+  });
+});
 
 // async function getSubscriptions() {
 //     try {
@@ -100,7 +131,7 @@ server.on("listening", () => {
 //             console.log("all subscriptions ", response.data);
 //             return response.data;
 //         }
-//         // handle error 
+//         // handle error
 //     } catch (error) {
 //         console.error(error);
 //     }
