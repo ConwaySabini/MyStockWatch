@@ -18,4 +18,4 @@ COPY . .
 # Expose the port to run the app on
 EXPOSE 3000
 # commands to run the app
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
