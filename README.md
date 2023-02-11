@@ -29,6 +29,14 @@ Link: https://my-stock-watch.netlify.app/
   the financial data and back-end to work. Twelve Data and Bing News are the financial APIs being used.
   In the base directory, run docker-compose build to create the deployment image.
   Then run docker-compose up -d to run the image which will contain both the front end and the back end in a single docker image.
+  
+  
+## Tech Stack
+
+**Client:** React, Redux, Bulma, Auth0, RapidAPI, Netlify
+
+**Server:** NodeJS, Express, MongoDB, Heroku, Docker
+
 
 ### 🏠 [Homepage](https://github.com/ConwaySabini/MyStockWatch#readme)
 
@@ -76,6 +84,10 @@ npm run test
 > Implement technical analysis of stock with trading strategies to inform the user when it might be a good time to buy or sell a stock
 
 > More technical analysis options available
+
+> Implement caching of data with automatic cache refreshing after a certain amount of time
+
+> Debouncing and Throttling API calls
 
 > UI design toggle to switch stock view to a grid
 ## Author
