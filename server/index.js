@@ -1,8 +1,6 @@
 // imports
 require('dotenv').config();
 const path = require('path');
-const cors = require('cors')
-const express = require('express');
 import http from 'http';
 import mongoose from 'mongoose';
 import logger from 'morgan';
@@ -15,6 +13,9 @@ import subscriptionRouter from './routes/subscriptions.js';
 //import "./config/mongo.js";
 // routes
 import userRouter from './routes/user.js';
+const cors = require('cors');
+const express = require('express');
+
 const CONNECTION_URL = process.env.MONGODB_CONNECTION;
 // Redis configuration
 // const redis = require("redis"),
