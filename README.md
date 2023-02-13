@@ -15,43 +15,36 @@
 Link: https://my-stock-watch.netlify.app/
 
 > A stock tracking platform which includes technical analysis, news, list management, accounts, user authentication, and more
-> MyStockWatch is a full-stack web app where you can create an account, add and remove stocks, 
-  analyze stocks with different time frames and using various technical analysis indicators, 
-  keep a list of favorites, create custom lists, check financial news and stock specific news, and more. 
-  This application was deployed to Netlify and Heroku, with the front-end on Netlify, and the back-end on Heroku. 
-  I used financial and news APIs to fetch the relevant data for the application and Auth0 for user authorization. 
-  I Designed the front end with Bulma, component based architecture, and react hooks. 
-  The server and API was implemented with NodeJS, Express, and MongoDB for storing the users, stock data, etc.
-  
-  > To run this code locally, you can clone the repo and run npm install or yarn install to get all of the dependencies.
-  Then change the directory to the client and run npm install or yarn install again to get all of the client dependencies.
-  You will need to create your own environment variables in a file with a mongoDB database in order for the API calls to 
-  the financial data and back-end to work. Twelve Data and Bing News are the financial APIs being used.
-  In the base directory, run docker-compose build to create the deployment image.
-  Then run docker-compose up -d to run the image which will contain both the front end and the back end in a single docker image.
-  
-  
+> MyStockWatch is a full-stack web app where you can create an account, add and remove stocks,
+> analyze stocks with different time frames and using various technical analysis indicators,
+> keep a list of favorites, create custom lists, check financial news and stock specific news, and more.
+> This application was deployed to Netlify and Heroku, with the front-end on Netlify, and the back-end on Heroku.
+> I used financial and news APIs to fetch the relevant data for the application and Auth0 for user authorization.
+> I Designed the front end with Bulma, component based architecture, and react hooks.
+> The server and API was implemented with NodeJS, Express, and MongoDB for storing the users, stock data, etc.
+
+> To run this code locally, you can clone the repo and run npm install or yarn install to get all of the dependencies.
+> Then change the directory to the client and run npm install or yarn install again to get all of the client dependencies.
+> You will need to create your own environment variables in a file with a mongoDB database in order for the API calls to
+> the financial data and back-end to work. Twelve Data and Bing News are the financial APIs being used.
+> In the base directory, run docker-compose build to create the deployment image.
+> Then run docker-compose up -d to run the image which will contain both the front end and the back end in a single docker image.
+
 ## Tech Stack
 
 **Client:** React, Redux, Bulma, Auth0, RapidAPI, Netlify
 
 **Server:** NodeJS, Express, MongoDB, Heroku, Docker
 
-
 ### 🏠 [Homepage](https://github.com/ConwaySabini/MyStockWatch#readme)
 
 Architecture:
 
-
 ![image](https://user-images.githubusercontent.com/53063791/194472711-b0909676-e376-4e81-a0e8-959c3c1b3e20.png)
-
 
 Dashboard:
 
-
-
 ![image](https://user-images.githubusercontent.com/53063791/194472676-66281f63-96f0-4bca-baf4-6acc528662e8.png)
-
 
 ### ✨ [Demo](https://my-stock-watch.netlify.app/)
 
@@ -75,6 +68,8 @@ npm run test
 
 ## Features to add in the future
 
+> Display only stocks in selected lists.
+
 > Complete subscriptions feature and schedule cron jobs to automatically update the stock data after a certain amount of time has passed for example daily.
 
 > Complete autocomplete function for stock adding
@@ -90,12 +85,13 @@ npm run test
 > Debouncing and Throttling API calls
 
 > UI design toggle to switch stock view to a grid
+
 ## Author
 
 👤 **Ethan Sabini**
 
-* Website: [Ethan Sabini](https://conwaysabini.github.io/portfolio/)
-* Github: [@ConwaySabini](https://github.com/ConwaySabini)
+- Website: [Ethan Sabini](https://conwaysabini.github.io/portfolio/)
+- Github: [@ConwaySabini](https://github.com/ConwaySabini)
 
 ## 🤝 Contributing
 
@@ -110,4 +106,4 @@ Give a ⭐️ if this project helped you!
 Copyright © 2022 [Ethan Sabini](https://github.com/ConwaySabini).<br />
 This project is [Creative Commons Attribution--NonCommercial--NoDerivs 3.0 Unported License](https://github.com/ConwaySabini/MyStockWatch/blob/master/LICENSE) licensed.
 
-***
+---
