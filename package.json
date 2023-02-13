@@ -11,7 +11,7 @@
   },
   "homepage": "https://github.com/ConwaySabini/MyStockWatch#readme",
   "scripts": {
-    "preinstall": "cp package.json dist/",
+    "preinstall": "cp package.json dist/ && ls -a",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "",
     "build": "npx --package @babel/cli babel ./server --out-dir ./dist --source-maps",
