@@ -1,8 +1,8 @@
 // imports
 require('dotenv').config();
 const path = require('path');
-import cors from 'cors';
-import express from 'express';
+const cors = require('cors')
+const express = require('express');
 import http from 'http';
 import mongoose from 'mongoose';
 import logger from 'morgan';
