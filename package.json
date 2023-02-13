@@ -14,7 +14,7 @@
     "preinstall": "cp package.json dist/",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "",
-    "build": "babel ./server --out-dir ./dist --source-maps",
+    "build": "npx --package @babel/cli babel ./server --out-dir ./dist --source-maps",
     "build:clean": "rm -rf dist",
     "start:dev": "set NODE_ENV=development && npm run build && nodemon ./dist/index.js",
     "start": "set NODE_ENV=production && npm run build && node ./dist/index.js",
