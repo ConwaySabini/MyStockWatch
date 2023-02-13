@@ -58,9 +58,14 @@ listsSchema.statics.createUserLists = async function (userId, lists) {
 
 listsSchema.statics.updateUserLists = async function (userId, lists) {
   try {
-    // updated the lists
-    const updatedLists = await this.findOneAndUpdate(userId, {
-      lists: lists
+    // delete the existing lists
+    await this.deleteOne({
+      userId: userId
+    }); // create the updated lists
+
+    await this.create({
+      userId,
+      lists
     });
   } catch (error) {
     throw error;

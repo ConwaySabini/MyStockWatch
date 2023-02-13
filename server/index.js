@@ -1,4 +1,6 @@
 // imports
+require('dotenv').config();
+const path = require('path');
 import cors from 'cors';
 import express from 'express';
 import http from 'http';

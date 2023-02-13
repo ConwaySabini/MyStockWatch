@@ -52,9 +52,14 @@ favoritesSchema.statics.createUserFavorites = async function (userId, favorites)
 
 favoritesSchema.statics.updateUserFavorites = async function (userId, favorites) {
   try {
-    // updated the favorites
-    const updatedFavorites = await this.findOneAndUpdate(userId, {
-      favorites: favorites
+    // delete the existing favorites
+    await this.deleteOne({
+      userId: userId
+    }); // create the updated favorites
+
+    await this.create({
+      userId,
+      favorites
     });
   } catch (error) {
     throw error;
