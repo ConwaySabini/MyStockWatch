@@ -46,6 +46,13 @@ Dashboard:
 
 ![image](https://user-images.githubusercontent.com/53063791/194472676-66281f63-96f0-4bca-baf4-6acc528662e8.png)
 
+Technical Indicators:
+
+![image](https://user-images.githubusercontent.com/53063791/236649126-bccd041a-6aa1-4dfd-ad56-3b54d61a57d1.png)
+
+![image](https://user-images.githubusercontent.com/53063791/236649131-739d4008-cf0f-4a1b-a2de-6eba5cad0cef.png)
+
+
 ### ✨ [Demo](https://my-stock-watch.netlify.app/)
 
 ## Install
