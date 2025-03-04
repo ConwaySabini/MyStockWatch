@@ -11,14 +11,12 @@
   },
   "homepage": "https://github.com/ConwaySabini/MyStockWatch#readme",
   "scripts": {
-    "preinstall": "cp package.json dist/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prebuild": "",
-    "build": "npx --package @babel/cli babel ./server --out-dir ./dist --source-maps",
+    "prebuild": "npm run build:clean",
+    "build": "babel ./server --out-dir ./dist --source-maps",
     "build:clean": "rm -rf dist",
-    "start:dev": "set NODE_ENV=development && npm run build && nodemon ./dist/index.js",
+    "start": "set NODE_ENV=development && npm run build && nodemon ./dist/index.js",
     "start:prod": "set NODE_ENV=production && npm run build && nodemon --exec babel-node ./server",
-    "start": "node index.js",
     "start-server": "node server/index.js"
   },
   "repository": {
